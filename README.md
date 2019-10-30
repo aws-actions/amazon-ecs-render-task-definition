@@ -1,7 +1,7 @@
-## Amazon Ecs Render Task Definition For Github Actions
+## Amazon ECS "Render Task Definition" Action for GitHub Actions
 
-Inserts an image URI into an Amazon ECS task definition file.
+Inserts a container image URI into an Amazon ECS task definition file, creating a new task definition file.
 
 ## License Summary
 
-This sample code is made available under the MIT license. 
+This code is made available under the MIT license.
