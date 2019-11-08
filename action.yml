@@ -1,5 +1,8 @@
 name: 'Amazon ECS "Render Task Definition" Action for GitHub Actions'
 description: 'Inserts a container image URI into a container definition in an Amazon ECS task definition file, creating a new task definition file.'
+branding:
+  icon: 'cloud'
+  color: 'orange'
 inputs:
   task-definition:
     description: 'The path to the ECS task definition JSON file'
