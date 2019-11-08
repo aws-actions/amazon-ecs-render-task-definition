@@ -1,5 +1,5 @@
 {
-  "name": "amazon-ecs-render-task-definition-for-github-actions",
+  "name": "aws-actions-amazon-ecs-render-task-definition",
   "version": "0.0.0",
   "description": "Render Amazon ECS task definition file",
   "main": "index.js",
@@ -10,7 +10,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/aws/amazon-ecs-render-task-definition-for-github-actions.git"
+    "url": "git+https://github.com/aws-actions/amazon-ecs-render-task-definition.git"
   },
   "keywords": [
     "AWS",
@@ -21,9 +21,9 @@
   "author": "AWS",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/aws/amazon-ecs-render-task-definition-for-github-actions/issues"
+    "url": "https://github.com/aws-actions/amazon-ecs-render-task-definition/issues"
   },
-  "homepage": "https://github.com/aws/amazon-ecs-render-task-definition-for-github-actions#readme",
+  "homepage": "https://github.com/aws-actions/amazon-ecs-render-task-definition#readme",
   "dependencies": {
     "@actions/core": "^1.2.0",
     "tmp": "^0.1.0"
