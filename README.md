@@ -23,6 +23,8 @@ To insert the image URI `amazon/amazon-ecs-sample:latest` as the image for the `
         cluster: my-cluster
 ```
 
+See [action.yml](action.yml) for the full documentation for this action's inputs and outputs.
+
 ## License Summary
 
 This code is made available under the MIT license.
