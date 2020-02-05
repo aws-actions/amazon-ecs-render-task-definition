@@ -16,7 +16,7 @@ jobs:
 
     - name: Print current build ID
       run: |
-        echo Integration test run: githubactionsamazonecsrende-xV2akKOKK8OC:d5e7f158-59ae-4df2-a827-6b5eca793a49
+        echo Integration test run: githubactionsamazonecsrende-xV2akKOKK8OC:7d4dd9b0-6fcd-4c76-9406-089216c77593
 
     - name: Configure AWS credentials
       uses: aws-actions/configure-aws-credentials@v1
@@ -26,21 +26,21 @@ jobs:
         aws-region: us-west-2
 
     - name: Render Amazon ECS task definition
-      id: render-web-container
+      id: render-task-definition
       uses: aws-actions/amazon-ecs-render-task-definition@c4510c088f9972e8dede305ea53b44f444666225
       with:
         task-definition: task-definition.json
-        container-name: web
+        container-name: sample-app
         image: amazon/amazon-ecs-sample:latest
 
     - name: Validate Amazon ECS task definition
       env:
-        TASK_DEF_FILE: ${{ steps.render-web-container.outputs.task-definition }}
+        TASK_DEF_FILE: ${{ steps.render-task-definition.outputs.task-definition }}
       run: |
         diff expected-task-definition.json $TASK_DEF_FILE
 
     - name: Register Amazon ECS task definition
       env:
-        TASK_DEF_FILE: ${{ steps.render-web-container.outputs.task-definition }}
+        TASK_DEF_FILE: ${{ steps.render-task-definition.outputs.task-definition }}
       run: |
         aws ecs register-task-definition --cli-input-json file://$TASK_DEF_FILE
