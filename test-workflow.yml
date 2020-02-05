@@ -1,0 +1,46 @@
+on:
+  push:
+    branches:
+      - integ-tests
+
+name: Integration Test
+
+jobs:
+  deploy:
+    name: Deploy
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    - name: Print current build ID
+      run: |
+        echo Integration test run: BUILD_ID
+
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: us-west-2
+
+    - name: Render Amazon ECS task definition
+      id: render-web-container
+      uses: aws-actions/amazon-ecs-render-task-definition@v1
+      with:
+        task-definition: task-definition.json
+        container-name: web
+        image: amazon/amazon-ecs-sample:latest
+
+    - name: Validate Amazon ECS task definition
+      env:
+        TASK_DEF_FILE: ${{ steps.render-web-container.outputs.task-definition }}
+      run: |
+        diff expected-task-definition.json $TASK_DEF_FILE
+
+    - name: Register Amazon ECS task definition
+      env:
+        TASK_DEF_FILE: ${{ steps.render-web-container.outputs.task-definition }}
+      run: |
+        aws ecs register-task-definition --cli-input-json file://$TASK_DEF_FILE
