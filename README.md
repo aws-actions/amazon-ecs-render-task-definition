@@ -2,6 +2,16 @@
 
 Inserts a container image URI into an Amazon ECS task definition JSON file, creating a new task definition file.
 
+**Table of Contents**
+
+<!-- toc -->
+
+- [Usage](#usage)
+- [License Summary](#license-summary)
+- [Security Disclosures](#security-disclosures)
+
+<!-- tocstop -->
+
 ## Usage
 
 To insert the image URI `amazon/amazon-ecs-sample:latest` as the image for the `web` container in the task definition file, and then deploy the edited task definition file to ECS:
@@ -28,3 +38,7 @@ See [action.yml](action.yml) for the full documentation for this action's inputs
 ## License Summary
 
 This code is made available under the MIT license.
+
+## Security Disclosures
+
+If you would like to report a potential security issue in this project, please do not create a GitHub issue.  Instead, please follow the instructions [here](https://aws.amazon.com/security/vulnerability-reporting/) or [email AWS security directly](mailto:aws-security@amazon.com).
