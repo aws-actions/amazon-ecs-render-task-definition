@@ -173,4 +173,163 @@ describe('Render task definition', () => {
 
         expect(core.setFailed).toBeCalledWith('Invalid task definition: Could not find container definition with matching name');
     });
+
+    test('renders environments variables', async () => {
+        jest.mock(
+          './task-definition-with-env.json',
+          () => ({
+            family: 'task-def-family',
+            containerDefinitions: [
+              {
+                name: 'web',
+                image: 'expect-image',
+                environment: []
+              }
+            ]
+          }),
+          { virtual: true }
+        );
+
+         core.getInput = jest
+            .fn()
+            .mockReturnValueOnce('task-definition-with-env.json')
+            .mockReturnValueOnce('web')
+            .mockReturnValueOnce('expect-image')
+            .mockReturnValueOnce([
+                {
+                    name: 'secret',
+                    value: 'expect-value-2'
+                }
+            ]);
+
+        await run();
+
+        expect(tmp.fileSync).toHaveBeenNthCalledWith(1, {
+          dir: '/tmp',
+          prefix: 'task-definition-',
+          postfix: '.json',
+          keep: true,
+          discardDescriptor: true
+        });
+
+        expect(fs.writeFileSync).toHaveBeenNthCalledWith(
+          1,
+          'new-task-def-file-name',
+          JSON.stringify(
+            {
+              family: 'task-def-family',
+              containerDefinitions: [
+                {
+                  name: 'web',
+                  image: 'expect-image',
+                  environment: [
+                    {
+                      name: 'secret',
+                      value: 'expect-value-2'
+                    }
+                  ]
+                }
+              ]
+            },
+            null,
+            2
+          )
+        );
+    });
+
+    test('error returned for task definition without environment section', async () => {
+      jest.mock(
+        './task-definition-without-env.json',
+        () => ({
+          family: 'task-def-family',
+          containerDefinitions: [
+            {
+              name: 'web',
+              image: 'expect-image',
+            }
+          ]
+        }),
+        { virtual: true }
+      );
+
+      core.getInput = jest
+        .fn()
+        .mockReturnValueOnce('task-definition-without-env.json')
+        .mockReturnValueOnce('web')
+        .mockReturnValueOnce('expect-image')
+        .mockReturnValueOnce([
+          {
+            name: 'secret',
+            value: 'expect-value-2'
+          }
+        ]);
+
+      await run();
+
+      expect(core.setFailed).toBeCalledWith('Invalid task definition format: environment section is not present or is not an array');
+    });
+
+    test('error returned for non-array input envs', async () => {
+      jest.mock(
+        './task-definition-non-array-input.json',
+        () => ({
+          family: 'task-def-family',
+          containerDefinitions: [
+            {
+              name: 'web',
+              image: 'expect-image',
+              environment: []
+            }
+          ]
+        }),
+        { virtual: true }
+      );
+
+      core.getInput = jest
+        .fn()
+        .mockReturnValueOnce('task-definition-non-array-input.json')
+        .mockReturnValueOnce('web')
+        .mockReturnValueOnce('expect-image')
+        .mockReturnValueOnce({
+            name: 'my',
+            value: 'secret'
+        });
+
+      await run();
+
+      expect(core.setFailed).toBeCalledWith('Invalid input format: environments section is not an array');
+    });
+
+    test('error returned for invalid input envs', async () => {
+      jest.mock(
+        './task-definition-invalid-input.json',
+        () => ({
+          family: 'task-def-family',
+          containerDefinitions: [
+            {
+              name: 'web',
+              image: 'expect-image',
+              environment: []
+            }
+          ]
+        }),
+        { virtual: true }
+      );
+
+      core.getInput = jest
+				.fn()
+				.mockReturnValueOnce('task-definition-invalid-input.json')
+				.mockReturnValueOnce('web')
+				.mockReturnValueOnce('expect-image')
+				.mockReturnValueOnce([
+					{
+                        notname: 'my',
+						notvalue: 'secret'
+					}
+				]);
+
+      await run();
+
+      expect(core.setFailed).toBeCalledWith('Invalid input format: each environment must have name and value args');
+    });
 });
