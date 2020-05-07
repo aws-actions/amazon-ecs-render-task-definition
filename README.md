@@ -36,6 +36,36 @@ definition file to ECS:
         cluster: my-cluster
 ```
 
+If your task definition file holds multiple containers in the `containerDefs`
+section which require updated image URIs, chain multiple executions of this action
+together using the output value from the first action for the `task-definition`
+input of the second:
+
+```yaml
+    - name: Render Amazon ECS task definition for first container
+      id: render-web-container
+      uses: aws-actions/amazon-ecs-render-task-definition@v1
+      with:
+        task-definition: task-definition.json
+        container-name: web
+        image: amazon/amazon-ecs-sample:latest
+
+    - name: Modify Amazon ECS task definition with second container
+      id: render-app-container
+      uses: aws-actions/amazon-ecs-render-task-definition@v1
+      with:
+        task-definition: ${{ steps.render-web-container.outputs.task-definition }}
+        container-name: app
+        image: amazon/amazon-ecs-sample:latest
+
+    - name: Deploy to Amazon ECS service
+      uses: aws-actions/amazon-ecs-deploy-task-definition@v1
+      with:
+        task-definition: ${{ steps.render-app-container.outputs.task-definition }}
+        service: my-service
+        cluster: my-cluster
+```
+
 See [action.yml](action.yml) for the full documentation for this action's inputs
 and outputs.
 
