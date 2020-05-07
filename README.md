@@ -1,6 +1,7 @@
 ## Amazon ECS "Render Task Definition" Action for GitHub Actions
 
-Inserts a container image URI into an Amazon ECS task definition JSON file, creating a new task definition file.
+Inserts a container image URI into an Amazon ECS task definition JSON file,
+creating a new task definition file.
 
 **Table of Contents**
 
@@ -14,7 +15,9 @@ Inserts a container image URI into an Amazon ECS task definition JSON file, crea
 
 ## Usage
 
-To insert the image URI `amazon/amazon-ecs-sample:latest` as the image for the `web` container in the task definition file, and then deploy the edited task definition file to ECS:
+To insert the image URI `amazon/amazon-ecs-sample:latest` as the image for the
+`web` container in the task definition file, and then deploy the edited task
+definition file to ECS:
 
 ```yaml
     - name: Render Amazon ECS task definition
@@ -33,7 +36,8 @@ To insert the image URI `amazon/amazon-ecs-sample:latest` as the image for the `
         cluster: my-cluster
 ```
 
-See [action.yml](action.yml) for the full documentation for this action's inputs and outputs.
+See [action.yml](action.yml) for the full documentation for this action's inputs
+and outputs.
 
 ## License Summary
 
@@ -41,4 +45,7 @@ This code is made available under the MIT license.
 
 ## Security Disclosures
 
-If you would like to report a potential security issue in this project, please do not create a GitHub issue.  Instead, please follow the instructions [here](https://aws.amazon.com/security/vulnerability-reporting/) or [email AWS security directly](mailto:aws-security@amazon.com).
+If you would like to report a potential security issue in this project, please
+do not create a GitHub issue.  Instead, please follow the instructions
+[here](https://aws.amazon.com/security/vulnerability-reporting/) or
+[email AWS security directly](mailto:aws-security@amazon.com).
