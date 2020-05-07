@@ -48,7 +48,7 @@ input of the second:
       with:
         task-definition: task-definition.json
         container-name: web
-        image: amazon/amazon-ecs-sample:latest
+        image: amazon/amazon-ecs-sample-1:latest
 
     - name: Modify Amazon ECS task definition with second container
       id: render-app-container
@@ -56,7 +56,7 @@ input of the second:
       with:
         task-definition: ${{ steps.render-web-container.outputs.task-definition }}
         container-name: app
-        image: amazon/amazon-ecs-sample:latest
+        image: amazon/amazon-ecs-sample-2:latest
 
     - name: Deploy to Amazon ECS service
       uses: aws-actions/amazon-ecs-deploy-task-definition@v1
