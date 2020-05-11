@@ -19,7 +19,7 @@ describe('Render task definition', () => {
             .mockReturnValueOnce('nginx:latest');        // image
 
         process.env = Object.assign(process.env, { GITHUB_WORKSPACE: __dirname });
-        process.env = Object.assign(process.env, { RUNNER_TEMP: '/tmp' });
+        process.env = Object.assign(process.env, { RUNNER_TEMP: '/home/runner/work/_temp' });
 
         tmp.fileSync.mockReturnValue({
             name: 'new-task-def-file-name'
@@ -45,7 +45,7 @@ describe('Render task definition', () => {
     test('renders the task definition and creates a new task def file', async () => {
         await run();
         expect(tmp.fileSync).toHaveBeenNthCalledWith(1, {
-            dir: '/tmp',
+            tmpdir: '/home/runner/work/_temp',
             prefix: 'task-definition-',
             postfix: '.json',
             keep: true,
@@ -88,7 +88,7 @@ describe('Render task definition', () => {
         await run();
 
         expect(tmp.fileSync).toHaveBeenNthCalledWith(1, {
-            dir: '/tmp',
+            tmpdir: '/home/runner/work/_temp',
             prefix: 'task-definition-',
             postfix: '.json',
             keep: true,
