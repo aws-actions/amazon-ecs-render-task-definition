@@ -1107,7 +1107,7 @@ async function run() {
 
     // Write out a new task definition file
     var updatedTaskDefFile = tmp.fileSync({
-      dir: process.env.RUNNER_TEMP,
+      tmpdir: process.env.RUNNER_TEMP,
       prefix: 'task-definition-',
       postfix: '.json',
       keep: true,
