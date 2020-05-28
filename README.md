@@ -33,7 +33,7 @@ To insert the image URI `amazon/amazon-ecs-sample:latest` as the image for the `
         cluster: my-cluster
 ```
 
-If your task definition file holds multiple containers in the `containerDefs`
+If your task definition file holds multiple containers in the `containerDefinitions`
 section which require updated image URIs, chain multiple executions of this action
 together using the output value from the first action for the `task-definition`
 input of the second:
