@@ -24,6 +24,7 @@ To insert the image URI `amazon/amazon-ecs-sample:latest` as the image for the `
         task-definition: task-definition.json
         container-name: web
         image: amazon/amazon-ecs-sample:latest
+        secrets: true
 
     - name: Deploy to Amazon ECS service
       uses: aws-actions/amazon-ecs-deploy-task-definition@v1
@@ -63,6 +64,24 @@ input of the second:
         cluster: my-cluster
 ```
 
+If you choose to add environment variables using the "secrets" input, add the secrets input
+and set it to `true` in your GitHub workflow and add the secrets section to your 
+[task definition](https://aws.amazon.com/premiumsupport/knowledge-center/ecs-data-security-container-task/).
+The "valueFrom" should include this specific format:
+
+```
+{
+    "name": "var-from-parameter-store",
+    "valueFrom": "ssm:path/to/variable"
+}
+{
+    "name": "var-from-secrets-manager",
+    "valueFrom": "secretsmanager:path/to/variable"
+}
+```
+
+Notice the "ssm" and "secretsmanager" prefix, both of which are followed by a ":" (colon) and variable path.
+
 See [action.yml](action.yml) for the full documentation for this action's inputs and outputs.
 
 ## License Summary
@@ -72,3 +91,4 @@ This code is made available under the MIT license.
 ## Security Disclosures
 
 If you would like to report a potential security issue in this project, please do not create a GitHub issue.  Instead, please follow the instructions [here](https://aws.amazon.com/security/vulnerability-reporting/) or [email AWS security directly](mailto:aws-security@amazon.com).
+
