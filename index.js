@@ -10,6 +10,7 @@ async function run() {
     const containerName = core.getInput('container-name', { required: true });
     const imageURI = core.getInput('image', { required: true });
     const secrets = core.getInput('secrets', { required: false });
+    const regionName = core.getInput('region-name', { required: false });
 
     // Parse the task definition
     const taskDefPath = path.isAbsolute(taskDefinitionFile) ?
@@ -39,13 +40,22 @@ async function run() {
         if (!Array.isArray(containerDef.secrets)) {
             throw new Error('Invalid task definition format: secrets section must be an array')
         }
+        if (!regionName) {
+            throw new Error('Invalid GitHub action input: You must specify the region name')
+        }
         // Loop through array of, hopefully, dictionaries
         containerDef.secrets.forEach(element => {
             const valueFrom = element.valueFrom(":")
             if (valueFrom.length != 2) {
-                throw new Error('Invalid task definition: valueFrom format must be in the form of <service>:<path of variable>');
+                throw new Error(`Invalid task definition: valueFrom format must be in the form of <service>:<path of variable>. Errored: ${valueFrom}`);
             }
-            element.valueFrom = "arn:aws:".concat(valueFrom[0], ":::", "region name", ":", "accountID", ":", valueFrom[1])
+            if (!['ssm', 'secretsmanager'].includes(valueFrom[0])) {
+                throw new Error(`Invalid task definition: valueFrom must have prefix ssm or secretsmanager, not ${valueFrom[0]}`)
+            }
+            if (valueFrom[1].charAt(0) != '/') {
+                throw new Error('Invalid task definition: parameter path must begin with "/" (a forward slash)')
+            }
+            element.valueFrom = `arn:aws:${valueFrom[0]}:${regionName}::${(valueFrom[0] == 'ssm') ? 'parameter' : 'secret'}${valueFrom[1]}`
         });
     }
 

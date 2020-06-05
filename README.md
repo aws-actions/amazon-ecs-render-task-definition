@@ -25,6 +25,7 @@ To insert the image URI `amazon/amazon-ecs-sample:latest` as the image for the `
         container-name: web
         image: amazon/amazon-ecs-sample:latest
         secrets: true
+        region-name: us-east-2
 
     - name: Deploy to Amazon ECS service
       uses: aws-actions/amazon-ecs-deploy-task-definition@v1
@@ -64,23 +65,23 @@ input of the second:
         cluster: my-cluster
 ```
 
-If you choose to add environment variables using the "secrets" input, add the secrets input
-and set it to `true` in your GitHub workflow and add the secrets section to your 
+If you choose to add environment variables using the "secrets" input, add the "secrets" input
+and set it to `true` and your "region-name" in your GitHub workflow and add the secrets section to your 
 [task definition](https://aws.amazon.com/premiumsupport/knowledge-center/ecs-data-security-container-task/).
-The "valueFrom" should include this specific format:
+The "valueFrom" in your task definition should include this specific format:
 
 ```
 {
     "name": "var-from-parameter-store",
-    "valueFrom": "ssm:path/to/variable"
+    "valueFrom": "ssm:/path/to/variable"
 }
 {
     "name": "var-from-secrets-manager",
-    "valueFrom": "secretsmanager:path/to/variable"
+    "valueFrom": "secretsmanager:/path/to/variable"
 }
 ```
 
-Notice the "ssm" and "secretsmanager" prefix, both of which are followed by a ":" (colon) and variable path.
+Notice the "ssm" and "secretsmanager" prefix, both of which are followed by a ":" (colon) and variable path. The parameter path must start with "/" (a forward slash).
 
 See [action.yml](action.yml) for the full documentation for this action's inputs and outputs.
 
@@ -91,4 +92,3 @@ This code is made available under the MIT license.
 ## Security Disclosures
 
 If you would like to report a potential security issue in this project, please do not create a GitHub issue.  Instead, please follow the instructions [here](https://aws.amazon.com/security/vulnerability-reporting/) or [email AWS security directly](mailto:aws-security@amazon.com).
-
