@@ -306,7 +306,7 @@ describe('Render task definition', () => {
         expect(core.setFailed).toBeCalledWith('Invalid task definition: valueFrom format must be in the form of <service>:<path of variable>. Errored: randomService');
     });
 
-    test('insert / at beginning of parameter path if / is not there.', async () => {
+    test('insert / at beginning of parameter path if / is not there', async () => {
         jest.mock('./missing-beginning-slash-param-path-task-definition.json', () => ({
             family: 'task-def-family',
             containerDefinitions: [
@@ -360,5 +360,162 @@ describe('Render task definition', () => {
             }, null, 2)
         );
         expect(core.setOutput).toHaveBeenNthCalledWith(1, 'task-definition', 'new-task-def-file-name');
+    });
+
+    // Testing external secrets file insertion
+    test('insert external secrets file into secrets', async () => {
+        jest.mock('./two-external-secrets.json', () => ({
+            secrets: [
+                {
+                    "name": "external1",
+                    "valueFrom": "ssm:blah"
+                },
+                {
+                    "name": "external2",
+                    "valueFrom": "ssm:blah2"
+                }
+            ]
+        }), { virtual: true });
+
+        jest.mock('./empty-secrets-array-task-definition.json', () => ({
+            family: 'task-def-family',
+            containerDefinitions: [
+                {
+                    name: "web",
+                    image: "some-other-image"
+                }
+            ]
+        }), { virtual: true });
+
+        core.getInput = jest
+            .fn()
+            .mockReturnValueOnce('empty-secrets-array-task-definition.json')
+            .mockReturnValueOnce('web')
+            .mockReturnValueOnce('nginx:latest')
+            .mockReturnValueOnce('two-external-secrets.json')
+            .mockReturnValueOnce('us-east-2')
+            .mockReturnValueOnce(1234);
+
+        await run();
+
+        expect(tmp.fileSync).toHaveBeenNthCalledWith(1, {
+            tmpdir: '/home/runner/work/_temp',
+            prefix: 'task-definition-',
+            postfix: '.json',
+            keep: true,
+            discardDescriptor: true
+          });
+        expect(fs.writeFileSync).toHaveBeenNthCalledWith(1, 'new-task-def-file-name',
+            JSON.stringify({
+                family: 'task-def-family',
+                containerDefinitions: [
+                    {
+                        name: "web",
+                        image: "nginx:latest",
+                        secrets: [
+                            {
+                                name: "external1",
+                                valueFrom: "arn:aws:ssm:us-east-2:1234:parameter/blah"
+                            },
+                            {
+                                name: "external2",
+                                valueFrom: "arn:aws:ssm:us-east-2:1234:parameter/blah2"
+                            }
+                        ]
+                    }
+                ],
+                executionRoleArn: 'arn:aws:iam::1234:role/ecsTaskExecutionRole'
+            }, null, 2)
+        );
+        expect(core.setOutput).toHaveBeenNthCalledWith(1, 'task-definition', 'new-task-def-file-name');
+    });
+
+    test('insert external secrets file into secrets which already has secrets in task definition', async () => {
+        // Makes sure the secrets are combined.
+        jest.mock('./three-external-secrets.json', () => ({
+            secrets: [
+                {
+                    "name": "external1",
+                    "valueFrom": "ssm:blah"
+                },
+                {
+                    "name": "external2",
+                    "valueFrom": "secretsmanager:/blah2"
+                },
+                {
+                    "name": "external3",
+                    "valueFrom": "secretsmanager:/blah/blah"
+                }
+            ]
+        }), { virtual: true });
+
+        core.getInput = jest
+            .fn()
+            .mockReturnValueOnce('correct-secrets-task-definition.json')
+            .mockReturnValueOnce('web')
+            .mockReturnValueOnce('nginx:latest')
+            .mockReturnValueOnce('three-external-secrets.json')
+            .mockReturnValueOnce('us-east-2')
+            .mockReturnValueOnce(1234);
+
+        await run();
+
+        expect(tmp.fileSync).toHaveBeenNthCalledWith(1, {
+            tmpdir: '/home/runner/work/_temp',
+            prefix: 'task-definition-',
+            postfix: '.json',
+            keep: true,
+            discardDescriptor: true
+          });
+        expect(fs.writeFileSync).toHaveBeenNthCalledWith(1, 'new-task-def-file-name',
+            JSON.stringify({
+                family: 'task-def-family',
+                containerDefinitions: [
+                    {
+                        name: "web",
+                        image: "nginx:latest",
+                        secrets: [
+                            {
+                                name: "SomeEnvironmentVarName",
+                                valueFrom: "arn:aws:ssm:us-east-2:1234:parameter/qwop/blah"
+                            },
+                            {
+                                name: "Yoomzzzzzz",
+                                valueFrom: "arn:aws:ssm:us-east-2:1234:parameter/qwerty/qwerty"
+                            },
+                            {
+                                name: "external1",
+                                valueFrom: "arn:aws:ssm:us-east-2:1234:parameter/blah"
+                            },
+                            {
+                                name: "external2",
+                                valueFrom: "arn:aws:secretsmanager:us-east-2:1234:secret/blah2"
+                            },
+                            {
+                                name: "external3",
+                                valueFrom: "arn:aws:secretsmanager:us-east-2:1234:secret/blah/blah"
+                            }
+                        ]
+                    }
+                ],
+                executionRoleArn: 'arn:aws:iam::1234:role/ecsTaskExecutionRole'
+            }, null, 2)
+        );
+        expect(core.setOutput).toHaveBeenNthCalledWith(1, 'task-definition', 'new-task-def-file-name');
+    });
+
+    test('error returned for missing external secrets file', async () => {
+        core.getInput = jest
+            .fn()
+            .mockReturnValueOnce('correct-secrets-task-definition.json')
+            .mockReturnValueOnce('web')
+            .mockReturnValueOnce('nginx:latest')
+            .mockReturnValueOnce('missing-external-secrets-file.json')
+            .mockReturnValueOnce('us-east-2')
+            .mockReturnValueOnce(1234);
+
+        await run();
+
+        expect(core.setFailed).toBeCalledWith('Secrets file does not exist: missing-external-secrets-file.json');
     });
 });

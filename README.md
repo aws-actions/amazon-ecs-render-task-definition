@@ -32,7 +32,7 @@ To insert the image URI `amazon/amazon-ecs-sample:latest` as the image for the `
         task-definition: task-definition.json
         container-name: web
         image: amazon/amazon-ecs-sample:latest
-        secrets: true
+        secrets: external-secrets.json
         region-name: us-east-2
         aws-account-id: ${{ steps.aws-credentials-configuration.outputs.aws-account-id }}
 
@@ -75,22 +75,46 @@ input of the second:
 ```
 
 If you choose to add environment variables using the "secrets" input, add the "secrets" input
-and set it to `true` and your "region-name" in your GitHub workflow and add the secrets section to your 
+and set it to `true`, your AWS "region-name", and AWS account ID (from configure AWS credentials
+action) in your GitHub workflow and add the secrets section to your 
 [task definition](https://aws.amazon.com/premiumsupport/knowledge-center/ecs-data-security-container-task/).
+You can either use the task definition file, an external file, or both (the last two, you must specify the
+filename and have the secrets array in the containerDefinition).
 The "valueFrom" in your task definition should include this specific format:
 
 ```
 {
     "name": "var-from-parameter-store",
     "valueFrom": "ssm:/path/to/variable"
-}
+},
 {
     "name": "var-from-secrets-manager",
     "valueFrom": "secretsmanager:/path/to/variable"
 }
 ```
 
-Notice the "ssm" and "secretsmanager" prefix, both of which are followed by a ":" (colon) and variable path. The parameter path must start with "/" (a forward slash).
+If you use an external JSON file for secrets, then your secrets input
+should be the external JSON file and the file should have the format
+that must abide as follows:
+
+```
+{
+    secrets: [
+        {
+            "name": "var-from-parameter-store",
+            "valueFrom": "ssm:/path/to/variable"
+        },
+        {
+            "name": "var-from-secrets-manager",
+            "valueFrom": "secretsmanager:/path/to/variable"
+        }
+    ]
+}
+```
+
+Notice the "ssm" and "secretsmanager" prefix, both of which are followed by a ":" (colon) and variable path.
+The parameter path must start with "/" (a forward slash). You can have an external secrets JSON
+file AND secrets already inside of your task definition as they'll be combined. 
 
 See [action.yml](action.yml) for the full documentation for this action's inputs and outputs.
 
