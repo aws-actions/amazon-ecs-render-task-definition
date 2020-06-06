@@ -23,7 +23,7 @@ To insert the image URI `amazon/amazon-ecs-sample:latest` as the image for the `
       with:
         aws-access-key-id: ${{ secrets.TEST_AWS_ACCESS_KEY_ID }}
         aws-secret-access-key: ${{ secrets.TEST_AWS_SECRET_ACCESS_KEY }}
-        aws-region: us-east-1
+        aws-region: us-east-2
 
     - name: Render Amazon ECS task definition
       id: render-web-container
@@ -33,7 +33,7 @@ To insert the image URI `amazon/amazon-ecs-sample:latest` as the image for the `
         container-name: web
         image: amazon/amazon-ecs-sample:latest
         secrets: external-secrets.json
-        region-name: us-east-2
+        aws-region: us-east-2
         aws-account-id: ${{ steps.aws-credentials-configuration.outputs.aws-account-id }}
 
     - name: Deploy to Amazon ECS service

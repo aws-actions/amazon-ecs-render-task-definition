@@ -222,7 +222,7 @@ describe('Render task definition', () => {
 
         await run();
 
-        expect(core.setFailed).toBeCalledWith('Invalid GitHub action input: You must specify the region name and the account ID.');
+        expect(core.setFailed).toBeCalledWith('Invalid GitHub action input: You must specify the region name and the account ID');
     });
 
     test('error returned for missing region name if secrets is turned on', async () => {
@@ -236,7 +236,7 @@ describe('Render task definition', () => {
 
         await run();
 
-        expect(core.setFailed).toBeCalledWith('Invalid GitHub action input: You must specify the region name and the account ID.');
+        expect(core.setFailed).toBeCalledWith('Invalid GitHub action input: You must specify the region name and the account ID');
     });
 
     // Testing valueFrom format
@@ -502,6 +502,57 @@ describe('Render task definition', () => {
             }, null, 2)
         );
         expect(core.setOutput).toHaveBeenNthCalledWith(1, 'task-definition', 'new-task-def-file-name');
+    });
+
+    test('error returned for non-array secrets section', async () => {
+        jest.mock('./non-array-secrets-task-definition.json', () => ({
+            family: 'task-def-family',
+            containerDefinitions: [
+                {
+                    name: "web",
+                    image: "some-other-image",
+                    secrets: {
+                        name: "SomeEnvironmentVarName",
+                        valueFrom: "ssm:/qwop/blah"
+                    }
+                }
+            ]
+        }), { virtual: true });
+
+        core.getInput = jest
+            .fn()
+            .mockReturnValueOnce('non-array-secrets-task-definition.json')
+            .mockReturnValueOnce('web')
+            .mockReturnValueOnce('nginx:latest')
+            .mockReturnValueOnce('three-external-secrets.json')
+            .mockReturnValueOnce('us-east-2')
+            .mockReturnValue('1234')
+
+        await run();
+
+        expect(core.setFailed).toBeCalledWith('Invalid task definition format: secrets section must be an array');
+    });
+
+    test('error returned for invalid external secrets json file format', async () => {
+        jest.mock('./invalid-external-secrets-file.json', () => ({
+            secrets: {
+                "name": "external1",
+                "valueFrom": "ssm:blah"
+            }
+        }), { virtual: true });
+
+        core.getInput = jest
+            .fn()
+            .mockReturnValueOnce('correct-secrets-task-definition.json')
+            .mockReturnValueOnce('web')
+            .mockReturnValueOnce('nginx:latest')
+            .mockReturnValueOnce('invalid-external-secrets-file.json')
+            .mockReturnValueOnce('us-east-2')
+            .mockReturnValueOnce(1234);
+
+        await run();
+
+        expect(core.setFailed).toBeCalledWith('Invalid external secrets file: secrets section must be an array');
     });
 
     test('error returned for missing external secrets file', async () => {

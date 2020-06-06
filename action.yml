@@ -13,6 +13,15 @@ inputs:
   image:
     description: 'The URI of the container image to insert into the ECS task definition'
     required: true
+  secrets:
+    description: 'Whether to incorporate secrets from parameter store or secrets manager using pre-defined secrets in the task definition or from an external file'
+    required: false
+  aws-region:
+    description: 'AWS Region, e.g. us-east-2'
+    required: false
+  aws-account-id:
+    description: 'AWS Account ID'
+    required: false
 outputs:
   task-definition:
     description: 'The path to the rendered task definition file'
