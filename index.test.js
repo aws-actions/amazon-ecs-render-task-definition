@@ -173,4 +173,192 @@ describe('Render task definition', () => {
 
         expect(core.setFailed).toBeCalledWith('Invalid task definition: Could not find container definition with matching name');
     });
+
+    // Secrets section
+
+    test('error returned for malformed task definition with missing secrets section', async () => {
+        core.getInput = jest
+            .fn()
+            .mockReturnValueOnce('task-definition.json')
+            .mockReturnValueOnce('web')
+            .mockReturnValueOnce('nginx:latest')
+            .mockReturnValueOnce('true')
+            .mockReturnValueOnce('us-east-2')
+            .mockReturnValueOnce(1234);
+
+        await run();
+
+        expect(core.setFailed).toBeCalledWith('Invalid task definition format: secrets section must be an array');
+    });
+
+    test('error returned for missing AWS account ID if secrets is turned on', async () => {
+        jest.mock('./correct-secrets-task-definition.json', () => ({
+            family: 'task-def-family',
+            containerDefinitions: [
+                {
+                    name: "web",
+                    image: "some-other-image",
+                    secrets: [
+                        {
+                            name: "SomeEnvironmentVarName",
+                            valueFrom: "ssm:/qwop/blah"
+                        },
+                        {
+                            name: "Yoomzzzzzz",
+                            valueFrom: "ssm:/qwerty/qwerty"
+                        }
+                    ]
+                }
+            ]
+        }), { virtual: true });
+
+        core.getInput = jest
+            .fn()
+            .mockReturnValueOnce('correct-secrets-task-definition.json')
+            .mockReturnValueOnce('web')
+            .mockReturnValueOnce('nginx:latest')
+            .mockReturnValueOnce('true')
+            .mockReturnValueOnce('us-east-2')
+
+        await run();
+
+        expect(core.setFailed).toBeCalledWith('Invalid GitHub action input: You must specify the region name and the account ID.');
+    });
+
+    test('error returned for missing region name if secrets is turned on', async () => {
+        core.getInput = jest
+            .fn()
+            .mockReturnValueOnce('correct-secrets-task-definition.json')
+            .mockReturnValueOnce('web')
+            .mockReturnValueOnce('nginx:latest')
+            .mockReturnValueOnce('true')
+            .mockReturnValueOnce(1234)
+
+        await run();
+
+        expect(core.setFailed).toBeCalledWith('Invalid GitHub action input: You must specify the region name and the account ID.');
+    });
+
+    // Testing valueFrom format
+    test('error returned for incorrect valueFrom prefix in secrets section', async () => {
+        jest.mock('./incorrect-valueFrom-prefix-task-definition.json', () => ({
+            family: 'task-def-family',
+            containerDefinitions: [
+                {
+                    name: "web",
+                    image: "some-other-image",
+                    secrets: [
+                        {
+                            name: "someEnvironName",
+                            valueFrom: "randomService:/asd/asd"
+                        }
+                    ]
+                }
+            ]
+        }), { virtual: true });
+
+        core.getInput = jest
+            .fn()
+            .mockReturnValueOnce('incorrect-valueFrom-prefix-task-definition.json')
+            .mockReturnValueOnce('web')
+            .mockReturnValueOnce('nginx:latest')
+            .mockReturnValueOnce('true')
+            .mockReturnValueOnce('us-east-2')
+            .mockReturnValueOnce(12345);
+
+        await run();
+
+        expect(core.setFailed).toBeCalledWith('Invalid task definition: valueFrom must have prefix ssm or secretsmanager, not randomService');
+    });
+
+    test('error returned for incorrect valueFrom format in secrets section', async () => {
+        jest.mock('./incorrect-valueFrom-format-task-definition.json', () => ({
+            family: 'task-def-family',
+            containerDefinitions: [
+                {
+                    name: "web",
+                    image: "some-other-image",
+                    secrets: [
+                        {
+                            name: "someEnvironName",
+                            valueFrom: "randomService"
+                        },
+                        {
+                            name: "someEnvironName",
+                            valueFrom: "randomService"
+                        }
+                    ]
+                }
+            ]
+        }), { virtual: true });
+
+        core.getInput = jest
+            .fn()
+            .mockReturnValueOnce('incorrect-valueFrom-format-task-definition.json')
+            .mockReturnValueOnce('web')
+            .mockReturnValueOnce('nginx:latest')
+            .mockReturnValueOnce('true')
+            .mockReturnValueOnce('us-east-2')
+            .mockReturnValueOnce(1234);
+
+        await run();
+
+        expect(core.setFailed).toBeCalledWith('Invalid task definition: valueFrom format must be in the form of <service>:<path of variable>. Errored: randomService');
+    });
+
+    test('insert / at beginning of parameter path if / is not there.', async () => {
+        jest.mock('./missing-beginning-slash-param-path-task-definition.json', () => ({
+            family: 'task-def-family',
+            containerDefinitions: [
+                {
+                    name: "web",
+                    image: "some-other-image",
+                    secrets: [
+                        {
+                            name: "someEnvironName",
+                            valueFrom: "ssm:asd/asd"
+                        }
+                    ]
+                }
+            ]
+        }), { virtual: true });
+
+        core.getInput = jest
+            .fn()
+            .mockReturnValueOnce('missing-beginning-slash-param-path-task-definition.json')
+            .mockReturnValueOnce('web')
+            .mockReturnValueOnce('nginx:latest')
+            .mockReturnValueOnce('true')
+            .mockReturnValueOnce('us-east-2')
+            .mockReturnValueOnce(1234);
+
+        await run();
+
+        expect(tmp.fileSync).toHaveBeenNthCalledWith(1, {
+            tmpdir: '/home/runner/work/_temp',
+            prefix: 'task-definition-',
+            postfix: '.json',
+            keep: true,
+            discardDescriptor: true
+          });
+        expect(fs.writeFileSync).toHaveBeenNthCalledWith(1, 'new-task-def-file-name',
+            JSON.stringify({
+                family: 'task-def-family',
+                containerDefinitions: [
+                    {
+                        name: "web",
+                        image: "nginx:latest",
+                        secrets: [
+                            {
+                                name: "someEnvironName",
+                                valueFrom: 'arn:aws:ssm:us-east-2:1234:parameter/asd/asd'
+                            }
+                        ]
+                    }
+                ],
+                executionRoleArn: 'arn:aws:iam::1234:role/ecsTaskExecutionRole'
+            }, null, 2)
+        );
+        expect(core.setOutput).toHaveBeenNthCalledWith(1, 'task-definition', 'new-task-def-file-name');
+    });
 });

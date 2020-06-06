@@ -11,6 +11,7 @@ async function run() {
     const imageURI = core.getInput('image', { required: true });
     const secrets = core.getInput('secrets', { required: false });
     const regionName = core.getInput('region-name', { required: false });
+    const accountID = core.getInput('aws-account-id', { required: false });
 
     // Parse the task definition
     const taskDefPath = path.isAbsolute(taskDefinitionFile) ?
@@ -40,22 +41,26 @@ async function run() {
         if (!Array.isArray(containerDef.secrets)) {
             throw new Error('Invalid task definition format: secrets section must be an array')
         }
-        if (!regionName) {
-            throw new Error('Invalid GitHub action input: You must specify the region name')
+        if (!regionName || !accountID) {
+            throw new Error('Invalid GitHub action input: You must specify the region name and the account ID.')
         }
         // Loop through array of, hopefully, dictionaries
         containerDef.secrets.forEach(element => {
-            const valueFrom = element.valueFrom(":")
+            const valueFrom = element.valueFrom.split(":")
             if (valueFrom.length != 2) {
+                // Detailed error since we're looping through.
                 throw new Error(`Invalid task definition: valueFrom format must be in the form of <service>:<path of variable>. Errored: ${valueFrom}`);
             }
             if (!['ssm', 'secretsmanager'].includes(valueFrom[0])) {
                 throw new Error(`Invalid task definition: valueFrom must have prefix ssm or secretsmanager, not ${valueFrom[0]}`)
             }
             if (valueFrom[1].charAt(0) != '/') {
-                throw new Error('Invalid task definition: parameter path must begin with "/" (a forward slash)')
+                valueFrom[1] = "/".concat(valueFrom[1])
             }
-            element.valueFrom = `arn:aws:${valueFrom[0]}:${regionName}::${(valueFrom[0] == 'ssm') ? 'parameter' : 'secret'}${valueFrom[1]}`
+            element.valueFrom = `arn:aws:${valueFrom[0]}:${regionName}:${accountID}:${(valueFrom[0] == 'ssm') ? 'parameter' : 'secret'}${valueFrom[1]}`
+
+            // Set executionRoleArn to use secrets section
+            taskDefContents.executionRoleArn = `arn:aws:iam::${accountID}:role/ecsTaskExecutionRole`
         });
     }
 
