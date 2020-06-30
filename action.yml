@@ -4,8 +4,14 @@ branding:
   icon: 'cloud'
   color: 'orange'
 inputs:
-  task-definition:
+  task-definition-patch:
     description: 'The path to the ECS task definition JSON file'
+    required: true
+  service:
+    description: 'The name of the ECS service to update'
+    required: true
+  cluster:
+    description: 'The name of the ECS cluster'
     required: true
   container-name:
     description: 'The name of the container defined in the containerDefinitions section of the ECS task definition'

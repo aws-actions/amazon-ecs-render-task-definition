@@ -2,11 +2,30 @@ const path = require('path');
 const core = require('@actions/core');
 const tmp = require('tmp');
 const fs = require('fs');
+const aws = require('aws-sdk');
+
+function mergeContainerDefinition(defaults, patch) {
+  const { environment: envDefaults } = defaults;
+  const { environment: envPatch, ...patchRest } = patch;
+  const { acc: environment } = (envPatch || []).concat(envDefaults || []).reduce(({ acc, seen }, e) => {
+    if (seen[e.name]) return { acc, seen };
+    seen[e.name] = 1;
+    acc.push(e)
+    return { acc, seen };
+  }, { acc: [], seen: {} });
+  return { ...defaults, ...patchRest, environment };
+}
 
 async function run() {
   try {
+    const ecs = new aws.ECS({
+      customUserAgent: 'amazon-ecs-render-task-definition-for-github-actions'
+    });
+
     // Get inputs
-    const taskDefinitionFile = core.getInput('task-definition', { required: true });
+    const taskDefinitionFile = core.getInput('task-definition-patch', { required: true });
+    const service = core.getInput('service', { required: true });
+    const clusterName = core.getInput('cluster', { required: true });
     const containerName = core.getInput('container-name', { required: true });
     const imageURI = core.getInput('image', { required: true });
 
@@ -17,19 +36,51 @@ async function run() {
     if (!fs.existsSync(taskDefPath)) {
       throw new Error(`Task definition file does not exist: ${taskDefinitionFile}`);
     }
-    const taskDefContents = require(taskDefPath);
+    const taskDefPatch = require(taskDefPath);
 
-    // Insert the image URI
-    if (!Array.isArray(taskDefContents.containerDefinitions)) {
-      throw new Error('Invalid task definition format: containerDefinitions section is not present or is not an array');
+    // Download the task definition
+    const describeResponse = await ecs.describeServices({
+      services: [service],
+      cluster: clusterName
+    }).promise();
+    if (describeResponse.failures && describeResponse.failures.length > 0) {
+      const failure = describeResponse.failures[0];
+      throw new Error(`${failure.arn} is ${failure.reason}`);
     }
-    const containerDef = taskDefContents.containerDefinitions.find(function(element) {
-      return element.name == containerName;
-    });
-    if (!containerDef) {
-      throw new Error('Invalid task definition: Could not find container definition with matching name');
+
+    const serviceResponse = describeResponse.services[0];
+    if (serviceResponse.status != 'ACTIVE') {
+      throw new Error(`Service is ${serviceResponse.status}`);
     }
-    containerDef.image = imageURI;
+    const taskDefArn = serviceResponse.taskDefinition
+
+    core.debug('Downloading the task definition');
+    let describeResponse;
+    try {
+      describeResponse = await ecs.describeTaskDefinition(taskDefArn).promise();
+    } catch (error) {
+      core.setFailed("Failed to download task definition in ECS: " + error.message);
+      core.debug("Task definition name: " + taskDefinitionName);
+      throw (error);
+    }
+    const taskDef = describeResponse.taskDefinition;
+
+    const newContainerDefinition = mergeContainerDefinition(
+      taskDef.containerDefinitions[0], { ...taskDefPatch, imageURI });
+
+    var newTaskDef = {
+      containerDefinitions: [newContainerDefinition],
+      family: taskDef.fanily,
+      taskRoleArn: taskDef.taskRoleArn,
+      executionRoleArn: taskDef.executionRoleArn,
+      networkMode: taskDef.networkMode,
+      memory: taskDef.memory,
+      cpu: taskDef.cpu,
+      requiresCompatibilities: taskDef.requiresCompatibilities,
+      volumes: taskDef.volumes,
+      placementConstraints: taskDef.placementConstraints
+
+    }
 
     // Write out a new task definition file
     var updatedTaskDefFile = tmp.fileSync({
@@ -39,8 +90,8 @@ async function run() {
       keep: true,
       discardDescriptor: true
     });
-    const newTaskDefContents = JSON.stringify(taskDefContents, null, 2);
-    fs.writeFileSync(updatedTaskDefFile.name, newTaskDefContents);
+    const newtaskDefPatch = JSON.stringify(newTaskDef, null, 2);
+    fs.writeFileSync(updatedTaskDefFile.name, newtaskDefPatch);
     core.setOutput('task-definition', updatedTaskDefFile.name);
   }
   catch (error) {
@@ -52,5 +103,5 @@ module.exports = run;
 
 /* istanbul ignore next */
 if (require.main === module) {
-    run();
+  run();
 }

@@ -26,7 +26,8 @@
   "homepage": "https://github.com/aws-actions/amazon-ecs-render-task-definition#readme",
   "dependencies": {
     "@actions/core": "^1.2.4",
-    "tmp": "^0.2.1"
+    "tmp": "^0.2.1",
+    "aws-sdk": "^2.706.0"
   },
   "devDependencies": {
     "@zeit/ncc": "^0.22.3",
