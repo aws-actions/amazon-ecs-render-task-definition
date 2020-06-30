@@ -55,15 +55,15 @@ async function run() {
     const taskDefArn = serviceResponse.taskDefinition
 
     core.debug('Downloading the task definition');
-    let describeResponse;
+    let describeTaskResponse;
     try {
-      describeResponse = await ecs.describeTaskDefinition(taskDefArn).promise();
+      describeTaskResponse = await ecs.describeTaskDefinition(taskDefArn).promise();
     } catch (error) {
       core.setFailed("Failed to download task definition in ECS: " + error.message);
       core.debug("Task definition name: " + taskDefinitionName);
       throw (error);
     }
-    const taskDef = describeResponse.taskDefinition;
+    const taskDef = describeTaskResponse.taskDefinition;
     const findContDef = taskDef.containerDefinitions.findIndex(x => x.name === containerName);
 
     const newContainerDefinition = mergeContainerDefinition(
