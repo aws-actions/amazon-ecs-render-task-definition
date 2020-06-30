@@ -27,7 +27,7 @@ async function run() {
     const service = core.getInput('service', { required: true });
     const clusterName = core.getInput('cluster', { required: true });
     const containerName = core.getInput('container-name', { required: true });
-    const imageURI = core.getInput('image', { required: true });
+    const image = core.getInput('image', { required: true });
 
     // Parse the task definition
     const taskDefPath = path.isAbsolute(taskDefinitionFile) ?
@@ -67,11 +67,11 @@ async function run() {
     const findContDef = taskDef.containerDefinitions.findIndex(x => x.name === containerName);
 
     const newContainerDefinition = mergeContainerDefinition(
-      taskDef.containerDefinitions[findContDef], { ...taskDefPatch, imageURI });
+      taskDef.containerDefinitions[findContDef], { ...taskDefPatch, image });
 
     var newTaskDef = {
       containerDefinitions: [newContainerDefinition],
-      family: taskDef.fanily,
+      family: taskDef.family,
       taskRoleArn: taskDef.taskRoleArn,
       executionRoleArn: taskDef.executionRoleArn,
       networkMode: taskDef.networkMode,
