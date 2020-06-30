@@ -16,6 +16,7 @@ jobs:
         ref: master
     - name: Package
       run: |
+        npm install
         npm ci
         npm test
         npm run package
