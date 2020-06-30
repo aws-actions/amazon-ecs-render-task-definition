@@ -65,8 +65,10 @@ async function run() {
     }
     const taskDef = describeResponse.taskDefinition;
 
+    const findContDef = taskDef.containerDefinitions.findIndex(x => x.name === containerName);
+
     const newContainerDefinition = mergeContainerDefinition(
-      taskDef.containerDefinitions[0], { ...taskDefPatch, imageURI });
+      taskDef.containerDefinitions[findContDef], { ...taskDefPatch, imageURI });
 
     var newTaskDef = {
       containerDefinitions: [newContainerDefinition],
