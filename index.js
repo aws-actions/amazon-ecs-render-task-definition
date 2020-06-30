@@ -60,7 +60,7 @@ async function run() {
       describeTaskResponse = await ecs.describeTaskDefinition(taskDefArn).promise();
     } catch (error) {
       core.setFailed("Failed to download task definition in ECS: " + error.message);
-      core.debug("Task definition name: " + taskDefinitionName);
+      core.debug("Task definition name: " + taskDefArn);
       throw (error);
     }
     const taskDef = describeTaskResponse.taskDefinition;
