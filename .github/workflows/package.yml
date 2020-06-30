@@ -18,7 +18,6 @@ jobs:
       run: |
         npm install
         npm ci
-#        npm test
         npm run package
     - name: Commit
       run: |
