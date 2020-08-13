@@ -9,6 +9,8 @@ async function run() {
     const taskDefinitionFile = core.getInput('task-definition', { required: true });
     const containerName = core.getInput('container-name', { required: true });
     const imageURI = core.getInput('image', { required: true });
+    const replacementPattern =  core.getInput('replacement-pattern', { required: false });
+    const replacementValue =  core.getInput('replacement-value', { required: false });
 
     // Parse the task definition
     const taskDefPath = path.isAbsolute(taskDefinitionFile) ?
@@ -39,7 +41,10 @@ async function run() {
       keep: true,
       discardDescriptor: true
     });
-    const newTaskDefContents = JSON.stringify(taskDefContents, null, 2);
+    let newTaskDefContents = JSON.stringify(taskDefContents, null, 2);
+    if (replacementPattern && replacementValue) {
+      newTaskDefContents = newTaskDefContents.replace(replacementPattern, replacementValue);
+    }
     fs.writeFileSync(updatedTaskDefFile.name, newTaskDefContents);
     core.setOutput('task-definition', updatedTaskDefFile.name);
   }

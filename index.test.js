@@ -17,7 +17,7 @@ describe('Render task definition', () => {
             .mockReturnValueOnce('task-definition.json') // task-definition
             .mockReturnValueOnce('web')                  // container-name
             .mockReturnValueOnce('nginx:latest');        // image
-
+ 
         process.env = Object.assign(process.env, { GITHUB_WORKSPACE: __dirname });
         process.env = Object.assign(process.env, { RUNNER_TEMP: '/home/runner/work/_temp' });
 
@@ -121,6 +121,7 @@ describe('Render task definition', () => {
         expect(core.setFailed).toBeCalledWith('Task definition file does not exist: does-not-exist-task-definition.json');
     });
 
+
     test('error returned for non-JSON task definition contents', async () => {
         jest.mock('./non-json-task-definition.json', () => ("hello"), { virtual: true });
 
@@ -172,5 +173,63 @@ describe('Render task definition', () => {
         await run();
 
         expect(core.setFailed).toBeCalledWith('Invalid task definition: Could not find container definition with matching name');
+    });
+
+
+    test('renders a task definition and replace a value ', async () => {
+
+        jest.mock('./task-definition-replace.json', () => ({
+            family: 'task-def-family',
+            containerDefinitions: [
+                {
+                    name: "web",
+                    image: "some-other-image",
+                    environment: [
+                        {
+                          "name": "VERSION",
+                          "value": "#VERSION#"
+                        }
+                      ],
+                },
+                {
+                    name: "sidecar",
+                    image: "hello"
+                }
+            ]
+        }), { virtual: true });
+
+        core.getInput = jest
+            .fn()
+            .mockReturnValueOnce('task-definition-replace.json') // task-definition
+            .mockReturnValueOnce('web')                  // container-name
+            .mockReturnValueOnce('nginx:latest')        // image
+            .mockReturnValueOnce('#VERSION#')           // replacement-pattern
+            .mockReturnValueOnce('1.2.3');               // replacement-value
+
+
+        await run();
+
+        expect(fs.writeFileSync).toHaveBeenNthCalledWith(1, 'new-task-def-file-name',
+            JSON.stringify({
+                family: 'task-def-family',
+                containerDefinitions: [
+                    {
+                        name: "web",
+                        image: "nginx:latest",
+                        environment: [
+                            {
+                              "name": "VERSION",
+                              "value": "1.2.3"
+                            }
+                          ],
+                    },
+                    {
+                        name: "sidecar",
+                        image: "hello"
+                    }
+                ]
+            }, null, 2)
+        );
+
     });
 });
