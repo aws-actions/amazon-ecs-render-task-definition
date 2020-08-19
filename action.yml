@@ -16,6 +16,12 @@ inputs:
   environment-variables:
     description: 'Variables to add to the container. Each variable is of the form KEY=value, you can specify multiple variables with multi-line YAML strings.'
     required: false
+  log-group:
+    description: 'The log group to set for the task'
+    required: true
+  service-family:
+    description: 'The service family container'
+    required: true
 outputs:
   task-definition:
     description: 'The path to the rendered task definition file'
