@@ -17,7 +17,7 @@ describe('Render task definition', () => {
             .mockReturnValueOnce('task-definition.json') // task-definition
             .mockReturnValueOnce('web')                  // container-name
             .mockReturnValueOnce('nginx:latest');        // image
- 
+
         process.env = Object.assign(process.env, { GITHUB_WORKSPACE: __dirname });
         process.env = Object.assign(process.env, { RUNNER_TEMP: '/home/runner/work/_temp' });
 
@@ -120,7 +120,6 @@ describe('Render task definition', () => {
 
         expect(core.setFailed).toBeCalledWith('Task definition file does not exist: does-not-exist-task-definition.json');
     });
-
 
     test('error returned for non-JSON task definition contents', async () => {
         jest.mock('./non-json-task-definition.json', () => ("hello"), { virtual: true });
