@@ -14,10 +14,10 @@ inputs:
     description: 'The URI of the container image to insert into the ECS task definition'
     required: true
   replacement-pattern:
-    description: 'Regular expression used for the replacement'
+    description: 'The regular expression used for the replacement'
     required: false
   replacement-value:
-    description: 'Value used for the replacement'
+    description: 'The value used for the replacement'
     required: false
 outputs:
   task-definition:

@@ -201,10 +201,10 @@ describe('Render task definition', () => {
         core.getInput = jest
             .fn()
             .mockReturnValueOnce('task-definition-replace.json') // task-definition
-            .mockReturnValueOnce('web')                  // container-name
+            .mockReturnValueOnce('web')                 // container-name
             .mockReturnValueOnce('nginx:latest')        // image
             .mockReturnValueOnce('#VERSION#')           // replacement-pattern
-            .mockReturnValueOnce('1.2.3');               // replacement-value
+            .mockReturnValueOnce('1.2.3');              // replacement-value
 
 
         await run();
