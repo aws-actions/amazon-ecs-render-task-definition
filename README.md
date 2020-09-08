@@ -6,6 +6,7 @@ Inserts a container image URI into an Amazon ECS task definition JSON file, crea
 
 <!-- toc -->
 
+- [Amazon ECS "Render Task Definition" Action for GitHub Actions](#amazon-ecs-render-task-definition-action-for-github-actions)
 - [Usage](#usage)
 - [License Summary](#license-summary)
 - [Security Disclosures](#security-disclosures)
@@ -24,6 +25,7 @@ To insert the image URI `amazon/amazon-ecs-sample:latest` as the image for the `
         task-definition: task-definition.json
         container-name: web
         image: amazon/amazon-ecs-sample:latest
+        git-sha: ${{ github.sha }}
 
     - name: Deploy to Amazon ECS service
       uses: aws-actions/amazon-ecs-deploy-task-definition@v1
@@ -46,6 +48,7 @@ input of the second:
         task-definition: task-definition.json
         container-name: web
         image: amazon/amazon-ecs-sample-1:latest
+        git-sha: ${{ github.sha }}
 
     - name: Modify Amazon ECS task definition with second container
       id: render-app-container
@@ -54,6 +57,7 @@ input of the second:
         task-definition: ${{ steps.render-web-container.outputs.task-definition }}
         container-name: app
         image: amazon/amazon-ecs-sample-2:latest
+        git-sha: ${{ github.sha }}
 
     - name: Deploy to Amazon ECS service
       uses: aws-actions/amazon-ecs-deploy-task-definition@v1

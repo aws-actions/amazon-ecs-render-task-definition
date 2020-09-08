@@ -16,7 +16,8 @@ describe('Render task definition', () => {
             .fn()
             .mockReturnValueOnce('task-definition.json') // task-definition
             .mockReturnValueOnce('web')                  // container-name
-            .mockReturnValueOnce('nginx:latest');        // image
+            .mockReturnValueOnce('nginx:latest')         // image
+            .mockReturnValueOnce('gitsha');              // git-sha
 
         process.env = Object.assign(process.env, { GITHUB_WORKSPACE: __dirname });
         process.env = Object.assign(process.env, { RUNNER_TEMP: '/home/runner/work/_temp' });
@@ -57,7 +58,8 @@ describe('Render task definition', () => {
                 containerDefinitions: [
                     {
                         name: "web",
-                        image: "nginx:latest"
+                        image: "nginx:latest",
+                        environment: [ { "name": "GIT_SHA", "value": "gitsha" } ]
                     },
                     {
                         name: "sidecar",
@@ -74,7 +76,8 @@ describe('Render task definition', () => {
             .fn()
             .mockReturnValueOnce('/hello/task-definition.json') // task-definition
             .mockReturnValueOnce('web')                  // container-name
-            .mockReturnValueOnce('nginx:latest');        // image
+            .mockReturnValueOnce('nginx:latest')         // image
+            .mockReturnValueOnce('gitsha');        // git-sha
         jest.mock('/hello/task-definition.json', () => ({
             family: 'task-def-family',
             containerDefinitions: [
@@ -100,7 +103,8 @@ describe('Render task definition', () => {
                 containerDefinitions: [
                     {
                         name: "web",
-                        image: "nginx:latest"
+                        image: "nginx:latest",
+                        environment: [ { "name": "GIT_SHA", "value": "gitsha" } ]
                     }
                 ]
             }, null, 2)

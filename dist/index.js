@@ -1089,6 +1089,7 @@ async function run() {
     const taskDefinitionFile = core.getInput('task-definition', { required: true });
     const containerName = core.getInput('container-name', { required: true });
     const imageURI = core.getInput('image', { required: true });
+    const gitSha = core.getInput('git-sha', { required: true });
 
     // Parse the task definition
     const taskDefPath = path.isAbsolute(taskDefinitionFile) ?
@@ -1110,6 +1111,12 @@ async function run() {
       throw new Error('Invalid task definition: Could not find container definition with matching name');
     }
     containerDef.image = imageURI;
+
+    // Prepare environment
+    if (!Array.isArray(containerDef.environment)) {
+      containerDef.environment = [];
+    }
+    containerDef.environment.push({ "name": "GIT_SHA", "value": gitSha });
 
     // Write out a new task definition file
     var updatedTaskDefFile = tmp.fileSync({

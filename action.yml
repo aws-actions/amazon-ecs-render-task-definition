@@ -13,6 +13,9 @@ inputs:
   image:
     description: 'The URI of the container image to insert into the ECS task definition'
     required: true
+  git_sha:
+    description: 'The SHA of the git commit'
+    required: true
 outputs:
   task-definition:
     description: 'The path to the rendered task definition file'
