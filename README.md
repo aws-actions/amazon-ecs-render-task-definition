@@ -63,6 +63,96 @@ input of the second:
         cluster: my-cluster
 ```
 
+If containers in your task definition require different values depending on environment, you can specify `merge` file that contains a JSON fragment to merge with the `task-definition`:
+
+_task-def.json_
+
+```json
+  {
+    "family": "task-def-family",
+    "containerDefinitions": [
+      {
+          "name": "web",
+          "image": "some-image"
+      }
+    ]
+  }
+```
+
+_staging-vars.json_
+
+```json
+  {
+    "containerDefinitions": [
+      {
+        "name": "web",
+        "environment": [
+            {
+              "name": "log_level",
+              "value": "debug"
+            }
+        ]
+      }
+    ]
+  }
+```
+
+_prod-vars.json_
+
+```json
+  {
+    "containerDefinitions": [
+      {
+        "name": "web",
+        "environment": [
+            {
+              "name": "log_level",
+              "value": "info"
+            }
+        ]
+      }
+    ]
+  }
+```
+
+```yaml
+    - name: Add image to Amazon ECS task definition
+      id: render-image-in-task-def
+      uses: aws-actions/amazon-ecs-render-task-definition@v1
+      with:
+        task-definition: task-def.json
+        container-name: web
+        image: amazon/amazon-ecs-sample:latest
+
+    - name: Render Amazon ECS task definition for staging
+      id: render-staging-task-def
+      uses: aws-actions/amazon-ecs-render-task-definition@v1
+      with:
+        task-definition: ${{ steps.render-image-in-task-def.outputs.task-definition }}
+        merge: staging-vars.json
+
+    - name: Render Amazon ECS task definition for prod
+      id: render-prod-task-def
+      uses: aws-actions/amazon-ecs-render-task-definition@v1
+      with:
+        task-definition: ${{ steps.render-image-in-task-def.outputs.task-definition }}
+        merge: prod-vars.json
+
+    - name: Deploy to Staging
+      uses: aws-actions/amazon-ecs-deploy-task-definition@v1
+      with:
+        task-definition: ${{ steps.render-staging-task-def.outputs.task-definition }}
+        service: my-staging-service
+        cluster: my-staging-cluster
+
+    - name: Deploy to Prod
+      uses: aws-actions/amazon-ecs-deploy-task-definition@v1
+      with:
+        task-definition: ${{ steps.render-prod-task-def.outputs.task-definition }}
+        service: my-prod-service
+        cluster: my-prod-cluster
+```
+
 See [action.yml](action.yml) for the full documentation for this action's inputs and outputs.
 
 ## License Summary
