@@ -2,7 +2,7 @@ const path = require('path');
 const core = require('@actions/core');
 const tmp = require('tmp');
 const fs = require('fs');
-const mergeWith = require('lodash.mergeWith');
+const mergeWith = require('lodash.mergewith');
 
 // Customizer for lodash mergeWith
 // allows arrays in the original task definition to contain
