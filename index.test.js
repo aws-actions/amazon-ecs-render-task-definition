@@ -108,13 +108,66 @@ describe('Render task definition', () => {
         expect(core.setOutput).toHaveBeenNthCalledWith(1, 'task-definition', 'new-task-def-file-name');
     });
 
+    test('renders a task definition without an image specificied', async () => {
+        core.getInput = jest
+            .fn()
+            .mockReturnValueOnce('task-definition-no-image.json')
+            .mockReturnValueOnce('web')
+            .mockReturnValueOnce(undefined)
+            .mockReturnValueOnce('merge-no-image.json');
+
+        jest.mock('./task-definition-no-image.json', () => ({
+            family: 'task-def-family',
+            containerDefinitions: [
+                {
+                    name: "web",
+                    image: "nginx:latest"
+                }
+            ]
+        }), { virtual: true });
+        
+        jest.mock('./merge-no-image.json', () => ({
+            containerDefinitions: [
+                {
+                    name: "web",
+                    environment: [
+                        {
+                            name: "log_level",
+                            value: "info"
+                        }
+                    ]
+                }
+            ]
+        }), {virtual: true});
+
+        await run();
+
+        expect(fs.writeFileSync).toHaveBeenNthCalledWith(1, 'new-task-def-file-name',
+            JSON.stringify({
+                family: 'task-def-family',
+                containerDefinitions: [
+                    {
+                        name: "web",
+                        image: "nginx:latest",
+                        environment: [
+                            {
+                                name: "log_level",
+                                value: "info"
+                            }
+                        ]
+                    }
+                ]
+            }, null, 2)
+        );
+    });
+
     test('renders a task definition with a merge file', async () => {
         core.getInput = jest
             .fn()
-            .mockReturnValueOnce('task-definition.json') // task-definition
-            .mockReturnValueOnce('web')                  // container-name
-            .mockReturnValueOnce('nginx:latest')         // image
-            .mockReturnValueOnce('merge.json');          // merge
+            .mockReturnValueOnce('task-definition.json')      // task-definition
+            .mockReturnValueOnce('web')                       // container-name
+            .mockReturnValueOnce('nginx:latest')              // image
+            .mockReturnValueOnce('merge.json'); // merge
         
         jest.mock('./merge.json', () => ({
             containerDefinitions: [

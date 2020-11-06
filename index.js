@@ -20,7 +20,7 @@ async function run() {
     // Get inputs
     const taskDefinitionFile = core.getInput('task-definition', { required: true });
     const containerName = core.getInput('container-name', { required: true });
-    const imageURI = core.getInput('image', { required: true });
+    const imageURI = core.getInput('image', { required: false });
     const mergeFile = core.getInput('merge', { required: false });
 
     // Parse the task definition
@@ -32,7 +32,7 @@ async function run() {
     }
     const taskDefContents = require(taskDefPath);
 
-    // Insert the image URI
+    // Get containerDef with name `containerName`
     if (!Array.isArray(taskDefContents.containerDefinitions)) {
       throw new Error('Invalid task definition format: containerDefinitions section is not present or is not an array');
     }
@@ -42,7 +42,12 @@ async function run() {
     if (!containerDef) {
       throw new Error('Invalid task definition: Could not find container definition with matching name');
     }
-    containerDef.image = imageURI;
+
+    // Check for imageURI
+    if(imageURI) {
+      // Insert the image URI
+      containerDef.image = imageURI;
+    }
 
     // Check for mergeFile
     if (mergeFile) {
