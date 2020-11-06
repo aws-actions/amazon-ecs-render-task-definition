@@ -63,7 +63,7 @@ input of the second:
         cluster: my-cluster
 ```
 
-If containers in your task definition require different values depending on environment, you can specify `merge` file that contains a JSON fragment to merge with the `task-definition`:
+If containers in your task definition require different values depending on environment, you can specify a `merge` file that contains a JSON fragment to merge with the `task-definition`. `merge` task defintion JSON fragments can be used to modify any key/value pair in `task-definition`. If merging an array value, arrays from the `task-defition` and `merge` fragment will be concatenated.
 
 _task-def.json_
 
