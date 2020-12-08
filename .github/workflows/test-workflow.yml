@@ -16,7 +16,7 @@ jobs:
 
     - name: Print current build ID
       run: |
-        echo Integration test run: githubactionsamazonecsrende-wVtTCLjhID2l:af81a70a-4013-4fa7-bb22-3ed73e0c93a2
+        echo Integration test run: githubactionsamazonecsrende-wVtTCLjhID2l:6786a239-75c3-4a96-bed0-88424a65db2d
 
     - name: Configure AWS credentials
       uses: aws-actions/configure-aws-credentials@v1
@@ -27,7 +27,7 @@ jobs:
 
     - name: Render Amazon ECS task definition
       id: render-task-definition
-      uses: aws-actions/amazon-ecs-render-task-definition@60726b8ab436fc67677555f3e0140940b29c20bd
+      uses: aws-actions/amazon-ecs-render-task-definition@3fc1dab3df41f97bba366195ef704a11a29c0353
       with:
         task-definition: task-definition.json
         container-name: sample-app
