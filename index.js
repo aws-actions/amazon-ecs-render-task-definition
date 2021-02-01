@@ -58,16 +58,20 @@ async function run() {
     core.debug('Downloading the task definition');
     let describeTaskResponse;
     try {
-        describeTaskResponse = await ecs.describeTaskDefinition({ taskDefinition: taskDefArn, include: includeTags }).promise();
+      describeTaskResponse = await ecs.describeTaskDefinition({ taskDefinition: taskDefArn, include: includeTags }).promise();
     } catch (error) {
       core.setFailed("Failed to download task definition in ECS: " + error.message);
       core.debug("Task definition name: " + taskDefArn);
       throw (error);
     }
+
+    print(includeTags);
+    print(JSON.stringify(describeTaskResponse));
+
     const taskDef = describeTaskResponse.taskDefinition;
     if (includeTags) {
       const tags = describeTaskResponse.tags;
-    }      
+    }
     const findContDef = taskDef.containerDefinitions.findIndex(x => x.name === containerName);
 
     const newContainerDefinition = mergeContainerDefinition(
