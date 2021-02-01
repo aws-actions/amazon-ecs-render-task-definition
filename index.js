@@ -70,7 +70,7 @@ async function run() {
 
     const taskDef = describeTaskResponse.taskDefinition;
     if (includeTags) {
-      const tags = describeTaskResponse.tags;
+      tags = describeTaskResponse.tags;
     }
     const findContDef = taskDef.containerDefinitions.findIndex(x => x.name === containerName);
 
