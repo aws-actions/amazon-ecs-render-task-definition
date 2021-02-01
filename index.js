@@ -28,6 +28,7 @@ async function run() {
     const clusterName = core.getInput('cluster', { required: true });
     const containerName = core.getInput('container-name', { required: true });
     const image = core.getInput('image', { required: true });
+    const include_tags = (core.getInput('include_tags', { required: false }) == "true" || core.getInput('include_tags', { required: false }) == "");
 
     // Parse the task definition
     const taskDefPath = path.isAbsolute(taskDefinitionFile) ?
@@ -57,13 +58,18 @@ async function run() {
     core.debug('Downloading the task definition');
     let describeTaskResponse;
     try {
-      describeTaskResponse = await ecs.describeTaskDefinition({ taskDefinition: taskDefArn }).promise();
+      if (include_tags)
+        describeTaskResponse = await ecs.describeTaskDefinition({ taskDefinition: taskDefArn, include: ["TAGS"] }).promise();
+      else
+        describeTaskResponse = await ecs.describeTaskDefinition({ taskDefinition: taskDefArn }).promise();
     } catch (error) {
       core.setFailed("Failed to download task definition in ECS: " + error.message);
       core.debug("Task definition name: " + taskDefArn);
       throw (error);
     }
     const taskDef = describeTaskResponse.taskDefinition;
+    if (include_tags)
+      const tags = describeTaskResponse.tags;
     const findContDef = taskDef.containerDefinitions.findIndex(x => x.name === containerName);
 
     const newContainerDefinition = mergeContainerDefinition(
@@ -80,8 +86,8 @@ async function run() {
       requiresCompatibilities: taskDef.requiresCompatibilities,
       volumes: taskDef.volumes,
       placementConstraints: taskDef.placementConstraints
-
     }
+    if (include_tags) newTaskDef.tags = tags;
 
     // Write out a new task definition file
     var updatedTaskDefFile = tmp.fileSync({

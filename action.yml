@@ -19,6 +19,10 @@ inputs:
   image:
     description: 'The URI of the container image to insert into the ECS task definition'
     required: true
+  include_tags: 
+    description: 'Copy Tags definition from original definition'
+    rquired: false
+    default: true
 outputs:
   task-definition:
     description: 'The path to the rendered task definition file'
