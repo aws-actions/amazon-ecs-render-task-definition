@@ -65,8 +65,8 @@ async function run() {
       throw (error);
     }
 
-    print(includeTags);
-    print(JSON.stringify(describeTaskResponse));
+    core.info(includeTags);
+    core.info(JSON.stringify(describeTaskResponse));
 
     const taskDef = describeTaskResponse.taskDefinition;
     if (includeTags) {
