@@ -65,9 +65,6 @@ async function run() {
       throw (error);
     }
 
-    core.info(includeTags);
-    core.info(JSON.stringify(describeTaskResponse));
-
     const taskDef = describeTaskResponse.taskDefinition;
     if (includeTags) {
       tags = describeTaskResponse.tags;
