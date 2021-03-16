@@ -12,7 +12,10 @@ inputs:
     required: true
   image:
     description: 'The URI of the container image to insert into the ECS task definition'
-    required: true
+    required: false
+  merge:
+    description: 'The path to a task definition JSON fragment file to merge with the task defintion'
+    required: false
 outputs:
   task-definition:
     description: 'The path to the rendered task definition file'

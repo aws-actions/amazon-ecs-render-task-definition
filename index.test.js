@@ -108,6 +108,177 @@ describe('Render task definition', () => {
         expect(core.setOutput).toHaveBeenNthCalledWith(1, 'task-definition', 'new-task-def-file-name');
     });
 
+    test('renders a task definition without an image specificied', async () => {
+        core.getInput = jest
+            .fn()
+            .mockReturnValueOnce('task-definition-no-image.json')
+            .mockReturnValueOnce('web')
+            .mockReturnValueOnce(undefined)
+            .mockReturnValueOnce('merge-no-image.json');
+
+        jest.mock('./task-definition-no-image.json', () => ({
+            family: 'task-def-family',
+            containerDefinitions: [
+                {
+                    name: "web",
+                    image: "nginx:latest"
+                }
+            ]
+        }), { virtual: true });
+        
+        jest.mock('./merge-no-image.json', () => ({
+            containerDefinitions: [
+                {
+                    name: "web",
+                    environment: [
+                        {
+                            name: "log_level",
+                            value: "info"
+                        }
+                    ]
+                }
+            ]
+        }), {virtual: true});
+
+        await run();
+
+        expect(fs.writeFileSync).toHaveBeenNthCalledWith(1, 'new-task-def-file-name',
+            JSON.stringify({
+                family: 'task-def-family',
+                containerDefinitions: [
+                    {
+                        name: "web",
+                        image: "nginx:latest",
+                        environment: [
+                            {
+                                name: "log_level",
+                                value: "info"
+                            }
+                        ]
+                    }
+                ]
+            }, null, 2)
+        );
+    });
+
+    test('renders a task definition with a merge file', async () => {
+        core.getInput = jest
+            .fn()
+            .mockReturnValueOnce('task-definition.json')      // task-definition
+            .mockReturnValueOnce('web')                       // container-name
+            .mockReturnValueOnce('nginx:latest')              // image
+            .mockReturnValueOnce('merge.json'); // merge
+        
+        jest.mock('./merge.json', () => ({
+            containerDefinitions: [
+                {
+                    name: "web",
+                    environment: [
+                        {
+                            name: "log_level",
+                            value: "info"
+                        }
+                    ]
+                }
+            ]
+        }), {virtual: true});
+
+        await run();
+
+        expect(fs.writeFileSync).toHaveBeenNthCalledWith(1, 'new-task-def-file-name',
+            JSON.stringify({
+                family: 'task-def-family',
+                containerDefinitions: [
+                    {
+                        name: "web",
+                        image: "nginx:latest",
+                        environment: [
+                            {
+                                name: "log_level",
+                                value: "info"
+                            }
+                        ]
+                    },
+                    {
+                        name: "sidecar",
+                        image: "hello"
+                    }
+                ]
+            }, null, 2)
+        );
+    });
+
+    test('renders a task definition with a merge file to merge an array value', async () => {
+        core.getInput = jest
+            .fn()
+            .mockReturnValueOnce('task-definition.json')    // task-definition
+            .mockReturnValueOnce('web')                     // container-name
+            .mockReturnValueOnce('nginx:latest')            // image
+            .mockReturnValueOnce('merge-to-existing.json'); // merge
+        
+        jest.mock('./merge-to-existing.json', () => ({
+            containerDefinitions: [
+                {
+                    name: "web",
+                    environment: [
+                        {
+                            name: "env",
+                            value: "prod"
+                        }
+                    ]
+                }
+            ]
+        }), {virtual: true});
+
+        jest.mock('./task-definition.json', () => ({
+            family: 'task-def-family',
+            containerDefinitions: [
+                {
+                    name: "web",
+                    image: "some-other-image",
+                    environment: [
+                        {
+                            name: "log_level",
+                            value: "info"
+                        }
+                    ]
+                },
+                {
+                    name: "sidecar",
+                    image: "hello"
+                }
+            ]
+        }), { virtual: true });
+
+        await run();
+
+        expect(fs.writeFileSync).toHaveBeenNthCalledWith(1, 'new-task-def-file-name',
+            JSON.stringify({
+                family: 'task-def-family',
+                containerDefinitions: [
+                    {
+                        name: "web",
+                        image: "nginx:latest",
+                        environment: [
+                            {
+                                name: "log_level",
+                                value: "info"
+                            },
+                            {
+                                name: "env",
+                                value: "prod"
+                            }
+                        ]
+                    },
+                    {
+                        name: "sidecar",
+                        image: "hello"
+                    }
+                ]
+            }, null, 2)
+        );
+    });
+
     test('error returned for missing task definition file', async () => {
         fs.existsSync.mockReturnValue(false);
         core.getInput = jest
@@ -172,5 +343,33 @@ describe('Render task definition', () => {
         await run();
 
         expect(core.setFailed).toBeCalledWith('Invalid task definition: Could not find container definition with matching name');
+    });
+
+    test('error returned for invalid merge file', async () => {
+        fs.existsSync.mockReturnValue(false);
+        core.getInput = jest
+            .fn()
+            .mockReturnValueOnce('task-definition.json')
+            .mockReturnValueOnce('web')
+            .mockReturnValueOnce('nginx:latest')
+            .mockReturnValueOnce('invalid-merge-file.json');
+        
+        fs.existsSync.mockReturnValueOnce(JSON.stringify({
+            family: 'task-def-family',
+            containerDefinitions: [
+                {
+                    name: "web",
+                    image: "nginx:latest"
+                },
+                {
+                    name: "sidecar",
+                    image: "hello"
+                }
+            ]
+        }));
+
+        await run();
+
+        expect(core.setFailed).toBeCalledWith('Merge file does not exist: invalid-merge-file.json');
     });
 });
