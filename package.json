@@ -1,6 +1,6 @@
 {
   "name": "aws-actions-amazon-ecs-render-task-definition",
-  "version": "1.0.20",
+  "version": "1.0.21",
   "description": "Render Amazon ECS task definition file",
   "main": "index.js",
   "scripts": {
