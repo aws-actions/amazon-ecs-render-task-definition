@@ -13,6 +13,9 @@ inputs:
   image:
     description: 'The URI of the container image to insert into the ECS task definition'
     required: true
+  environment-variables:
+    description: 'Variables to add to the container. Each variable is of the form KEY=value, you can specify multiple variables with multi-line YAML strings.'
+    required: false
 outputs:
   task-definition:
     description: 'The path to the rendered task definition file'
