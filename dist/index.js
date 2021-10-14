@@ -1229,16 +1229,16 @@ async function run() {
         const trimmedLine = line.trim();
         // Skip if empty
         if (trimmedLine.length === 0) { return; }
-        // Split pairs on =
-        const pair = line.trim().split('=');
-        // If that pair didn't have exactly 2 parts (name and value)
-        if (pair.length != 2) {
-          throw new Error(`Cannot parse the environment variable '${trimmedLine}'. Environment variable pairs must be of the form NAME=value.`);
+        // Split on =
+        const separatorIdx = trimmedLine.indexOf("=");
+        // If there's nowhere to split
+        if (separatorIdx === -1) {
+            throw new Error(`Cannot parse the environment variable '${trimmedLine}'. Environment variable pairs must be of the form NAME=value.`);
         }
         // Build object
         const variable = {
-          name: pair[0],
-          value: pair[1],
+          name: trimmedLine.substring(0, separatorIdx),
+          value: trimmedLine.substring(separatorIdx + 1),
         };
 
         // Search container definition environment for one matching name
