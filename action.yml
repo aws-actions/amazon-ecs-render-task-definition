@@ -18,10 +18,13 @@ inputs:
     required: false
   log-group:
     description: 'The log group to set for the task'
-    required: true
+    required: false
   service-family:
     description: 'The service family container'
-    required: true
+    required: false
+  env-list:
+    description: 'A list of variables to pull from the environment'
+    required: false
 outputs:
   task-definition:
     description: 'The path to the rendered task definition file'
