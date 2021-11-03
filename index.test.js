@@ -21,7 +21,7 @@ describe('Render task definition', () => {
             .mockReturnValueOnce('nginx:latest')
             .mockReturnValueOnce('log-group')
             .mockReturnValueOnce('service-family')
-            .mockReturnValueOnce('["RUNNER_TEMP"]');
+            .mockReturnValueOnce('[ "DJANGO_ACCOUNT_ALLOW_REGISTRATION", "DJANGO_ADMIN_URL", "DJANGO_AWS_REGION_NAME", "DJANGO_AWS_S3_CUSTOM_DOMAIN", "DJANGO_AWS_STORAGE_BUCKET_NAME", "DJANGO_SECURE_SSL_REDIRECT", "DJANGO_SENTRY_LOG_LEVEL", "DJANGO_SENTRY_SAMPLE_RATE", "DJANGO_SETTINGS_MODULE", "MYSQL_DATABASE", "MYSQL_HOST", "MYSQL_PORT", "REDIS_URL", "SENTRY_DSN", "VRIFY_CDN_URL", "WEB_CONCURRENCY", "SOCIAL_AUTH_APPLE_ID_CLIENT", "SOCIAL_AUTH_APPLE_ID_AUDIENCE", "WEBAPP_ENDPOINT", "VPEAPP_ENDPOINT", "API_ENDPOINT", "CRONOFY_CLIENT_ID", "ENVIRONMENT", "MIXPANEL_API_KEY", "AMPLITUDE_API_KEY"]');
 
         process.env = Object.assign(process.env, { GITHUB_WORKSPACE: __dirname });
         process.env = Object.assign(process.env, { RUNNER_TEMP: '/home/runner/work/_temp' });
