@@ -1476,6 +1476,7 @@ async function run() {
     const logGroup = core.getInput('log-group', { required: false });
     const serviceFamily = core.getInput('service-family', { required: false });
     let envList = core.getInput('env-list', { required: false });
+    console.log(envList)
     if (envList) {
       envList = JSON.parse(envList)
     }
