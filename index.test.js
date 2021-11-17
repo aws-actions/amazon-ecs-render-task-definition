@@ -266,7 +266,7 @@ describe('Render task definition', () => {
             .mockReturnValueOnce('web')                  // container-name
             .mockReturnValueOnce('nginx:latest')         // image
             .mockReturnValueOnce('EXAMPLE=here')       // environment-variables
-            .mockReturnValueOnce('key1=value11\nkey2=value22\nkey3=value3');        // docker-labels
+            .mockReturnValueOnce('key1=update_value1\nkey2=update_value2\nkey3=value3');        // docker-labels
 
         jest.mock('/hello/task-definition.json', () => ({
             family: 'task-def-family',
@@ -306,8 +306,8 @@ describe('Render task definition', () => {
                             }
                         ], 
                         dockerLabels : {
-                            "key1":"value11", 
-                            "key2":"value22",
+                            "key1":"update_value1", 
+                            "key2":"update_value2",
                             "key3":"value3"
                         }
                     }
