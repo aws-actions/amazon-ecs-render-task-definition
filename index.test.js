@@ -205,4 +205,115 @@ describe('Render task definition', () => {
 
         expect(core.setFailed).toBeCalledWith('Invalid task definition: Could not find container definition with matching name');
     });
+
+    test('renders a task definition at an absolute path, and with initial docker labels empty', async () => {
+        core.getInput = jest
+            .fn()
+            .mockReturnValueOnce('/hello/task-definition.json') // task-definition
+            .mockReturnValueOnce('web')                  // container-name
+            .mockReturnValueOnce('nginx:latest')         // image
+            .mockReturnValueOnce('EXAMPLE=here')       // environment-variables
+            .mockReturnValueOnce('key1=value1\nkey2=value2');        // docker-labels
+
+        jest.mock('/hello/task-definition.json', () => ({
+            family: 'task-def-family',
+            containerDefinitions: [
+                {
+                    name: "web",
+                    image: "some-other-image"
+                }
+            ]
+        }), { virtual: true });
+
+        await run();
+
+        expect(tmp.fileSync).toHaveBeenNthCalledWith(1, {
+            tmpdir: '/home/runner/work/_temp',
+            prefix: 'task-definition-',
+            postfix: '.json',
+            keep: true,
+            discardDescriptor: true
+          });
+
+        expect(fs.writeFileSync).toHaveBeenNthCalledWith(1, 'new-task-def-file-name',
+            JSON.stringify({
+                family: 'task-def-family',
+                containerDefinitions: [
+                    {
+                        name: "web",
+                        image: "nginx:latest",
+                        environment: [
+                            {
+                                name: "EXAMPLE",
+                                value: "here"
+                            }
+                        ], 
+                        dockerLabels : {
+                            "key1":"value1", 
+                            "key2":"value2"
+                        }
+                    }
+                ]
+            }, null, 2)
+        );
+        expect(core.setOutput).toHaveBeenNthCalledWith(1, 'task-definition', 'new-task-def-file-name');
+    });
+
+    test('renders a task definition at an absolute path, and change existed docker labels empty', async () => {
+        core.getInput = jest
+            .fn()
+            .mockReturnValueOnce('/hello/task-definition.json') // task-definition
+            .mockReturnValueOnce('web')                  // container-name
+            .mockReturnValueOnce('nginx:latest')         // image
+            .mockReturnValueOnce('EXAMPLE=here')       // environment-variables
+            .mockReturnValueOnce('key1=value11\nkey2=value22\nkey3=value3');        // docker-labels
+
+        jest.mock('/hello/task-definition.json', () => ({
+            family: 'task-def-family',
+            containerDefinitions: [
+                {
+                    name: "web",
+                    image: "some-other-image",
+                    dockerLabels : {
+                        "key1":"value1", 
+                        "key2":"value2"
+                    }
+                }
+            ]
+        }), { virtual: true });
+
+        await run();
+
+        expect(tmp.fileSync).toHaveBeenNthCalledWith(1, {
+            tmpdir: '/home/runner/work/_temp',
+            prefix: 'task-definition-',
+            postfix: '.json',
+            keep: true,
+            discardDescriptor: true
+          });
+
+        expect(fs.writeFileSync).toHaveBeenNthCalledWith(1, 'new-task-def-file-name',
+            JSON.stringify({
+                family: 'task-def-family',
+                containerDefinitions: [
+                    {
+                        name: "web",
+                        image: "nginx:latest",
+                        environment: [
+                            {
+                                name: "EXAMPLE",
+                                value: "here"
+                            }
+                        ], 
+                        dockerLabels : {
+                            "key1":"value11", 
+                            "key2":"value22",
+                            "key3":"value3"
+                        }
+                    }
+                ]
+            }, null, 2)
+        );
+        expect(core.setOutput).toHaveBeenNthCalledWith(1, 'task-definition', 'new-task-def-file-name');
+    });
 });
