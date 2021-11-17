@@ -6,7 +6,6 @@ Inserts a container image URI into an Amazon ECS task definition JSON file, crea
 
 <!-- toc -->
 
-- [Amazon ECS "Render Task Definition" Action for GitHub Actions](#amazon-ecs-render-task-definition-action-for-github-actions)
 - [Usage](#usage)
 - [License Summary](#license-summary)
 - [Security Disclosures](#security-disclosures)
