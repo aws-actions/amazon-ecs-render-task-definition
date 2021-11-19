@@ -1194,6 +1194,7 @@ async function run() {
     const imageURI = core.getInput('image', { required: true });
 
     const environmentVariables = core.getInput('environment-variables', { required: false });
+    const dockerLabels = core.getInput('docker-labels', { required: false });
 
     // Parse the task definition
     const taskDefPath = path.isAbsolute(taskDefinitionFile) ?
@@ -1208,13 +1209,42 @@ async function run() {
     if (!Array.isArray(taskDefContents.containerDefinitions)) {
       throw new Error('Invalid task definition format: containerDefinitions section is not present or is not an array');
     }
-    const containerDef = taskDefContents.containerDefinitions.find(function(element) {
+    const containerDef = taskDefContents.containerDefinitions.find(function (element) {
       return element.name == containerName;
     });
     if (!containerDef) {
       throw new Error('Invalid task definition: Could not find container definition with matching name');
     }
     containerDef.image = imageURI;
+
+    if (dockerLabels) {
+
+      // If dockerLabels object is missing, create it
+      if (!containerDef.dockerLabels) {
+        containerDef.dockerLabels = {};
+      }
+
+      // Get pairs by splitting on newlines
+      dockerLabels.split('\n').forEach(function (line) {
+        // Trim whitespace
+        const trimmedLine = line.trim();
+        // Skip if empty
+        if (trimmedLine.length === 0) { return; }
+        // Split on =
+        const separatorIdx = trimmedLine.indexOf("=");
+        // If there's nowhere to split
+        if (separatorIdx === -1) {
+          throw new Error(`Cannot parse the docker labels '${trimmedLine}'. Docker label pairs must be of the form NAME=value.`);
+        }
+        // Build object
+        const variable = {
+          name: trimmedLine.substring(0, separatorIdx),
+          value: trimmedLine.substring(separatorIdx + 1),
+        };
+
+        containerDef.dockerLabels[variable.name] = variable.value;
+      })
+    }
 
     if (environmentVariables) {
 
@@ -1233,7 +1263,7 @@ async function run() {
         const separatorIdx = trimmedLine.indexOf("=");
         // If there's nowhere to split
         if (separatorIdx === -1) {
-            throw new Error(`Cannot parse the environment variable '${trimmedLine}'. Environment variable pairs must be of the form NAME=value.`);
+          throw new Error(`Cannot parse the environment variable '${trimmedLine}'. Environment variable pairs must be of the form NAME=value.`);
         }
         // Build object
         const variable = {
@@ -1275,7 +1305,7 @@ module.exports = run;
 
 /* istanbul ignore next */
 if (require.main === require.cache[eval('__filename')]) {
-    run();
+  run();
 }
 
 
