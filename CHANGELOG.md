@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.1.0](https://github.com/aws-actions/amazon-ecs-render-task-definition/compare/v1.0.24...v1.1.0) (2021-12-01)
+
+
+### Features
+
+* add environment-variables support ([#114](https://github.com/aws-actions/amazon-ecs-render-task-definition/issues/114)) ([85f5e35](https://github.com/aws-actions/amazon-ecs-render-task-definition/commit/85f5e350c104582a36945a4b66abdd29b42123bf))
+
 ### [1.0.24](https://github.com/aws-actions/amazon-ecs-render-task-definition/compare/v1.0.23...v1.0.24) (2021-08-24)
 
 ### [1.0.23](https://github.com/aws-actions/amazon-ecs-render-task-definition/compare/v1.0.22...v1.0.23) (2021-07-06)
