@@ -16,7 +16,7 @@ inputs:
   environment-variables:
     description: 'Variables to add to the container. Each variable is of the form KEY=value, you can specify multiple variables with multi-line YAML strings.'
     required: false
-  docker-lables:
+  docker-labels:
     description: 'The Docker labels'
     required: false
 outputs:
