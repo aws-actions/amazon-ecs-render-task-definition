@@ -100,10 +100,6 @@ async function run() {
         const secretSource = secretName.split(':')[0]
         const secretAddress = secretName.split(':')[1]
 
-        if(!arnRegex.test(secretValue)) {
-          throw new Error(`Invalid ARN for ${secretName} secret.`)
-        }
-
         // Build object
         const secret = {
           name: secretName,
