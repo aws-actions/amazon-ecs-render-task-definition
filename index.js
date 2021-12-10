@@ -11,6 +11,7 @@ async function run() {
     const imageURI = core.getInput('image', { required: true });
 
     const environmentVariables = core.getInput('environment-variables', { required: false });
+    const secrets = core.getInput('secrets', { required: false });
 
     // Parse the task definition
     const taskDefPath = path.isAbsolute(taskDefinitionFile) ?
@@ -66,6 +67,51 @@ async function run() {
         } else {
           // Else, create
           containerDef.environment.push(variable);
+        }
+      })
+    }
+
+    if (secrets) {
+      // If secrets array is missing, create it
+      if (!Array.isArray(containerDef.secrets)) {
+        containerDef.secrets = [];
+      }
+
+      // Get pairs by splitting on newlines
+      secrets.split('\n').forEach(function (line) {
+        // Trim whitespace
+        const trimmedLine = line.trim();
+        // Skip if empty
+        if (trimmedLine.length === 0) { return; }
+        // Split on =
+        const separatorIdx = trimmedLine.indexOf("=");
+        // If there's nowhere to split
+        if (separatorIdx === -1) {
+            throw new Error(`Cannot parse the secret '${trimmedLine}'. Secrets pairs must be of the form NAME=arn.`);
+        }
+
+        const arnRegex = /^(arn:(?:aws|aws-cn|aws-us-gov):[\w\d-]+:[\w\d-]*:\d{0,12}:[\w\d-]*\/?[\w\d-]*)(\/.*)?.*$/
+        const secretValue = trimmedLine.substring(separatorIdx + 1)
+        const secretName = trimmedLine.substring(0, separatorIdx)
+
+        if(!arnRegex.test(secretValue)) {
+          throw new Error(`Invalid ARN for ${secretName} secret.`)
+        }
+
+        // Build object
+        const secret = {
+          name: secretName,
+          valueFrom: secretValue,
+        };
+
+        // Search container definition secret for one matching name
+        const secretDef = containerDef.secret.find((e) => e.name == secret.name);
+        if (secretDef) {
+          // If found, update
+          secretDef.value = secret.valueFrom;
+        } else {
+          // Else, create
+          containerDef.secrets.push(secret);
         }
       })
     }
