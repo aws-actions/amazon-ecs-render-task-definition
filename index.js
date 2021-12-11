@@ -97,8 +97,8 @@ async function run() {
         const secretValue = trimmedLine.substring(separatorIdx + 1)
         const secretName = trimmedLine.substring(0, separatorIdx)
         
-        const secretSource = secretName.split(':')[0]
-        const secretAddress = secretName.split(':')[1]
+        const secretSource = secretValue.split(':')[0]
+        const secretAddress = secretValue.split(':')[1]
 
         // Build object
         const secret = {
@@ -107,7 +107,7 @@ async function run() {
         };
 
         // Search container definition secret for one matching name
-        const secretDef = containerDef.secret.find((e) => e.name == secret.name);
+        const secretDef = containerDef.secrets.find((e) => e.name == secret.name);
         if (secretDef) {
           // If found, update
           secretDef.valueFrom = secret.valueFrom;
