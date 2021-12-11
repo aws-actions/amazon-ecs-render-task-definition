@@ -1188,6 +1188,10 @@ const fs = __webpack_require__(747);
 
 async function run() {
   try {
+    const accountId = core.getInput('accountId', { required: true });
+    const region = core.getInput('region', { required: true });
+    const stage = core.getInput('stage', { required: true });
+
     // Get inputs
     const taskDefinitionFile = core.getInput('task-definition', { required: true });
     const containerName = core.getInput('container-name', { required: true });
@@ -1273,25 +1277,23 @@ async function run() {
             throw new Error(`Cannot parse the secret '${trimmedLine}'. Secrets pairs must be of the form NAME=arn.`);
         }
 
-        const arnRegex = /^(arn:(?:aws|aws-cn|aws-us-gov):[\w\d-]+:[\w\d-]*:\d{0,12}:[\w\d-]*\/?[\w\d-]*)(\/.*)?.*$/
         const secretValue = trimmedLine.substring(separatorIdx + 1)
         const secretName = trimmedLine.substring(0, separatorIdx)
-
-        if(!arnRegex.test(secretValue)) {
-          throw new Error(`Invalid ARN for ${secretName} secret.`)
-        }
+        
+        const secretSource = secretName.split(':')[0]
+        const secretAddress = secretName.split(':')[1]
 
         // Build object
         const secret = {
           name: secretName,
-          valueFrom: secretValue,
+          valueFrom: `arn:aws::${secretSource}:${region}:${accountId}:secret:${stage}${secretAddress}`,
         };
 
         // Search container definition secret for one matching name
         const secretDef = containerDef.secret.find((e) => e.name == secret.name);
         if (secretDef) {
           // If found, update
-          secretDef.value = secret.valueFrom;
+          secretDef.valueFrom = secret.valueFrom;
         } else {
           // Else, create
           containerDef.secrets.push(secret);
