@@ -25,6 +25,9 @@ To insert the image URI `amazon/amazon-ecs-sample:latest` as the image for the `
         container-name: web
         image: amazon/amazon-ecs-sample:latest
         environment-variables: "LOG_LEVEL=info"
+        environment-variables-files: |
+          arn:aws:s3:::S3_BUKET_NAME/PATH_TO_ENV/.env
+          arn:aws:s3:::S3_BUCKET_NAME/PATH_TO_ENV/.env
 
     - name: Deploy to Amazon ECS service
       uses: aws-actions/amazon-ecs-deploy-task-definition@v1
@@ -50,7 +53,10 @@ input of the second:
         environment-variables: |
             LOG_LEVEL=info
             ENVIRONMENT=prod
-
+        environment-variables-files: |
+          arn:aws:s3:::S3_BUCKET_NAME/PATH_TO_ENV/.env
+          arn:aws:s3:::S3_BUCKET_NAME/PATH_TO_ENV/.env
+          
     - name: Modify Amazon ECS task definition with second container
       id: render-app-container
       uses: aws-actions/amazon-ecs-render-task-definition@v1

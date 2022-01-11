@@ -14,10 +14,12 @@ describe('Render task definition', () => {
 
         core.getInput = jest
             .fn()
-            .mockReturnValueOnce('task-definition.json') // task-definition
-            .mockReturnValueOnce('web')                  // container-name
-            .mockReturnValueOnce('nginx:latest')         // image
-            .mockReturnValueOnce('FOO=bar\nHELLO=world'); // environment-variables
+            .mockReturnValueOnce('task-definition.json')                                // task-definition
+            .mockReturnValueOnce('web')                                                 // container-name
+            .mockReturnValueOnce('nginx:latest')                                        // image
+            .mockReturnValueOnce('FOO=bar\nHELLO=world')                                // environment-variables
+            .mockReturnValueOnce('arn:aws:s3:::S3_BUKET_NAME/PATH_TO_ENV/.env\narn:aws:s3:::S3_BUKET_NAME/PATH_TO_ENV/.env');        // environment-variables-files
+
 
         process.env = Object.assign(process.env, { GITHUB_WORKSPACE: __dirname });
         process.env = Object.assign(process.env, { RUNNER_TEMP: '/home/runner/work/_temp' });
@@ -42,6 +44,16 @@ describe('Render task definition', () => {
                         {
                             name: "DONT-TOUCH",
                             value: "me"
+                        }
+                    ],
+                    environmentFiles:[
+                        {
+                            type: "s3",
+                            value: "arn:aws:s3:::S3_BUKET_NAME/PATH_TO_ENV/.env"
+                        },
+                        {
+                            type: "s3",
+                            value: "arn:aws:s3:::S3_BUKET_NAME/PATH_TO_ENV/.env"
                         }
                     ]
                 },
@@ -82,6 +94,16 @@ describe('Render task definition', () => {
                                 name: "HELLO",
                                 value: "world"
                             }
+                        ],
+                        environmentFiles:[
+                            {
+                                type: "s3",
+                                value: "arn:aws:s3:::S3_BUKET_NAME/PATH_TO_ENV/.env"
+                            },
+                            {
+                                type: "s3",
+                                value: "arn:aws:s3:::S3_BUKET_NAME/PATH_TO_ENV/.env"
+                            }
                         ]
                     },
                     {
@@ -98,9 +120,10 @@ describe('Render task definition', () => {
         core.getInput = jest
             .fn()
             .mockReturnValueOnce('/hello/task-definition.json') // task-definition
-            .mockReturnValueOnce('web')                  // container-name
-            .mockReturnValueOnce('nginx:latest')         // image
-            .mockReturnValueOnce('EXAMPLE=here');        // environment-variables
+            .mockReturnValueOnce('web')                                                 // container-name
+            .mockReturnValueOnce('nginx:latest')                                        // image
+            .mockReturnValueOnce('EXAMPLE=here')                                        // environment-variables
+            .mockReturnValueOnce('arn:aws:s3:::S3_BUKET_NAME/PATH_TO_ENV/.env');        // environment-variables-files
         jest.mock('/hello/task-definition.json', () => ({
             family: 'task-def-family',
             containerDefinitions: [
@@ -131,6 +154,12 @@ describe('Render task definition', () => {
                             {
                                 name: "EXAMPLE",
                                 value: "here"
+                            }
+                        ],
+                        environmentFiles:[
+                            {
+                                type: "s3",
+                                value: "arn:aws:s3:::S3_BUKET_NAME/PATH_TO_ENV/.env"
                             }
                         ]
                     }

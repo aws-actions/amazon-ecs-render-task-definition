@@ -11,6 +11,7 @@ async function run() {
     const imageURI = core.getInput('image', { required: true });
 
     const environmentVariables = core.getInput('environment-variables', { required: false });
+    const environmentVariablesFiles = core.getInput('environment-variables-files', { required: false });
 
     // Parse the task definition
     const taskDefPath = path.isAbsolute(taskDefinitionFile) ?
@@ -68,6 +69,36 @@ async function run() {
           containerDef.environment.push(variable);
         }
       })
+    }
+
+    if (environmentVariablesFiles) {
+      // If environment array is missing, create it
+      if (!Array.isArray(containerDef.environmentFiles)) {
+          containerDef.environmentFiles = [];
+      }
+
+      environmentVariablesFiles.split('\n').forEach(function (line) {
+          // Trim whitespace
+          const trimmedLine = line.trim();
+          // Skip if empty
+          if (trimmedLine.length === 0) { return; }
+
+          // Build object
+          const variable = {
+              type: 's3',
+              value: trimmedLine,
+          };
+
+          // Search container definition environment for one matching name
+          const variableDef = containerDef.environmentFiles.find((e) => e.name == variable.name);
+          if (variableDef) {
+              // If found, update
+              variableDef.value = variable.value;
+          } else {
+              // Else, create
+              containerDef.environmentFiles.push(variable);
+          }
+        });
     }
 
 
