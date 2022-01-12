@@ -89,8 +89,8 @@ async function run() {
               value: trimmedLine,
           };
 
-          // Search container definition environment for one matching name
-          const variableDef = containerDef.environmentFiles.find((e) => e.name == variable.name);
+          // Search container definition environment for one matching value
+          const variableDef = containerDef.environmentFiles.find((e) => e.value == variable.value);
           if (variableDef) {
               // If found, update
               variableDef.value = variable.value;
