@@ -18,7 +18,7 @@ describe('Render task definition', () => {
             .mockReturnValueOnce('web')                                                 // container-name
             .mockReturnValueOnce('nginx:latest')                                        // image
             .mockReturnValueOnce('FOO=bar\nHELLO=world')                                // environment-variables
-            .mockReturnValueOnce('arn:aws:s3:::S3_BUKET_NAME/PATH_TO_ENV/.env\narn:aws:s3:::S3_BUKET_NAME/PATH_TO_ENV/.env');        // environment-variables-files
+            .mockReturnValueOnce('arn:aws:s3:::S3_BUKET_NAME/DONT-TOUCH/.env\narn:aws:s3:::S3_BUKET_NAME/PATH_TO_ENV/.env');        // environment-variables-files
 
 
         process.env = Object.assign(process.env, { GITHUB_WORKSPACE: __dirname });
@@ -49,11 +49,7 @@ describe('Render task definition', () => {
                     environmentFiles:[
                         {
                             type: "s3",
-                            value: "arn:aws:s3:::S3_BUKET_NAME/PATH_TO_ENV/.env"
-                        },
-                        {
-                            type: "s3",
-                            value: "arn:aws:s3:::S3_BUKET_NAME/PATH_TO_ENV/.env"
+                            value: "arn:aws:s3:::S3_BUKET_NAME/DONT-TOUCH/.env"
                         }
                     ]
                 },
@@ -98,7 +94,7 @@ describe('Render task definition', () => {
                         environmentFiles:[
                             {
                                 type: "s3",
-                                value: "arn:aws:s3:::S3_BUKET_NAME/PATH_TO_ENV/.env"
+                                value: "arn:aws:s3:::S3_BUKET_NAME/DONT-TOUCH/.env"
                             },
                             {
                                 type: "s3",
