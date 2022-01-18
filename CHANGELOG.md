@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.1.1](https://github.com/aws-actions/amazon-ecs-render-task-definition/compare/v1.1.0...v1.1.1) (2022-01-18)
+
+
+### Bug Fixes
+
+* Strict Mode Deprecation ([#150](https://github.com/aws-actions/amazon-ecs-render-task-definition/issues/150)) ([1d693a5](https://github.com/aws-actions/amazon-ecs-render-task-definition/commit/1d693a567ca030686d891af532ada9b4d908f863))
+
 ## [1.1.0](https://github.com/aws-actions/amazon-ecs-render-task-definition/compare/v1.0.24...v1.1.0) (2021-12-01)
 
 
