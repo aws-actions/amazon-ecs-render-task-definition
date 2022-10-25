@@ -5,12 +5,17 @@ const fs = require('fs');
 
 async function run() {
   try {
+    const accountId = core.getInput('accountId', { required: true });
+    const region = core.getInput('region', { required: true });
+    const stage = core.getInput('stage', { required: true });
+
     // Get inputs
     const taskDefinitionFile = core.getInput('task-definition', { required: true });
     const containerName = core.getInput('container-name', { required: true });
     const imageURI = core.getInput('image', { required: true });
 
     const environmentVariables = core.getInput('environment-variables', { required: false });
+    const secrets = core.getInput('secrets', { required: false });
 
     // Parse the task definition
     const taskDefPath = path.isAbsolute(taskDefinitionFile) ?
@@ -66,6 +71,49 @@ async function run() {
         } else {
           // Else, create
           containerDef.environment.push(variable);
+        }
+      })
+    }
+
+    if (secrets) {
+      // If secrets array is missing, create it
+      if (!Array.isArray(containerDef.secrets)) {
+        containerDef.secrets = [];
+      }
+
+      // Get pairs by splitting on newlines
+      secrets.split('\n').forEach(function (line) {
+        // Trim whitespace
+        const trimmedLine = line.trim();
+        // Skip if empty
+        if (trimmedLine.length === 0) { return; }
+        // Split on =
+        const separatorIdx = trimmedLine.indexOf("=");
+        // If there's nowhere to split
+        if (separatorIdx === -1) {
+            throw new Error(`Cannot parse the secret '${trimmedLine}'. Secrets pairs must be of the form NAME=arn.`);
+        }
+
+        const secretValue = trimmedLine.substring(separatorIdx + 1)
+        const secretName = trimmedLine.substring(0, separatorIdx)
+        
+        const secretSource = secretValue.split(':')[0]
+        const secretAddress = secretValue.split(':')[1]
+
+        // Build object
+        const secret = {
+          name: secretName,
+          valueFrom: `arn:aws::${secretSource}:${region}:${accountId}:secret:${stage}${secretAddress}`,
+        };
+
+        // Search container definition secret for one matching name
+        const secretDef = containerDef.secrets.find((e) => e.name == secret.name);
+        if (secretDef) {
+          // If found, update
+          secretDef.valueFrom = secret.valueFrom;
+        } else {
+          // Else, create
+          containerDef.secrets.push(secret);
         }
       })
     }

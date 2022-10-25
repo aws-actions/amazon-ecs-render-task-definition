@@ -16,6 +16,18 @@ inputs:
   environment-variables:
     description: 'Variables to add to the container. Each variable is of the form KEY=value, you can specify multiple variables with multi-line YAML strings.'
     required: false
+  accountId:
+    description: 'AWS Account ID.'
+    required: true
+  region:
+    description: 'AWS Region.'
+    required: true
+  stage:
+    description: 'Current working stage (DEV, STAGING, PROD)'
+    required: true
+  secrets:
+    description: 'Secrets to add to the container. Each variable is of the form KEY=value, you can specify multiple variables with multi-line YAML strings.'
+    required: false
 outputs:
   task-definition:
     description: 'The path to the rendered task definition file'
