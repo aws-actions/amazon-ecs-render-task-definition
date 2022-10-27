@@ -2,6 +2,21 @@ const path = require('path');
 const core = require('@actions/core');
 const tmp = require('tmp');
 const fs = require('fs');
+const aws = require('aws-sdk');
+var ssm = new aws.SSM();
+
+const loadParams = async (Path, NextPage = null) => {
+  const { Parameters, NextToken } = await ssm.getParametersByPath({ Path, NextToken: NextPage }).promise()
+
+  if (NextToken) {
+    const moreParams = await loadParams(Path, NextToken)
+    return [...Parameters, ...moreParams]
+  }
+
+  return Parameters
+}
+
+const extractParamName = (ssmParam, ssmParamPathPattern) => ssmParam.Name.replace(ssmParamPathPattern, '')
 
 async function run() {
   try {
@@ -11,6 +26,7 @@ async function run() {
     const imageURI = core.getInput('image', { required: true });
 
     const environmentVariables = core.getInput('environment-variables', { required: false });
+    const ssmParamPathPattern = core.getInput('ssm-param-path-pattern', { required: false })
 
     // Parse the task definition
     const taskDefPath = path.isAbsolute(taskDefinitionFile) ?
@@ -32,6 +48,31 @@ async function run() {
       throw new Error('Invalid task definition: Could not find container definition with matching name');
     }
     containerDef.image = imageURI;
+
+    if (ssmParamPathPattern) {
+      const params = await loadParams(ssmParamPathPattern)
+  
+      const paramsByType = params.reduce((currentMap, ssmParam) => {
+        switch (ssmParam.Type) {
+          case 'String': return { ...currentMap, environment: [...currentMap.environment, ssmParam] }
+          case 'SecureString': return { ...currentMap, secrets: [...currentMap.secrets, ssmParam] }
+        }
+      }, { environment: [], secrets: [] })
+
+      containerDef.environment = paramsByType.environment.map(ssmParam => {
+        return {
+          name: extractParamName(ssmParam),
+          value: ssmParam.Value
+        }
+      })
+
+      containerDef.secrets = paramsByType.secrets.map(ssmParam => {
+        return {
+          name: extractParamName(ssmParam, ssmParamPathPattern),
+          value: ssmParam.ARN
+        }
+      })
+    }
 
     if (environmentVariables) {
 
