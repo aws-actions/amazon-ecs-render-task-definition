@@ -1392,7 +1392,7 @@ async function run() {
   try {
     // Get inputs
     const taskDefinitionFile = core.getInput('task-definition', { required: true });
-
+    
     const family = core.getInput('family', { required: false });
     const cpu = core.getInput('cpu', { required: false });
     const memory = core.getInput('memory', { required: false });
