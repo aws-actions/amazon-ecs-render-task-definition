@@ -20,7 +20,8 @@ describe('Render task definition', () => {
             .mockReturnValueOnce('4096')                  // memory
             .mockReturnValueOnce('arn:aws:iam::xxxxxxxxxxxx:role/new') // executionRoleArn
             .mockReturnValueOnce('arn:aws:iam::xxxxxxxxxxxx:role/new') // taskRoleArn
-            .mockReturnValueOnce('web')                  // container-name
+            .mockReturnValueOnce('mobile')             // container-name
+            .mockReturnValueOnce('true')                  // overwrite-container-name
             .mockReturnValueOnce('nginx:latest')         // image
             .mockReturnValueOnce('/ecs/new')         // awslogs-group
             .mockReturnValueOnce('us-west-1')         // awslogs-region
@@ -44,7 +45,7 @@ describe('Render task definition', () => {
             taskRoleArn: "arn:aws:iam::xxxxxxxxxxxx:role/old",
             containerDefinitions: [
                 {
-                    name: "web",
+                    name: "placeholder_container_name",
                     image: "some-other-image",
                     logConfiguration: {
                         logDriver: "awslogs",
@@ -102,7 +103,7 @@ describe('Render task definition', () => {
                 taskRoleArn: "arn:aws:iam::xxxxxxxxxxxx:role/new",
                 containerDefinitions: [
                     {
-                        name: "web",
+                        name: "mobile",
                         image: "nginx:latest",
                         logConfiguration: {
                             logDriver: "awslogs",
@@ -161,7 +162,8 @@ describe('Render task definition', () => {
             .mockReturnValueOnce('4096')                  // memory
             .mockReturnValueOnce('arn:aws:iam::xxxxxxxxxxxx:role/new') // executionRoleArn
             .mockReturnValueOnce('arn:aws:iam::xxxxxxxxxxxx:role/new') // taskRoleArn
-            .mockReturnValueOnce('web')                  // container-name
+            .mockReturnValueOnce('mobile')                  // container-name
+            .mockReturnValueOnce('true')                  // overwrite-container-name
             .mockReturnValueOnce('nginx:latest')         // image
             .mockReturnValueOnce('/ecs/new')         // awslogs-group
             .mockReturnValueOnce('us-west-1')         // awslogs-region
@@ -171,7 +173,7 @@ describe('Render task definition', () => {
             family: 'task-def-family',
             containerDefinitions: [
                 {
-                    name: "web",
+                    name: "placeholder_container_name",
                     image: "some-other-image"
                 }
             ]
@@ -191,7 +193,7 @@ describe('Render task definition', () => {
                 family: 'task-def-family',
                 containerDefinitions: [
                     {
-                        name: "web",
+                        name: "mobile",
                         image: "nginx:latest",
                         environment: [
                             {
