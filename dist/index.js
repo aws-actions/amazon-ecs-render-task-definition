@@ -1400,6 +1400,7 @@ async function run() {
     const taskRoleArn = core.getInput('taskRoleArn', { required: false });
     
     const containerName = core.getInput('container-name', { required: false });
+    const overwriteContainerName = core.getInput('overwrite-container-name', { required: false });
     const imageURI = core.getInput('image', { required: true });
     const awslogsGroup = core.getInput('awslogs-group', { required: false });
     const awslogsRegion = core.getInput('awslogs-region', { required: false });
@@ -1420,12 +1421,14 @@ async function run() {
     if (!Array.isArray(taskDefContents.containerDefinitions)) {
       throw new Error('Invalid task definition format: containerDefinitions section is not present or is not an array');
     }
+    const lookupName = overwriteContainerName == "true" ? "placeholder_container_name" : containerName;
     const containerDef = taskDefContents.containerDefinitions.find(function(element) {
-      return element.name == containerName;
+      return element.name == lookupName;
     });
     if (!containerDef) {
       throw new Error('Invalid task definition: Could not find container definition with matching name');
     }
+    containerDef.name = containerName;
     containerDef.image = imageURI;
 
     if (family) {

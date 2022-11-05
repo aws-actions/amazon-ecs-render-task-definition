@@ -28,6 +28,7 @@ To insert the image URI `amazon/amazon-ecs-sample:latest` as the image for the `
         executionRoleArn: "arn:aws:iam::xxxxxxxxxxxx:role/x"
         taskRoleArn: "arn:aws:iam::xxxxxxxxxxxx:role/x"
         container-name: web
+        overwrite-container-name: "true"
         awslogs-group: "ecs/web"
         awslogs-region: "us-west-2"
         image: amazon/amazon-ecs-sample:latest
