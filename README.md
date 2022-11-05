@@ -22,9 +22,17 @@ To insert the image URI `amazon/amazon-ecs-sample:latest` as the image for the `
       uses: aws-actions/amazon-ecs-render-task-definition@v1
       with:
         task-definition: task-definition.json
+        family: "core-service"
+        cpu: "1024"
+        memory: "2048"
+        executionRoleArn: "arn:aws:iam::xxxxxxxxxxxx:role/x"
+        taskRoleArn: "arn:aws:iam::xxxxxxxxxxxx:role/x"
         container-name: web
+        awslogs-group: "ecs/web"
+        awslogs-region: "us-west-2"
         image: amazon/amazon-ecs-sample:latest
         environment-variables: "LOG_LEVEL=info"
+        environment-secrets: "SECRET_VAR=arn:aws:secretsmanager:us-west-x:xxxxxxxxxxxx:secret:prod/pkey"
 
     - name: Deploy to Amazon ECS service
       uses: aws-actions/amazon-ecs-deploy-task-definition@v1
