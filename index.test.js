@@ -15,9 +15,17 @@ describe('Render task definition', () => {
         core.getInput = jest
             .fn()
             .mockReturnValueOnce('task-definition.json') // task-definition
+            .mockReturnValueOnce('task-def-family-modified') // family
+            .mockReturnValueOnce('2048')                  // cpu
+            .mockReturnValueOnce('4096')                  // memory
+            .mockReturnValueOnce('arn:aws:iam::xxxxxxxxxxxx:role/new') // executionRoleArn
+            .mockReturnValueOnce('arn:aws:iam::xxxxxxxxxxxx:role/new') // taskRoleArn
             .mockReturnValueOnce('web')                  // container-name
             .mockReturnValueOnce('nginx:latest')         // image
-            .mockReturnValueOnce('FOO=bar\nHELLO=world'); // environment-variables
+            .mockReturnValueOnce('/ecs/new')         // awslogs-group
+            .mockReturnValueOnce('us-west-1')         // awslogs-region
+            .mockReturnValueOnce('FOO=bar\nHELLO=world') // environment-variables
+            .mockReturnValueOnce('FOO=bar\nHELLO=world'); // environment-secrets
 
         process.env = Object.assign(process.env, { GITHUB_WORKSPACE: __dirname });
         process.env = Object.assign(process.env, { RUNNER_TEMP: '/home/runner/work/_temp' });
@@ -30,10 +38,23 @@ describe('Render task definition', () => {
 
         jest.mock('./task-definition.json', () => ({
             family: 'task-def-family',
+            cpu: "1024",
+            memory: "2048",
+            executionRoleArn: "arn:aws:iam::xxxxxxxxxxxx:role/old",
+            taskRoleArn: "arn:aws:iam::xxxxxxxxxxxx:role/old",
             containerDefinitions: [
                 {
                     name: "web",
                     image: "some-other-image",
+                    logConfiguration: {
+                        logDriver: "awslogs",
+                        options: {
+                            "awslogs-group": "/ecs/old",
+                            "awslogs-region": "us-west-2",
+                            "awslogs-stream-prefix": "ecs",
+                            "awslogs-create-group": "true"
+                        }
+                    },
                     environment: [
                         {
                             name: "FOO",
@@ -42,6 +63,16 @@ describe('Render task definition', () => {
                         {
                             name: "DONT-TOUCH",
                             value: "me"
+                        }
+                    ],
+                    secrets: [
+                        {
+                            name: "FOO",
+                            valueFrom: "not bar"
+                        },
+                        {
+                            name: "DONT-TOUCH",
+                            valueFrom: "me"
                         }
                     ]
                 },
@@ -64,11 +95,24 @@ describe('Render task definition', () => {
           });
         expect(fs.writeFileSync).toHaveBeenNthCalledWith(1, 'new-task-def-file-name',
             JSON.stringify({
-                family: 'task-def-family',
+                family: 'task-def-family-modified',
+                cpu: "2048",
+                memory: "4096",
+                executionRoleArn: "arn:aws:iam::xxxxxxxxxxxx:role/new",
+                taskRoleArn: "arn:aws:iam::xxxxxxxxxxxx:role/new",
                 containerDefinitions: [
                     {
                         name: "web",
                         image: "nginx:latest",
+                        logConfiguration: {
+                            logDriver: "awslogs",
+                            options: {
+                                "awslogs-group": "/ecs/new",
+                                "awslogs-region": "us-west-1",
+                                "awslogs-stream-prefix": "ecs",
+                                "awslogs-create-group": "true"
+                            }
+                        },
                         environment: [
                             {
                                 name: "FOO",
@@ -81,6 +125,20 @@ describe('Render task definition', () => {
                             {
                                 name: "HELLO",
                                 value: "world"
+                            }
+                        ],
+                        secrets: [
+                            {
+                                name: "FOO",
+                                valueFrom: "bar"
+                            },
+                            {
+                                name: "DONT-TOUCH",
+                                valueFrom: "me"
+                            },
+                            {
+                                name: "HELLO",
+                                valueFrom: "world"
                             }
                         ]
                     },
@@ -98,9 +156,17 @@ describe('Render task definition', () => {
         core.getInput = jest
             .fn()
             .mockReturnValueOnce('/hello/task-definition.json') // task-definition
+            .mockReturnValueOnce('task-def-family') // family
+            .mockReturnValueOnce('2048')                  // cpu
+            .mockReturnValueOnce('4096')                  // memory
+            .mockReturnValueOnce('arn:aws:iam::xxxxxxxxxxxx:role/new') // executionRoleArn
+            .mockReturnValueOnce('arn:aws:iam::xxxxxxxxxxxx:role/new') // taskRoleArn
             .mockReturnValueOnce('web')                  // container-name
             .mockReturnValueOnce('nginx:latest')         // image
-            .mockReturnValueOnce('EXAMPLE=here');        // environment-variables
+            .mockReturnValueOnce('/ecs/new')         // awslogs-group
+            .mockReturnValueOnce('us-west-1')         // awslogs-region
+            .mockReturnValueOnce('EXAMPLE=here')        // environment-variables
+            .mockReturnValueOnce('EXAMPLE=here');        // environment-secrets
         jest.mock('/hello/task-definition.json', () => ({
             family: 'task-def-family',
             containerDefinitions: [
@@ -132,9 +198,19 @@ describe('Render task definition', () => {
                                 name: "EXAMPLE",
                                 value: "here"
                             }
+                        ],
+                        secrets: [
+                            {
+                                name: "EXAMPLE",
+                                valueFrom: "here"
+                            }
                         ]
                     }
-                ]
+                ],
+                cpu: "2048",
+                memory: "4096",
+                executionRoleArn: "arn:aws:iam::xxxxxxxxxxxx:role/new",
+                taskRoleArn: "arn:aws:iam::xxxxxxxxxxxx:role/new",
             }, null, 2)
         );
         expect(core.setOutput).toHaveBeenNthCalledWith(1, 'task-definition', 'new-task-def-file-name');

@@ -16,6 +16,30 @@ inputs:
   environment-variables:
     description: 'Variables to add to the container. Each variable is of the form KEY=value, you can specify multiple variables with multi-line YAML strings.'
     required: false
+  environment-secrets:
+    description: 'Secrets to add to the container. Each secret is of the form KEY=value, you can specify multiple variables with multi-line YAML strings.'
+    required: false
+  family:
+    description: 'task-def family'
+    required: false
+  cpu:
+    description: 'CPU'
+    required: false
+  memory: 
+    description: 'Memory'
+    required: false
+  executionRoleArn:
+    description: 'executionRoleArn'
+    required: false
+  taskRoleArn:
+    description: 'taskRoleArn'
+    required: false
+  awslogs-group:
+    description: 'awslogs-group'
+    required: false
+  awslogs-region:
+    description: 'awslogs-region'
+    required: false
 outputs:
   task-definition:
     description: 'The path to the rendered task definition file'
