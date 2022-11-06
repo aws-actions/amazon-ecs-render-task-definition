@@ -17,6 +17,9 @@ async function run() {
     const containerName = core.getInput('container-name', { required: false });
     const overwriteContainerName = core.getInput('overwrite-container-name', { required: false });
     const imageURI = core.getInput('image', { required: true });
+    const containerPort = core.getInput('container-port', { required: false });
+    const hostPort = core.getInput('host-port', { required: false });
+    const command = core.getInput('command', { required: false });
     const awslogsGroup = core.getInput('awslogs-group', { required: false });
     const awslogsRegion = core.getInput('awslogs-region', { required: false });
 
@@ -66,6 +69,30 @@ async function run() {
 
     if (taskRoleArn) {
       taskDefContents.taskRoleArn = taskRoleArn;
+    }
+
+    if (containerPort && hostPort) {
+      const portMapping = {
+        containerPort: containerPort,
+        hostPort: hostPort,
+        protocol: "tcp"
+      };
+      // If portMappings array is missing, create it
+      if (!Array.isArray(containerDef.portMappings)) {
+        containerDef.portMappings = [];
+      }
+      containerDef.portMappings.push(portMapping);
+    }
+
+    if (command) {
+      if (!Array.isArray(containerDef.command)) {
+        containerDef.command = [];
+      }
+
+      command.split(' ').forEach(function (line) {
+        const trimmedLine = line.trim();
+        containerDef.command.push(trimmedLine);
+      })
     }
 
     if (environmentVariables) {
