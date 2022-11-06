@@ -23,6 +23,9 @@ describe('Render task definition', () => {
             .mockReturnValueOnce('mobile')             // container-name
             .mockReturnValueOnce('true')                  // overwrite-container-name
             .mockReturnValueOnce('nginx:latest')         // image
+            .mockReturnValueOnce('80')         // container-port
+            .mockReturnValueOnce('80')         // host-port
+            .mockReturnValueOnce('gunicorn api:app --worker-class uvicorn.workers.UvicornWorker --bind 0.0.0.0:80 --workers=8 --timeout=300')         // command
             .mockReturnValueOnce('/ecs/new')         // awslogs-group
             .mockReturnValueOnce('us-west-1')         // awslogs-region
             .mockReturnValueOnce('FOO=bar\nHELLO=world') // environment-variables
@@ -47,6 +50,8 @@ describe('Render task definition', () => {
                 {
                     name: "placeholder_container_name",
                     image: "some-other-image",
+                    portMappings: [],
+                    command: [],
                     logConfiguration: {
                         logDriver: "awslogs",
                         options: {
@@ -105,6 +110,22 @@ describe('Render task definition', () => {
                     {
                         name: "mobile",
                         image: "nginx:latest",
+                        portMappings: [
+                            {
+                                "containerPort": "80",
+                                "hostPort": "80",
+                                "protocol": "tcp"
+                            }
+                        ],
+                        command: [
+                            "gunicorn", 
+                            "api:app", 
+                            "--worker-class", 
+                            "uvicorn.workers.UvicornWorker", 
+                            "--bind", "0.0.0.0:80", 
+                            "--workers=8",
+                            "--timeout=300"
+                        ],
                         logConfiguration: {
                             logDriver: "awslogs",
                             options: {
@@ -165,6 +186,9 @@ describe('Render task definition', () => {
             .mockReturnValueOnce('mobile')                  // container-name
             .mockReturnValueOnce('true')                  // overwrite-container-name
             .mockReturnValueOnce('nginx:latest')         // image
+            .mockReturnValueOnce('80')         // container-port
+            .mockReturnValueOnce('80')         // host-port
+            .mockReturnValueOnce('gunicorn api:app --worker-class uvicorn.workers.UvicornWorker --bind 0.0.0.0:80 --workers=8 --timeout=300')         // command
             .mockReturnValueOnce('/ecs/new')         // awslogs-group
             .mockReturnValueOnce('us-west-1')         // awslogs-region
             .mockReturnValueOnce('EXAMPLE=here')        // environment-variables
@@ -195,6 +219,22 @@ describe('Render task definition', () => {
                     {
                         name: "mobile",
                         image: "nginx:latest",
+                        portMappings: [
+                            {
+                                "containerPort": "80",
+                                "hostPort": "80",
+                                "protocol": "tcp"
+                            }
+                        ],
+                        command: [
+                            "gunicorn", 
+                            "api:app", 
+                            "--worker-class", 
+                            "uvicorn.workers.UvicornWorker", 
+                            "--bind", "0.0.0.0:80", 
+                            "--workers=8",
+                            "--timeout=300"
+                        ],
                         environment: [
                             {
                                 name: "EXAMPLE",
