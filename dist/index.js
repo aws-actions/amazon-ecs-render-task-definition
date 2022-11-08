@@ -1408,6 +1408,7 @@ async function run() {
     const awslogsGroup = core.getInput('awslogs-group', { required: false });
     const awslogsRegion = core.getInput('awslogs-region', { required: false });
 
+    const awsEnvFiles = core.getInput('aws-env-files', { required: false });
     const environmentVariables = core.getInput('environment-variables', { required: false });
     const environmentSecrets = core.getInput('environment-secrets', { required: false });
 
@@ -1478,41 +1479,88 @@ async function run() {
       })
     }
 
-    if (environmentVariables) {
-
-      // If environment array is missing, create it
-      if (!Array.isArray(containerDef.environment)) {
-        containerDef.environment = [];
-      }
-
-      // Get pairs by splitting on newlines
-      environmentVariables.split('\n').forEach(function (line) {
-        // Trim whitespace
-        const trimmedLine = line.trim();
-        // Skip if empty
-        if (trimmedLine.length === 0) { return; }
-        // Split on =
-        const separatorIdx = trimmedLine.indexOf("=");
-        // If there's nowhere to split
-        if (separatorIdx === -1) {
-            throw new Error(`Cannot parse the environment variable '${trimmedLine}'. Environment variable pairs must be of the form NAME=value.`);
+    if (awsEnvFiles) {
+      // Parse env file(s). 
+      // Precedence: Order of aws-env-files < environment-variables == environment-secrets
+      awsEnvFiles.split('|').forEach(function (awsEnvFilePath) {
+        let filePath = awsEnvFilePath.trim()
+        filePath = path.isAbsolute(filePath) ? filePath : path.join(process.env.GITHUB_WORKSPACE, filePath);
+        if (!fs.existsSync(filePath)) {
+          throw new Error(`AWS env file does not exist: ${awsEnvFilePath}`);
         }
-        // Build object
-        const variable = {
-          name: trimmedLine.substring(0, separatorIdx),
-          value: trimmedLine.substring(separatorIdx + 1),
-        };
+        const awsEnvFile = require(filePath);
+        if (awsEnvFile.environment) {
+          if (!Array.isArray(containerDef.environment)) {
+            containerDef.environment = [];
+          }
 
-        // Search container definition environment for one matching name
-        const variableDef = containerDef.environment.find((e) => e.name == variable.name);
-        if (variableDef) {
-          // If found, update
-          variableDef.value = variable.value;
-        } else {
-          // Else, create
-          containerDef.environment.push(variable);
+          awsEnvFile.environment.forEach(function (variable) {
+            // Search container definition environment for one matching name
+            const variableDef = containerDef.environment.find((e) => e.name == variable.name);
+            if (variableDef) {
+              // If found, update
+              variableDef.value = variable.value;
+            } else {
+              // Else, create
+              containerDef.environment.push(variable);
+            }
+          })
+        }
+
+        if (awsEnvFile.secrets) {
+          if (!Array.isArray(containerDef.secrets)) {
+            containerDef.secrets = [];
+          }
+          awsEnvFile.secrets.forEach(function (secret) {
+            // Search container definition secrets for one matching name
+            const variableDef = containerDef.secrets.find((e) => e.name == secret.name);
+            if (variableDef) {
+              // If found, update
+              variableDef.valueFrom = secret.valueFrom;
+            } else {
+              // Else, create
+              containerDef.secrets.push(secret);
+            }
+          })
         }
       })
+
+      if (environmentVariables) {
+
+        // If environment array is missing, create it
+        if (!Array.isArray(containerDef.environment)) {
+          containerDef.environment = [];
+        }
+
+        // Get pairs by splitting on newlines
+        environmentVariables.split('\n').forEach(function (line) {
+          // Trim whitespace
+          const trimmedLine = line.trim();
+          // Skip if empty
+          if (trimmedLine.length === 0) { return; }
+          // Split on =
+          const separatorIdx = trimmedLine.indexOf("=");
+          // If there's nowhere to split
+          if (separatorIdx === -1) {
+              throw new Error(`Cannot parse the environment variable '${trimmedLine}'. Environment variable pairs must be of the form NAME=value.`);
+          }
+          // Build object
+          const variable = {
+            name: trimmedLine.substring(0, separatorIdx),
+            value: trimmedLine.substring(separatorIdx + 1),
+          };
+
+          // Search container definition environment for one matching name
+          const variableDef = containerDef.environment.find((e) => e.name == variable.name);
+          if (variableDef) {
+            // If found, update
+            variableDef.value = variable.value;
+          } else {
+            // Else, create
+            containerDef.environment.push(variable);
+          }
+        })
+      }
     }
 
     if (environmentSecrets) {

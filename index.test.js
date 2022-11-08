@@ -38,6 +38,7 @@ describe('Render task definition', () => {
             .mockReturnValueOnce('gunicorn api:app --worker-class uvicorn.workers.UvicornWorker --bind 0.0.0.0:80 --workers=8 --timeout=300')         // command
             .mockReturnValueOnce('/ecs/new')         // awslogs-group
             .mockReturnValueOnce('us-west-1')         // awslogs-region
+            .mockReturnValueOnce('/hello/env_one.json|/hello/env_two.json')        // aws-env-files
             .mockReturnValueOnce('FOO=bar\nHELLO=world') // environment-variables
             .mockReturnValueOnce('FOO=bar\nHELLO=world'); // environment-secrets
 
@@ -73,6 +74,14 @@ describe('Render task definition', () => {
                     },
                     environment: [
                         {
+                            name: "environment_var_1",
+                            value: "environment_var_1_value"
+                        },
+                        {
+                            name: "environment_var_2",
+                            value: "environment_var_2_old_value"
+                        },
+                        {
                             name: "FOO",
                             value: "not bar"
                         },
@@ -82,6 +91,14 @@ describe('Render task definition', () => {
                         }
                     ],
                     secrets: [
+                        {
+                            name: "environment_secret_1",
+                            valueFrom: "environment_secret_1_value"
+                        },
+                        {
+                            name: "environment_secret_2",
+                            valueFrom: "environment_secret_2_old_value"
+                        },
                         {
                             name: "FOO",
                             valueFrom: "not bar"
@@ -97,6 +114,34 @@ describe('Render task definition', () => {
                     image: "hello"
                 }
             ]
+        }), { virtual: true });
+        jest.mock('/hello/env_one.json', () => ({
+            environment: [
+                {
+                    name: "environment_var_1",
+                    value: "environment_var_1_value"
+                }
+            ],
+            secrets: [
+                {
+                    name: "environment_secret_1",
+                    valueFrom: "environment_secret_1_value"
+                }
+            ],
+        }), { virtual: true });
+        jest.mock('/hello/env_two.json', () => ({
+            environment: [
+                {
+                    name: "environment_var_2",
+                    value: "environment_var_2_value"
+                }
+            ],
+            secrets: [
+                {
+                    name: "environment_secret_2",
+                    valueFrom: "environment_secret_2_value"
+                }
+            ],
         }), { virtual: true });
     });
 
@@ -147,6 +192,14 @@ describe('Render task definition', () => {
                         },
                         environment: [
                             {
+                                name: "environment_var_1",
+                                value: "environment_var_1_value"
+                            },
+                            {
+                                name: "environment_var_2",
+                                value: "environment_var_2_value"
+                            },
+                            {
                                 name: "FOO",
                                 value: "bar"
                             },
@@ -160,6 +213,14 @@ describe('Render task definition', () => {
                             }
                         ],
                         secrets: [
+                            {
+                                name: "environment_secret_1",
+                                valueFrom: "environment_secret_1_value"
+                            },
+                            {
+                                name: "environment_secret_2",
+                                valueFrom: "environment_secret_2_value"
+                            },
                             {
                                 name: "FOO",
                                 valueFrom: "bar"
@@ -201,6 +262,7 @@ describe('Render task definition', () => {
             .mockReturnValueOnce('gunicorn api:app --worker-class uvicorn.workers.UvicornWorker --bind 0.0.0.0:80 --workers=8 --timeout=300')         // command
             .mockReturnValueOnce('/ecs/new')         // awslogs-group
             .mockReturnValueOnce('us-west-1')         // awslogs-region
+            .mockReturnValueOnce('/hello/env_one.json|/hello/env_three.json')        // aws-env-files
             .mockReturnValueOnce('EXAMPLE=here')        // environment-variables
             .mockReturnValueOnce('EXAMPLE=here');        // environment-secrets
         jest.mock('/hello/task-definition.json', () => ({
@@ -211,6 +273,50 @@ describe('Render task definition', () => {
                     image: "some-other-image"
                 }
             ]
+        }), { virtual: true });
+        jest.mock('/hello/env_one.json', () => ({
+            environment: [
+                {
+                    name: "environment_var_1",
+                    value: "environment_var_1_value"
+                },
+                {
+                    name: "EXAMPLE",
+                    value: "version_1"
+                }
+            ],
+            secrets: [
+                {
+                    name: "environment_secret_1",
+                    valueFrom: "environment_secret_1_value"
+                },
+                {
+                    name: "EXAMPLE",
+                    valueFrom: "version_1"
+                }
+            ],
+        }), { virtual: true });
+        jest.mock('/hello/env_three.json', () => ({
+            environment: [
+                {
+                    name: "environment_var_1",
+                    value: "environment_var_2_value"
+                },
+                {
+                    name: "EXAMPLE",
+                    value: "version_2"
+                }
+            ],
+            secrets: [
+                {
+                    name: "environment_secret_1",
+                    valueFrom: "environment_secret_2_value"
+                },
+                {
+                    name: "EXAMPLE",
+                    valueFrom: "version_2"
+                }
+            ],
         }), { virtual: true });
 
         await run();
@@ -247,11 +353,19 @@ describe('Render task definition', () => {
                         ],
                         environment: [
                             {
+                                name: "environment_var_1",
+                                value: "environment_var_2_value"
+                            },
+                            {
                                 name: "EXAMPLE",
                                 value: "here"
                             }
                         ],
                         secrets: [
+                            {
+                                name: "environment_secret_1",
+                                valueFrom: "environment_secret_2_value"
+                            },
                             {
                                 name: "EXAMPLE",
                                 valueFrom: "here"
