@@ -13,9 +13,21 @@ inputs:
   overwrite-container-name:
     description: 'Overwrite container name "placeholder_container_name" with {{ container-name }} if set to "true"'
     required: false
+  container-port:
+    description: 'Container port mapping'
+    required: false
+  host-port:
+    description: 'Container port mapping'
+    required: false
+  command:
+    description: 'Command to execute on container'
+    required: false
   image:
     description: 'The URI of the container image to insert into the ECS task definition'
     required: true
+  aws-env-files:
+    description: 'AWS env files'
+    required: false
   environment-variables:
     description: 'Variables to add to the container. Each variable is of the form KEY=value, you can specify multiple variables with multi-line YAML strings.'
     required: false
