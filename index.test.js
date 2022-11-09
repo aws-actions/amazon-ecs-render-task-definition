@@ -4,8 +4,14 @@ const tmp = require('tmp');
 const fs = require('fs');
 
 jest.mock('@actions/core');
-jest.mock('tmp');
-jest.mock('fs');
+jest.mock('tmp', () => ({
+    fileSync: jest.fn(),
+}));
+jest.mock('fs', () => ({
+    promises: jest.fn(),
+    existsSync: jest.fn(),
+    writeFileSync: jest.fn(),
+}));
 
 describe('Render task definition', () => {
 
