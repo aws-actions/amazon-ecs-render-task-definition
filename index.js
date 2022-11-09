@@ -101,7 +101,7 @@ async function run() {
         let filePath = awsEnvFilePath.trim()
         filePath = path.isAbsolute(filePath) ? filePath : path.join(process.env.GITHUB_WORKSPACE, filePath);
         if (!fs.existsSync(filePath)) {
-          throw new Error(`AWS env file does not exist: ${awsEnvFilePath}`);
+          throw new Error(`AWS env file does not exist: ${filePath}`);
         } 
         const awsEnvFile = require(filePath);
         if (awsEnvFile.environment) {
