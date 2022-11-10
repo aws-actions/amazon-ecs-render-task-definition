@@ -1300,7 +1300,9 @@ async function run() {
               variableDef.value = variable.value;
             } else {
               // Else, create
-              containerDef.environment.push(variable);
+              if (variable.value.length !== 0) {
+                containerDef.environment.push(variable); 
+              }
             }
           })
         }
@@ -1316,8 +1318,10 @@ async function run() {
               // If found, update
               variableDef.valueFrom = secret.valueFrom;
             } else {
-              // Else, create
-              containerDef.secrets.push(secret);
+              // Else, create (only if not empty)
+              if (secret.valueFrom.length !== 0) {
+                containerDef.secrets.push(secret); 
+              }
             }
           })
         }
@@ -1355,7 +1359,9 @@ async function run() {
             variableDef.value = variable.value;
           } else {
             // Else, create
-            containerDef.environment.push(variable);
+            if (variable.value.length !== 0) {
+              containerDef.environment.push(variable); 
+            }
           }
         })
       }
@@ -1392,8 +1398,10 @@ async function run() {
           // If found, update
           variableDef.valueFrom = secret.valueFrom;
         } else {
-          // Else, create
-          containerDef.secrets.push(secret);
+          // Else, create (only if not empty)
+          if (secret.valueFrom.length !== 0) {
+            containerDef.secrets.push(secret);
+          }
         }
       })
     }
