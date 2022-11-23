@@ -35,11 +35,7 @@ async function run() {
     containerDef.image = imageURI;
 
     if (command) {
-      if (!Array.isArray(command)) {
-        throw new Error(`Cannot parse the command. The command must be a list of strings composing the docker command.`);
-      }
-      
-      containerDef.command = command;
+      containerDef.command = command.split(' ')
     }
     
     if (environmentVariables) {
