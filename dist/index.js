@@ -1194,6 +1194,7 @@ async function run() {
     const imageURI = core.getInput('image', { required: true });
 
     const environmentVariables = core.getInput('environment-variables', { required: false });
+    const command = core.getInput('command', { required: false });
 
     // Parse the task definition
     const taskDefPath = path.isAbsolute(taskDefinitionFile) ?
@@ -1216,6 +1217,10 @@ async function run() {
     }
     containerDef.image = imageURI;
 
+    if (command) {
+      containerDef.command = command.split(' ')
+    }
+    
     if (environmentVariables) {
 
       // If environment array is missing, create it
