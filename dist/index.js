@@ -103,17 +103,26 @@ async function run() {
       throw new Error("Either task definition, task definition arn or task definition family must be provided");
     }
 
-    // Insert the image URI
-    if (!Array.isArray(taskDefContents.containerDefinitions)) {
-      throw new Error('Invalid task definition format: containerDefinitions section is not present or is not an array');
+    const containersNames = containerName.split(',');
+    // Check if containerNames length is major than 1
+    // Regex to check if a string is comma separated
+    const pattern = /^([^,]+,)*[^,]+$/g;
+    if (!containerName.match(pattern)) {
+      throw new Error('Invalid format for container name. Please use a single value or comma separated values');
     }
-    const containerDef = taskDefContents.containerDefinitions.find(function (element) {
-      return element.name == containerName;
-    });
-    if (!containerDef) {
-      throw new Error('Invalid task definition: Could not find container definition with matching name');
-    }
-    containerDef.image = imageURI;
+
+    containersNames.forEach(contName => {
+      // Insert the image URI
+      if (!Array.isArray(taskDefContents.containerDefinitions)) {
+        throw new Error('Invalid task definition format: containerDefinitions section is not present or is not an array');
+      }
+      const containerDef = taskDefContents.containerDefinitions.find(function(element) {
+        return element.name == contName;
+      });
+      if (!containerDef) {
+        throw new Error('Invalid task definition: Could not find container definition with matching name');
+      }
+      containerDef.image = imageURI;      
 
     if (command) {
       containerDef.command = command.split(' ')
@@ -250,6 +259,7 @@ async function run() {
         }
       })
     }
+  });
 
     // Write out a new task definition file
     var updatedTaskDefFile = tmp.fileSync({
