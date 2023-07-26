@@ -67,6 +67,25 @@ input of the second:
         cluster: my-cluster
 ```
 
+Use the following approach to configure your log driver if needed:
+
+```yaml
+    - name: Render Amazon ECS task definition
+      id: render-web-container
+      uses: aws-actions/amazon-ecs-render-task-definition@v1
+      with:
+        task-definition: task-definition.json
+        container-name: web
+        image: amazon/amazon-ecs-sample:latest
+        log-configuration-log-driver: awslogs
+        log-configuration-log-options: |
+          awslogs-create-group=true
+          awslogs-group=/ecs/web
+          awslogs-region=us-east-1
+          awslogs-stream-prefix=ecs
+
+```
+
 See [action.yml](action.yml) for the full documentation for this action's inputs and outputs.
 
 ## License Summary
