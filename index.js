@@ -75,9 +75,9 @@ async function run() {
 
     if (logConfigurationLogDriver) {
       if (!containerDef.logConfiguration) { containerDef.logConfiguration = {} }
-      const validDrivers = ["json-file", "syslog", "journald", "gelf", "fluentd", "awslogs", "splunk", "awsfirelens"];
+      const validDrivers = ["json-file", "syslog", "journald", "logentries", "gelf", "fluentd", "awslogs", "splunk", "awsfirelens"];
       if (!validDrivers.find(driver => driver === logConfigurationLogDriver)) {
-        throw new Error(`'${logConfigurationLogDriver}' is invalid logConfigurationLogDriver. valid options are ${validDrivers}. More details: https://docs.aws.amazon.com/AmazonECS/latest/APIReference/API_LogConfiguration.html`)
+        throw new Error(`'${logConfigurationLogDriver}' is invalid logConfigurationLogDriver`)
       }
       containerDef.logConfiguration.logDriver = logConfigurationLogDriver
     }
