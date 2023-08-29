@@ -11,7 +11,7 @@ async function run() {
     const imageURI = core.getInput('image', { required: true });
 
     const environmentVariables = core.getInput('environment-variables', { required: false });
-
+    const envFiles = core.getInput('env-files', { required: false });
     // Parse the task definition
     const taskDefPath = path.isAbsolute(taskDefinitionFile) ?
       taskDefinitionFile :
@@ -33,13 +33,27 @@ async function run() {
     }
     containerDef.image = imageURI;
 
-    if (environmentVariables) {
+    if (envFiles) {
+      containerDef.environmentFiles = [];
+        envFiles.split('\n').forEach(function (line) {
+          // Trim whitespace
+          const trimmedLine = line.trim();
+          // Skip if empty
+          if (trimmedLine.length === 0) { return; }
+          // Build object
+          const variable = {
+            value: trimmedLine,
+            type: "s3",
+          };
+          containerDef.environmentFiles.push(variable);
+        })
+    }
 
+    if (environmentVariables) {
       // If environment array is missing, create it
       if (!Array.isArray(containerDef.environment)) {
         containerDef.environment = [];
       }
-
       // Get pairs by splitting on newlines
       environmentVariables.split('\n').forEach(function (line) {
         // Trim whitespace

@@ -27,7 +27,8 @@ describe('Render task definition', () => {
             .mockReturnValueOnce('task-definition.json') // task-definition
             .mockReturnValueOnce('web')                  // container-name
             .mockReturnValueOnce('nginx:latest')         // image
-            .mockReturnValueOnce('FOO=bar\nHELLO=world'); // environment-variables
+            .mockReturnValueOnce('FOO=bar\nHELLO=world') // environment-variables
+            .mockReturnValueOnce('arn:aws:s3:::s3_bucket_name/envfile_object_name.env'); // env-files
 
         process.env = Object.assign(process.env, { GITHUB_WORKSPACE: __dirname });
         process.env = Object.assign(process.env, { RUNNER_TEMP: '/home/runner/work/_temp' });
@@ -52,6 +53,12 @@ describe('Render task definition', () => {
                         {
                             name: "DONT-TOUCH",
                             value: "me"
+                        }
+                    ],
+                    environmentFiles: [
+                        {
+                            value: "arn:aws:s3:::s3_bucket_name/envfile_object_name.env",
+                            type: "s3"
                         }
                     ]
                 },
@@ -91,6 +98,12 @@ describe('Render task definition', () => {
                             {
                                 name: "HELLO",
                                 value: "world"
+                            }
+                        ],
+                        environmentFiles: [
+                            {
+                                value: "arn:aws:s3:::s3_bucket_name/envfile_object_name.env",
+                                type: "s3"
                             }
                         ]
                     },
