@@ -50,6 +50,9 @@ input of the second:
         environment-variables: |
             LOG_LEVEL=info
             ENVIRONMENT=prod
+        docker-labels: |
+            SERVICE=service
+            VERSION=version
 
     - name: Modify Amazon ECS task definition with second container
       id: render-app-container
