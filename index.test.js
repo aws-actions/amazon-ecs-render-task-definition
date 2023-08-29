@@ -150,6 +150,18 @@ describe('Render task definition', () => {
         expect(core.setOutput).toHaveBeenNthCalledWith(1, 'task-definition', 'new-task-def-file-name');
     });
 
+    test('error returned if container-name input is not well formated', async () => {
+        core.getInput = jest
+            .fn()
+            .mockReturnValueOnce('/hello/task-definition.json')
+            .mockReturnValueOnce('web,')
+            .mockReturnValueOnce('nginx:latest');
+
+        await run();
+
+        expect(core.setFailed).toBeCalledWith('Invalid format for container name. Please use a single value or comma separated values');
+    });
+
     test('error returned for missing task definition file', async () => {
         fs.existsSync.mockReturnValue(false);
         core.getInput = jest
