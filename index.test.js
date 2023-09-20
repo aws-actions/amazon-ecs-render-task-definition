@@ -27,7 +27,8 @@ describe('Render task definition', () => {
             .mockReturnValueOnce('task-definition.json') // task-definition
             .mockReturnValueOnce('web')                  // container-name
             .mockReturnValueOnce('nginx:latest')         // image
-            .mockReturnValueOnce('FOO=bar\nHELLO=world'); // environment-variables
+            .mockReturnValueOnce('FOO=bar\nHELLO=world') // environment-variables
+            .mockReturnValueOnce('tag=value\nanother=tag'); // tags
 
         process.env = Object.assign(process.env, { GITHUB_WORKSPACE: __dirname });
         process.env = Object.assign(process.env, { RUNNER_TEMP: '/home/runner/work/_temp' });
@@ -92,6 +93,16 @@ describe('Render task definition', () => {
                                 name: "HELLO",
                                 value: "world"
                             }
+                        ],
+                        tags: [
+                            {
+                                key: "tag",
+                                value: "value"
+                            },
+                            {
+                                key: "another",
+                                value: "tag"
+                            }
                         ]
                     },
                     {
@@ -110,7 +121,8 @@ describe('Render task definition', () => {
             .mockReturnValueOnce('/hello/task-definition.json') // task-definition
             .mockReturnValueOnce('web')                  // container-name
             .mockReturnValueOnce('nginx:latest')         // image
-            .mockReturnValueOnce('EXAMPLE=here');        // environment-variables
+            .mockReturnValueOnce('EXAMPLE=here')        // environment-variables
+            .mockReturnValueOnce('tag=value');          // tags
         jest.mock('/hello/task-definition.json', () => ({
             family: 'task-def-family',
             containerDefinitions: [
@@ -142,6 +154,12 @@ describe('Render task definition', () => {
                                 name: "EXAMPLE",
                                 value: "here"
                             }
+                        ],
+                        tags: [
+                            {
+                                key: "tag",
+                                value: "value"
+                            }
                         ]
                     }
                 ]
@@ -157,6 +175,7 @@ describe('Render task definition', () => {
             .mockReturnValueOnce('web')
             .mockReturnValueOnce('nginx:latest')
             .mockReturnValueOnce('FOO=bar\nHELLO=world')
+            .mockReturnValueOnce('tag=value\nanother=tag')
             .mockReturnValueOnce('awslogs')
             .mockReturnValueOnce(`awslogs-create-group=true\nawslogs-group=/ecs/web\nawslogs-region=us-east-1\nawslogs-stream-prefix=ecs`);
 
@@ -190,6 +209,16 @@ describe('Render task definition', () => {
                             {
                                 name: "HELLO",
                                 value: "world"
+                            }
+                        ],
+                        tags: [
+                            {
+                                key: "tag",
+                                value: "value"
+                            },
+                            {
+                                key: "another",
+                                value: "tag"
                             }
                         ],
                         logConfiguration: {

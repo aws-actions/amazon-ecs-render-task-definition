@@ -11,6 +11,7 @@ async function run() {
     const imageURI = core.getInput('image', { required: true });
 
     const environmentVariables = core.getInput('environment-variables', { required: false });
+    const tags = core.getInput('tags', {required: false});
 
     const logConfigurationLogDriver = core.getInput("log-configuration-log-driver", { required: false });
     const logConfigurationOptions = core.getInput("log-configuration-options", { required: false });
@@ -69,6 +70,43 @@ async function run() {
         } else {
           // Else, create
           containerDef.environment.push(variable);
+        }
+      })
+    }
+
+    if (tags) {
+
+      // If tags array is missing, create it
+      if (!Array.isArray(containerDef.tags)) {
+        containerDef.tags = [];
+      }
+
+      // Get pairs by splitting on newlines
+      tags.split('\n').forEach(function (line) {
+        // Trim whitespace
+        const trimmedLine = line.trim();
+        // Skip if empty
+        if (trimmedLine.length === 0) { return; }
+        // Split on =
+        const separatorIdx = trimmedLine.indexOf("=");
+        // If there's nowhere to split
+        if (separatorIdx === -1) {
+          throw new Error(`Cannot parse the tag '${trimmedLine}'. Tag key–value pairs must be of the form KEY=value.`);
+        }
+        // Build object
+        const tag = {
+          key: trimmedLine.substring(0, separatorIdx),
+          value: trimmedLine.substring(separatorIdx + 1),
+        };
+
+        // Search container definition tags for one matching name
+        const tagDef = containerDef.tags.find((e) => e.key == tag.key);
+        if (tagDef) {
+          // If found, update
+          tagDef.value = tag.value;
+        } else {
+          // Else, create
+          containerDef.tags.push(tag);
         }
       })
     }

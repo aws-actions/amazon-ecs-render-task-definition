@@ -22,6 +22,9 @@ inputs:
   log-configuration-options:
     description: "Create/Override options inside logConfiguration. Each variable is of the form key=value, you can specify multiple variables with multi-line YAML strings."
     required: false
+#  tags:
+#    description: "Tags to add to the task definition. Each Tag is of the form KEY=value, you can specify multiple key–value pairs with multi-line YAML strings."
+#    required: false
 outputs:
   task-definition:
     description: 'The path to the rendered task definition file'
