@@ -6,18 +6,23 @@ name: Check
 jobs:
   check:
     name: Run Unit Tests
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
     - name: Checkout
-      uses: actions/checkout@v2
+      #Version actions/checkout@V3.6.0
+      uses: actions/checkout@f43a0e5ff2bd294095638e18286ca9a3d1956744
+    - name: Node setup
+      #Version actions/setup-node@v3.8.1
+      uses: actions/setup-node@5e21ff4d9bc1a8cf6de233a3057d20ec6b3fb69d
+      with:
+        node-version: "18.16.1"
     - name: Run tests
       run: |
         npm ci
         npm test
-
   conventional-commits:
     name: Semantic Pull Request
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
       - name: validate
         uses: actions/github-script@v6
