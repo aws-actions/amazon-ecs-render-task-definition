@@ -78,7 +78,7 @@ Use the following approach to configure your log driver if needed:
         container-name: web
         image: amazon/amazon-ecs-sample:latest
         log-configuration-log-driver: awslogs
-        log-configuration-log-options: |
+        log-configuration-options: |
           awslogs-create-group=true
           awslogs-group=/ecs/web
           awslogs-region=us-east-1
