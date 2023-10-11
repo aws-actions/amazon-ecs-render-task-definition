@@ -20,6 +20,7 @@ async function run() {
 
     const logConfigurationLogDriver = core.getInput("log-configuration-log-driver", { required: false });
     const logConfigurationOptions = core.getInput("log-configuration-options", { required: false });
+    const dockerLabels = core.getInput('docker-labels', { required: false });
 
     // Parse the task definition
     const taskDefPath = path.isAbsolute(taskDefinitionFile) ?
@@ -99,6 +100,24 @@ async function run() {
           }
           const [key, value] = option.split("=");
           containerDef.logConfiguration.options[key] = value
+        }
+      })
+    }
+
+    if (dockerLabels) {
+      // If dockerLabels object is missing, create it
+      if (!containerDef.dockerLabels) { containerDef.dockerLabels = {} }
+
+      // Get pairs by splitting on newlines
+      dockerLabels.split('\n').forEach(function (label) {
+        // Trim whitespace
+        label = label.trim();
+        if (label && label.length) {
+          if (label.indexOf("=") == -1 ) {
+            throw new Error(`Can't parse logConfiguration option ${label}. Must be in key=value format, one per line`);
+          }
+          const [key, value] = label.split("=");
+          containerDef.dockerLabels[key] = value;
         }
       })
     }
