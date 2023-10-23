@@ -22,6 +22,9 @@ inputs:
   log-configuration-options:
     description: "Create/Override options inside logConfiguration. Each variable is of the form key=value, you can specify multiple variables with multi-line YAML strings."
     required: false
+  docker-labels:
+    description: "Create/Override options inside dockerLabels. Each variable is key=value, you can specify multiple variables with multi-line YAML."
+    required: false
 outputs:
   task-definition:
     description: 'The path to the rendered task definition file'
