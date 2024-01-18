@@ -21,6 +21,7 @@ async function run() {
     const logConfigurationLogDriver = core.getInput("log-configuration-log-driver", { required: false });
     const logConfigurationOptions = core.getInput("log-configuration-options", { required: false });
     const dockerLabels = core.getInput('docker-labels', { required: false });
+    const command = core.getInput('command', { required: false });
 
     // Parse the task definition
     const taskDefPath = path.isAbsolute(taskDefinitionFile) ?
@@ -42,6 +43,10 @@ async function run() {
       throw new Error('Invalid task definition: Could not find container definition with matching name');
     }
     containerDef.image = imageURI;
+
+    if (command) {
+      containerDef.command = command.split(' ')
+    }
 
     if (environmentVariables) {
 

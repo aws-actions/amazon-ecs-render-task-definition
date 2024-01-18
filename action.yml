@@ -25,6 +25,9 @@ inputs:
   docker-labels:
     description: "Create/Override options inside dockerLabels. Each variable is key=value, you can specify multiple variables with multi-line YAML."
     required: false
+  command:
+    description: 'The command used by ECS to start the container image'
+    required: false
 outputs:
   task-definition:
     description: 'The path to the rendered task definition file'
