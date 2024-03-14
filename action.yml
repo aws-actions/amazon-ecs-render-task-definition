@@ -29,5 +29,5 @@ outputs:
   task-definition:
     description: 'The path to the rendered task definition file'
 runs:
-  using: 'node16'
+  using: 'node20'
   main: 'dist/index.js'
