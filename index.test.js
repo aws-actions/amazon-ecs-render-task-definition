@@ -123,7 +123,9 @@ describe('Render task definition', () => {
             .mockReturnValueOnce('/hello/task-definition.json') // task-definition
             .mockReturnValueOnce('web')                  // container-name
             .mockReturnValueOnce('nginx:latest')         // image
-            .mockReturnValueOnce('EXAMPLE=here');        // environment-variables
+            .mockReturnValueOnce('EXAMPLE=here')         // environment-variables
+            .mockReturnValueOnce('arn:aws:s3:::s3_bucket_name/envfile_object_name.env'); // env-files
+
         jest.mock('/hello/task-definition.json', () => ({
             family: 'task-def-family',
             containerDefinitions: [
@@ -150,6 +152,12 @@ describe('Render task definition', () => {
                     {
                         name: "web",
                         image: "nginx:latest",
+                        environmentFiles: [
+                            {
+                                value: "arn:aws:s3:::s3_bucket_name/envfile_object_name.env",
+                                type: "s3"
+                            }
+                        ],
                         environment: [
                             {
                                 name: "EXAMPLE",
@@ -170,6 +178,7 @@ describe('Render task definition', () => {
             .mockReturnValueOnce('web')
             .mockReturnValueOnce('nginx:latest')
             .mockReturnValueOnce('FOO=bar\nHELLO=world')
+            .mockReturnValueOnce('arn:aws:s3:::s3_bucket_name/envfile_object_name.env')
             .mockReturnValueOnce('awslogs')
             .mockReturnValueOnce(`awslogs-create-group=true\nawslogs-group=/ecs/web\nawslogs-region=us-east-1\nawslogs-stream-prefix=ecs`);
 
@@ -203,6 +212,12 @@ describe('Render task definition', () => {
                             {
                                 name: "HELLO",
                                 value: "world"
+                            }
+                        ],
+                        environmentFiles: [
+                            {
+                                value: "arn:aws:s3:::s3_bucket_name/envfile_object_name.env",
+                                type: "s3"
                             }
                         ],
                         logConfiguration: {
@@ -244,6 +259,7 @@ describe('Render task definition', () => {
             .mockReturnValueOnce('web')
             .mockReturnValueOnce('nginx:latest')
             .mockReturnValueOnce('EXAMPLE=here')
+            .mockReturnValueOnce('arn:aws:s3:::s3_bucket_name/envfile_object_name.env')
             .mockReturnValueOnce('awslogs')
             .mockReturnValueOnce('awslogs-create-group=true\nawslogs-group=/ecs/web\nawslogs-region=us-east-1\nawslogs-stream-prefix=ecs')
             .mockReturnValueOnce('key1=value1\nkey2=value2');
@@ -283,6 +299,12 @@ describe('Render task definition', () => {
                                 value: "here"
                             }
                         ],
+                        environmentFiles: [
+                            {
+                                value: "arn:aws:s3:::s3_bucket_name/envfile_object_name.env",
+                                type: "s3"
+                            }
+                        ],
                         logConfiguration: {
                             logDriver: "awslogs",
                             options: {
@@ -313,6 +335,7 @@ describe('Render task definition', () => {
             .mockReturnValueOnce('web')
             .mockReturnValueOnce('nginx:latest')
             .mockReturnValueOnce('EXAMPLE=here')
+            .mockReturnValueOnce('arn:aws:s3:::s3_bucket_name/envfile_object_name.env')
             .mockReturnValueOnce('awslogs')
             .mockReturnValueOnce('awslogs-create-group=true\nawslogs-group=/ecs/web\nawslogs-region=us-east-1\nawslogs-stream-prefix=ecs')
             .mockReturnValueOnce('key1=update_value1\nkey2\nkey3=value3');
@@ -396,6 +419,7 @@ describe('Render task definition', () => {
             .mockReturnValueOnce('web')
             .mockReturnValueOnce('nginx:latest')
             .mockReturnValueOnce('EXAMPLE=here')
+            .mockReturnValueOnce('arn:aws:s3:::s3_bucket_name/envfile_object_name.env')
             .mockReturnValueOnce('awslogs')
             .mockReturnValueOnce('awslogs-create-group=true\nawslogs-group=/ecs/web\nawslogs-region=us-east-1\nawslogs-stream-prefix=ecs')
             .mockReturnValueOnce('key1=value1\nkey2=value2')
@@ -434,6 +458,12 @@ describe('Render task definition', () => {
                             {
                                 name: "EXAMPLE",
                                 value: "here"
+                            }
+                        ],
+                        environmentFiles: [
+                            {
+                                value: "arn:aws:s3:::s3_bucket_name/envfile_object_name.env",
+                                type: "s3"
                             }
                         ],
                         logConfiguration: {
