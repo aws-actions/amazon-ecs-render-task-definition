@@ -386,7 +386,7 @@ describe('Render task definition', () => {
             .mockReturnValueOnce('awslogs')
             .mockReturnValueOnce('awslogs-create-group=true\nawslogs-group=/ecs/web\nawslogs-region=us-east-1\nawslogs-stream-prefix=ecs')
             .mockReturnValueOnce('key1=value1\nkey2=value2')
-            .mockReturnValueOnce('npm start --nice --please');
+            .mockReturnValueOnce('["npm", "start", "--nice", "--please"]');
 
         await run();
 
@@ -445,5 +445,22 @@ describe('Render task definition', () => {
                 ]
             }, null, 2)
         );
+    });
+
+    test('error returned for invalid command', async () => {
+        core.getInput = jest
+            .fn()
+            .mockReturnValueOnce('task-definition.json')
+            .mockReturnValueOnce('web')
+            .mockReturnValueOnce('nginx:latest')
+            .mockReturnValueOnce('EXAMPLE=here')
+            .mockReturnValueOnce('awslogs')
+            .mockReturnValueOnce('awslogs-create-group=true\nawslogs-group=/ecs/web\nawslogs-region=us-east-1\nawslogs-stream-prefix=ecs')
+            .mockReturnValueOnce('key1=value1\nkey2=value2')
+            .mockReturnValueOnce('npm start --nice --please');
+
+        await run();
+
+        expect(core.setFailed).toBeCalledWith('Invalid command: \'npm start --nice --please\'. command must be a valid JSON array.');
     });
 });
