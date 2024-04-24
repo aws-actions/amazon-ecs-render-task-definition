@@ -40,8 +40,7 @@ async function run() {
       throw new Error('Invalid task definition: Could not find container definition with matching name');
     }
     containerDef.image = imageURI;
-    containerDef.executionRoleArn = taskRoleArn;
-    containerDef.taskRoleArn = executionRoleArn;
+
 
     if (command) {
       containerDef.command = command.split(' ')
@@ -124,6 +123,14 @@ async function run() {
           containerDef.dockerLabels[key] = value;
         }
       })
+    }
+
+    if (taskRoleArn) {
+      taskDefContents.taskRoleArn = taskRoleArn;
+    }
+
+    if (executionRoleArn) {
+      taskDefContents.executionRoleArn = executionRoleArn;
     }
 
     // Write out a new task definition file
