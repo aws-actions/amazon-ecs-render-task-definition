@@ -41,7 +41,7 @@ async function run() {
     }
     containerDef.image = imageURI;
     containerDef.executionRoleArn = taskRoleArn;
-    containerDef.taskRoleArn = executionRoleArn
+    containerDef.taskRoleArn = executionRoleArn;
 
     if (command) {
       containerDef.command = command.split(' ')
