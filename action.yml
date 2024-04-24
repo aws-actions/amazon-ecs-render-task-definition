@@ -28,6 +28,12 @@ inputs:
   command:
     description: 'The command used by ECS to start the container image'
     required: false
+  task-role-arn:
+    description: 'The ARN of the IAM role that the ECS container will assume'
+    required: false
+  execution-role-arn:
+    description: 'The ARN of the IAM role that the ECS task execution role will assume'
+    required: false
 outputs:
   task-definition:
     description: 'The path to the rendered task definition file'
