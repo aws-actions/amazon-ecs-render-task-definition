@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.3.0](https://github.com/aws-actions/amazon-ecs-render-task-definition/compare/v1.2.0...v1.3.0) (2024-05-07)
+
+
+### Features
+
+* support command override ([#284](https://github.com/aws-actions/amazon-ecs-render-task-definition/issues/284)) ([9259793](https://github.com/aws-actions/amazon-ecs-render-task-definition/commit/925979370e7456028a520e0dad54854d027a3808))
+
 ## [1.2.0](https://github.com/aws-actions/amazon-ecs-render-task-definition/compare/v1.1.3...v1.2.0) (2023-11-14)
 
 

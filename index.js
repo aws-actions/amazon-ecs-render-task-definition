@@ -9,8 +9,8 @@ async function run() {
     const taskDefinitionFile = core.getInput('task-definition', { required: true });
     const containerName = core.getInput('container-name', { required: true });
     const imageURI = core.getInput('image', { required: true });
-
     const environmentVariables = core.getInput('environment-variables', { required: false });
+    const envFiles = core.getInput('env-files', { required: false });
 
     const logConfigurationLogDriver = core.getInput("log-configuration-log-driver", { required: false });
     const logConfigurationOptions = core.getInput("log-configuration-options", { required: false });
@@ -53,13 +53,27 @@ async function run() {
       }
     }
 
-    if (environmentVariables) {
+    if (envFiles) {
+      containerDef.environmentFiles = [];
+      envFiles.split('\n').forEach(function (line) {
+        // Trim whitespace
+        const trimmedLine = line.trim();
+        // Skip if empty
+        if (trimmedLine.length === 0) { return; }
+        // Build object
+        const variable = {
+          value: trimmedLine,
+          type: "s3",
+        };
+        containerDef.environmentFiles.push(variable);
+      })
+    }
 
+    if (environmentVariables) {
       // If environment array is missing, create it
       if (!Array.isArray(containerDef.environment)) {
         containerDef.environment = [];
       }
-
       // Get pairs by splitting on newlines
       environmentVariables.split('\n').forEach(function (line) {
         // Trim whitespace
