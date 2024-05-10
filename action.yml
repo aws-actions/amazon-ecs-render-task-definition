@@ -28,6 +28,9 @@ inputs:
   command:
     description: 'The command used by ECS to start the container image'
     required: false
+  env-files:
+    description: 'S3 object arns to set env variables onto the container. You can specify multiple files with multi-line YAML strings.'
+    required: false
 outputs:
   task-definition:
     description: 'The path to the rendered task definition file'
