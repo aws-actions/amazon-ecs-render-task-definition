@@ -7,7 +7,7 @@ All notable changes to this project will be documented in this file. See [standa
 
 ### Features
 
-* Force version upgrade to v1.4 ([#308](https://github.com/aws-actions/amazon-ecs-render-task-definition/issues/308)) ([2c5f6d8](https://github.com/aws-actions/amazon-ecs-render-task-definition/commit/2c5f6d89518b6090f8b4c688b2eac61149e8e2d3))
+* Adds env-files input to the github action ([a40f6ea](https://github.com/aws-actions/amazon-ecs-render-task-definition/commit/a40f6eaad3be711b605d54fefc660fbd40925fdb))
 
 ## [1.3.0](https://github.com/aws-actions/amazon-ecs-render-task-definition/compare/v1.2.0...v1.3.0) (2024-05-07)
 
