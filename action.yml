@@ -4,9 +4,19 @@ branding:
   icon: 'cloud'
   color: 'orange'
 inputs:
-  task-definition:
+
+  task-definition-file:
     description: 'The path to the ECS task definition JSON file'
-    required: true
+    required: false
+  task-definition-arn:
+    description: 'The task definition from where the the ARN link is found is used'
+    required: false
+  task-definition-family:
+    description: 'The latest task definition is used'
+    required: false
+  task-definition-revision:
+    description: 'The revision the customer wants to use, if not the default will be used'
+    required: false
   container-name:
     description: 'The name of the container defined in the containerDefinitions section of the ECS task definition'
     required: true

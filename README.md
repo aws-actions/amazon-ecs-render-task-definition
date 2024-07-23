@@ -21,7 +21,10 @@ To insert the image URI `amazon/amazon-ecs-sample:latest` as the image for the `
       id: render-web-container
       uses: aws-actions/amazon-ecs-render-task-definition@v1
       with:
-        task-definition: task-definition.json
+        task-definition: task-definition-file
+        task-definition-arn:  task-definition-arn-name 
+        task-definition-family: task-definition-family-name 
+        task-definition-revision: task-definition-revision-name 
         container-name: web
         image: amazon/amazon-ecs-sample:latest
         environment-variables: "LOG_LEVEL=info"

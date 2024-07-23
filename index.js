@@ -2,11 +2,17 @@ const path = require('path');
 const core = require('@actions/core');
 const tmp = require('tmp');
 const fs = require('fs');
+const {ECS} = require('@aws-sdk/client-ecs');
+
 
 async function run() {
   try {
+    const ecs = new ECS({
+      customUserAgent: 'amazon-ecs-render-task-definition-for-github-actions'
+    });
+
     // Get inputs
-    const taskDefinitionFile = core.getInput('task-definition', { required: true });
+    const taskDefinitionFile = core.getInput('task-definition', { required: false });
     const containerName = core.getInput('container-name', { required: true });
     const imageURI = core.getInput('image', { required: true });
     const environmentVariables = core.getInput('environment-variables', { required: false });
@@ -16,18 +22,60 @@ async function run() {
     const logConfigurationOptions = core.getInput("log-configuration-options", { required: false });
     const dockerLabels = core.getInput('docker-labels', { required: false });
     const command = core.getInput('command', { required: false });
+    
+     //New inputs 
+     const taskDefinitionArn = core.getInput('task-definition-arn', { required: false });
+     const taskDefinitionFamily = core.getInput('task-definition-family', { required: false });
+     const taskDefinitionRevision = Number(core.getInput('task-definition-revision', { required: false}));
+    
 
-    // Parse the task definition
-    const taskDefPath = path.isAbsolute(taskDefinitionFile) ?
-      taskDefinitionFile :
-      path.join(process.env.GITHUB_WORKSPACE, taskDefinitionFile);
-    if (!fs.existsSync(taskDefPath)) {
-      throw new Error(`Task definition file does not exist: ${taskDefinitionFile}`);
+    if (taskDefinitionFile && taskDefinitionArn) { // checks if provided both task definition and task definition arn
+      core.warning("Both task definition file and task definition arn are provided: task definition file will be option used.");
     }
+
+    if(taskDefinitionArn){
+      core.debug("The specific amazon resource name is used to fetch your task definition");
+    }
+
+    if(taskDefinitionFamily && taskDefinitionRevision){
+      core.warning("Both task definition family and task definition revision are provided: the most up to date version will be used to fetch task definition");
+    }
+
+    if(taskDefinitionFamily && !taskDefinitionRevision){
+      throw new Error("Provide task definition revision if task definition family will be used to fetch task definition - vice versa ");
+    }
+
+
+    // task definition arn, revison and family become part of the selection 
+    let describeTaskDefResponse;
+    try{ 
+      describeTaskDefResponse = await ecs.describeTaskDefinition({
+      taskDefinitionArn: taskDefinitionArn,
+      taskDefinitionFamily: taskDefinitionFamily,
+      taskDefinitionRevision: taskDefinitionRevision
+    })}
+  
+      catch (error) {
+        core.setFailed("Failed to describe task definition in ECS: " + error.message);
+        core.debug("Task definition contents:");
+        core.debug(JSON.stringify(taskDefContents, undefined, 4));
+        throw(error); 
+  
+      }
+  
+      const taskDefPath = path.isAbsolute(taskDefinitionFile) ?
+      taskDefinitionFile : 
+      path.join(process.env.GITHUB_WORKSPACE, taskDefinitionFile); /// guides to the task def file that is in the G.A workflow
+      
+      if (!fs.existsSync(taskDefPath) && !taskDefinitionArn) {// confirms if the file or directory actually exist 
+      throw new Error(`Task definition file does not exist: ${taskDefinitionFile} and Task definition arn does not exist: ${taskDefinitionArn}`);
+      }
+
+    if(taskDefinitionFile){
     const taskDefContents = require(taskDefPath);
 
     // Insert the image URI
-    if (!Array.isArray(taskDefContents.containerDefinitions)) {
+    if (!Array.isArray(taskDefContents.containerDefinitions)) {//it returns true if it is an array, and false otherwise.
       throw new Error('Invalid task definition format: containerDefinitions section is not present or is not an array');
     }
     const containerDef = taskDefContents.containerDefinitions.find(function (element) {
@@ -146,6 +194,8 @@ async function run() {
     const newTaskDefContents = JSON.stringify(taskDefContents, null, 2);
     fs.writeFileSync(updatedTaskDefFile.name, newTaskDefContents);
     core.setOutput('task-definition', updatedTaskDefFile.name);
+  }
+    
   }
   catch (error) {
     core.setFailed(error.message);
