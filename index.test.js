@@ -150,10 +150,8 @@ describe('Render task definition', () => {
                 ]
             }, null, 2)
         );
-
         
         expect(core.setOutput).toHaveBeenNthCalledWith(1, 'task-definition', 'new-task-def-file-name');
-
     });
 
     test('renders a task definition at an absolute path, and with initial environment empty', async () => {
@@ -278,25 +276,37 @@ describe('Render task definition', () => {
         );
     });
 
+    //NEW TESTS - describe api
 
-    test('error returned for missing task definition file & task definition arn ', async () => {
+    test('error returned for missing task definition file', async () => {
         fs.existsSync.mockReturnValue(false);
         core.getInput = jest
             .fn()
             .mockReturnValueOnce('does-not-exist-task-definition.json')
             .mockReturnValueOnce('web')
-            .mockReturnValueOnce('nginx:latest')
+            .mockReturnValueOnce('nginx:latest');
+
+        await run();
+        expect(core.setFailed).toBeCalledWith('Task definition file does not exist: does-not-exist-task-definition.json');
+    });
+
+    test('error thown for missing task definition file, task definition arn and task definition family ', async () => {
+        fs.existsSync.mockReturnValue(false);
+        core.getInput = jest
+            .fn()
+            .mockReturnValueOnce('')
+            .mockReturnValueOnce('')
+            .mockReturnValueOnce('')
             .mockReturnValueOnce('')
             .mockReturnValueOnce('')
             .mockReturnValueOnce(0);
 
         await run();
-        expect(core.setFailed).toBeCalledWith("Task definition file does not exist: does-not-exist-task-definition.json and Task definition arn does not exist: undefined");
+        expect(core.setFailed).toBeCalledWith("Either task definition file, task definition arn or task definition family must be provided");
 
     });
 
-
-    test('warning returned for providing both task definition file & task definition arn ', async () => {
+    test('warning returned for providing both task definition file, task definition arn, and task definition family ', async () => {
         core.getInput = jest
             .fn()
             .mockReturnValueOnce('task-definition.json')                             //task definition file 
@@ -309,24 +319,14 @@ describe('Render task definition', () => {
             .mockReturnValueOnce('')                                                //Docker Labels
             .mockReturnValueOnce('')                                                //Command Options 
             .mockReturnValueOnce('task-definition-arn')                             //task definition arn
-            .mockReturnValueOnce('')                                                //task definition family
-            .mockReturnValueOnce(0);                                             //task definition revision
-
-            console.log('warning for having both task def and arn ')
+            .mockReturnValueOnce('task-definition-family')                                                //task definition family
+            .mockReturnValueOnce(0);                                                //task definition revision
 
             await run();
-
-            expect(mockEcsClient.describeTaskDefinition).toHaveBeenCalledTimes(1);
-            expect(mockEcsDescribeTaskDef).toHaveBeenCalledWith({
-                taskDefinitionArn: "task-definition-arn",
-                taskDefinitionFamily: "",
-                taskDefinitionRevision: 0
-            });
-            
-            expect(core.warning).toBeCalledWith("Both task definition file and task definition arn are provided: task definition file will be option used.");
+            expect(core.warning).toBeCalledWith("Task definition file will be option used.");
     });
     
-    test('if inputs are task definition family and revision, that specific task definition created is chosen', async () => {
+    test('if inputs are task definition family and revision, that specific task definition revision is chosen', async () => {
         core.getInput = jest
             .fn()
             .mockReturnValueOnce('')                           //task definition file 
@@ -343,18 +343,15 @@ describe('Render task definition', () => {
             .mockReturnValueOnce(10);                          //task definition revision
 
             await run();
-
             expect(mockEcsClient.describeTaskDefinition).toHaveBeenCalledTimes(1);
             expect(mockEcsDescribeTaskDef).toHaveBeenCalledWith({
-                taskDefinitionArn: "",
-                taskDefinitionFamily: "task-definition-family",
-                taskDefinitionRevision: 10
-            });
-            
-            expect(core.warning).toBeCalledWith("Both task definition family and task definition revision are provided: the most up to date version will be used to fetch task definition");
+                taskDefArn: "",
+                taskDefFam: "task-definition-family",
+                taskDefRev: 10
+            });  
     });
 
-    test('if the only input is task definition family and no revision, an error is thrown', async () => {
+    test('if the only input is task definition family and no revision, the latest verion for task definition family is provided', async () => {
         core.getInput = jest
             .fn()
             .mockReturnValueOnce('')                           //task definition file 
@@ -371,10 +368,74 @@ describe('Render task definition', () => {
             .mockReturnValueOnce(0);                          //task definition revision
 
             await run();
-            
-            expect(core.setFailed).toBeCalledWith("Provide task definition revision if task definition family will be used to fetch task definition - vice versa ");
+            expect(core.warning).toBeCalledWith("The latest revision of the task definition family will be provided");
     });
 
+    test('if the only option is a file to fetch task definition', async () => {
+        core.getInput = jest
+            .fn()
+            .mockReturnValueOnce('task-definition.json')                           //task definition file 
+            .mockReturnValueOnce('')                                              //conatiner name
+            .mockReturnValueOnce('')                                     //image
+            .mockReturnValueOnce('')                                    // environment-variables
+            .mockReturnValueOnce('') // env-files
+            .mockReturnValueOnce('')                           //log Configuration Log Driver
+            .mockReturnValueOnce('')                           //log Configuration Options
+            .mockReturnValueOnce('')                           //Docker Labels
+            .mockReturnValueOnce('')                           //Command Options 
+            .mockReturnValueOnce('')                           //task definition arn
+            .mockReturnValueOnce('')                           //task definition family
+            .mockReturnValueOnce(0);                          //task definition revision
+
+            await run();
+    });
+
+    test('if only arn is provided to fetch task definition', async () => {
+        core.getInput = jest
+            .fn()
+            .mockReturnValueOnce('')                           //task definition file 
+            .mockReturnValueOnce('')                                              //conatiner name
+            .mockReturnValueOnce('')                                     //image
+            .mockReturnValueOnce('')                                    // environment-variables
+            .mockReturnValueOnce('') // env-files
+            .mockReturnValueOnce('')                           //log Configuration Log Driver
+            .mockReturnValueOnce('')                           //log Configuration Options
+            .mockReturnValueOnce('')                           //Docker Labels
+            .mockReturnValueOnce('')                           //Command Options 
+            .mockReturnValueOnce('task-definition-arn')                           //task definition arn
+            .mockReturnValueOnce('')                           //task definition family
+            .mockReturnValueOnce(0);                          //task definition revision
+
+            await run();
+            expect(mockEcsClient.describeTaskDefinition).toHaveBeenCalledTimes(1);
+            expect(mockEcsDescribeTaskDef).toHaveBeenCalledWith({
+                taskDefArn: "task-definition-arn",
+                taskDefFam: "",
+                taskDefRev: 0
+            });  
+       
+    });
+
+    test('if only revision is provided to fetch task definition', async () => {
+        core.getInput = jest
+            .fn()
+            .mockReturnValueOnce('')                           //task definition file 
+            .mockReturnValueOnce('')                                              //conatiner name
+            .mockReturnValueOnce('')                                     //image
+            .mockReturnValueOnce('')                                    // environment-variables
+            .mockReturnValueOnce('') // env-files
+            .mockReturnValueOnce('')                           //log Configuration Log Driver
+            .mockReturnValueOnce('')                           //log Configuration Options
+            .mockReturnValueOnce('')                           //Docker Labels
+            .mockReturnValueOnce('')                           //Command Options 
+            .mockReturnValueOnce('')                           //task definition arn
+            .mockReturnValueOnce('')                           //task definition family
+            .mockReturnValueOnce(10);                          //task definition revision
+
+            await run();  
+
+            expect(core.setFailed).toBeCalledWith("You cant fetch task definition with just revision: Either use task definition file, arn or family");
+    });
 
     test('renders a task definition with docker labels', async () => {
         core.getInput = jest

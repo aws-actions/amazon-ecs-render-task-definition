@@ -10,7 +10,6 @@ const tmp = __nccwpck_require__(8517);
 const fs = __nccwpck_require__(7147);
 const {ECS} = __nccwpck_require__(8209);
 
-
 async function run() {
   try {
     const ecs = new ECS({
@@ -29,59 +28,58 @@ async function run() {
     const dockerLabels = core.getInput('docker-labels', { required: false });
     const command = core.getInput('command', { required: false });
     
-     //New inputs 
+     //New inputs to fecth task definition 
      const taskDefinitionArn = core.getInput('task-definition-arn', { required: false });
      const taskDefinitionFamily = core.getInput('task-definition-family', { required: false });
      const taskDefinitionRevision = Number(core.getInput('task-definition-revision', { required: false}));
-    
 
-    if (taskDefinitionFile && taskDefinitionArn) { // checks if provided both task definition and task definition arn
-      core.warning("Both task definition file and task definition arn are provided: task definition file will be option used.");
+
+    if(taskDefinitionFile && taskDefinitionArn && taskDefinitionFamily){ 
+      core.warning("Task definition file will be option used.");
     }
-
-    if(taskDefinitionArn){
-      core.debug("The specific amazon resource name is used to fetch your task definition");
-    }
-
-    if(taskDefinitionFamily && taskDefinitionRevision){
-      core.warning("Both task definition family and task definition revision are provided: the most up to date version will be used to fetch task definition");
-    }
-
     if(taskDefinitionFamily && !taskDefinitionRevision){
-      throw new Error("Provide task definition revision if task definition family will be used to fetch task definition - vice versa ");
+      core.warning("The latest revision of the task definition family will be provided");
+    }
+    if(taskDefinitionRevision){
+      core.setFailed("You cant fetch task definition with just revision: Either use task definition file, arn or family");
+    }
+  
+    let taskDefPath;
+    let describeTaskDefResponse;
+
+    if(taskDefinitionFile){
+    taskDefPath = path.isAbsolute(taskDefinitionFile) ?
+      taskDefinitionFile : 
+      path.join(process.env.GITHUB_WORKSPACE, taskDefinitionFile); 
+
+      if (!fs.existsSync(taskDefPath)) {
+        throw new Error(`Task definition file does not exist: ${taskDefinitionFile}`);
+      }
     }
 
-
-    // task definition arn, revison and family become part of the selection 
-    let describeTaskDefResponse;
-    try{ 
-      describeTaskDefResponse = await ecs.describeTaskDefinition({
-      taskDefinitionArn: taskDefinitionArn,
-      taskDefinitionFamily: taskDefinitionFamily,
-      taskDefinitionRevision: taskDefinitionRevision
-    })}
-  
+    else if((taskDefinitionArn) || (taskDefinitionFamily && taskDefinitionRevision) || (taskDefinitionFamily && !taskDefinitionRevision)){
+      try{
+        describeTaskDefResponse = await ecs.describeTaskDefinition({
+        taskDefArn: taskDefinitionArn,
+        taskDefFam: taskDefinitionFamily,
+        taskDefRev: taskDefinitionRevision
+      })}
       catch (error) {
         core.setFailed("Failed to describe task definition in ECS: " + error.message);
         core.debug("Task definition contents:");
         core.debug(JSON.stringify(taskDefContents, undefined, 4));
         throw(error); 
-  
+    
       }
-  
-      const taskDefPath = path.isAbsolute(taskDefinitionFile) ?
-      taskDefinitionFile : 
-      path.join(process.env.GITHUB_WORKSPACE, taskDefinitionFile); /// guides to the task def file that is in the G.A workflow
-      
-      if (!fs.existsSync(taskDefPath) && !taskDefinitionArn) {// confirms if the file or directory actually exist 
-      throw new Error(`Task definition file does not exist: ${taskDefinitionFile} and Task definition arn does not exist: ${taskDefinitionArn}`);
-      }
+    }
+    else{
+      throw new Error("Either task definition file, task definition arn or task definition family must be provided");
+    }
 
-    if(taskDefinitionFile){
-    const taskDefContents = require(taskDefPath);
+    const taskDefContents = require(taskDefPath) || describeTaskDefResponse ;
 
     // Insert the image URI
-    if (!Array.isArray(taskDefContents.containerDefinitions)) {//it returns true if it is an array, and false otherwise.
+    if (!Array.isArray(taskDefContents.containerDefinitions)) {
       throw new Error('Invalid task definition format: containerDefinitions section is not present or is not an array');
     }
     const containerDef = taskDefContents.containerDefinitions.find(function (element) {
@@ -201,8 +199,7 @@ async function run() {
     fs.writeFileSync(updatedTaskDefFile.name, newTaskDefContents);
     core.setOutput('task-definition', updatedTaskDefFile.name);
   }
-    
-  }
+  
   catch (error) {
     core.setFailed(error.message);
   }

@@ -9,13 +9,13 @@ inputs:
     description: 'The path to the ECS task definition JSON file'
     required: false
   task-definition-arn:
-    description: 'The task definition from where the the ARN link is found is used'
+    description: 'The full Amazon Resource Name (ARN) of the task definition to describe'
     required: false
   task-definition-family:
-    description: 'The latest task definition is used'
+    description: 'The name of a family that this task definition is registered to and the latest ACTIVE revision in that family.'
     required: false
   task-definition-revision:
-    description: 'The revision the customer wants to use, if not the default will be used'
+    description: 'The revision is a copy of the current task definition with the new parameter values replacing the existing ones.'
     required: false
   container-name:
     description: 'The name of the container defined in the containerDefinitions section of the ECS task definition'
