@@ -13,9 +13,9 @@ Inserts a container image URI into an Amazon ECS task definition JSON file, crea
 <!-- tocstop -->
 
 ## Usage
-if task definition file is provided that has presedence over any other new option to fecth task definition. 
-if task definition file and task definition arn are provided, a warning will be executed.
-if neither task definition file, task definition arn, task definition family are provided, an error will be thrown. (at least one option needs to be provided)
+if task definition file is provided that has precedence over any other new option to fecth task definition. 
+if task definition file and task definition arn are provided, a warning will be returned.
+if neither task definition file, task definition arn, task definition family are provided, an error will be thrown. (At least one option needs to be provided)
 
 To insert the image URI `amazon/amazon-ecs-sample:latest` as the image for the `web` container in the task definition file, and then deploy the edited task definition file to ECS:
 
@@ -24,7 +24,7 @@ To insert the image URI `amazon/amazon-ecs-sample:latest` as the image for the `
       id: render-web-container
       uses: aws-actions/amazon-ecs-render-task-definition@v1
       with:
-        task-definition-file: task-definition-file
+        task-definition: task-definition
         task-definition-arn:  task-definition-arn
         task-definition-family: task-definition-family-name 
         task-definition-revision: task-definition-revision-name 

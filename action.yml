@@ -5,7 +5,7 @@ branding:
   color: 'orange'
 inputs:
 
-  task-definition-file:
+  task-definition:
     description: 'The path to the ECS task definition JSON file'
     required: false
   task-definition-arn:

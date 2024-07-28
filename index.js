@@ -11,7 +11,7 @@ async function run() {
     });
 
     // Get inputs
-    const taskDefinitionFile = core.getInput('task-definition', { required: false });
+    const taskDefinition = core.getInput('task-definition', { required: false });
     const containerName = core.getInput('container-name', { required: true });
     const imageURI = core.getInput('image', { required: true });
     const environmentVariables = core.getInput('environment-variables', { required: false });
@@ -22,55 +22,60 @@ async function run() {
     const dockerLabels = core.getInput('docker-labels', { required: false });
     const command = core.getInput('command', { required: false });
     
-     //New inputs to fecth task definition 
+     //New inputs to fetch task definition 
      const taskDefinitionArn = core.getInput('task-definition-arn', { required: false });
      const taskDefinitionFamily = core.getInput('task-definition-family', { required: false });
      const taskDefinitionRevision = Number(core.getInput('task-definition-revision', { required: false}));
 
-
-    if(taskDefinitionFile && taskDefinitionArn && taskDefinitionFamily){ 
-      core.warning("Task definition file will be option used.");
-    }
-    if(taskDefinitionFamily && !taskDefinitionRevision){
-      core.warning("The latest revision of the task definition family will be provided");
-    }
-    if(taskDefinitionRevision){
-      core.setFailed("You cant fetch task definition with just revision: Either use task definition file, arn or family");
-    }
-  
     let taskDefPath;
+    let taskDefContents;
     let describeTaskDefResponse;
 
-    if(taskDefinitionFile){
-    taskDefPath = path.isAbsolute(taskDefinitionFile) ?
-      taskDefinitionFile : 
-      path.join(process.env.GITHUB_WORKSPACE, taskDefinitionFile); 
-
+    if(taskDefinition){
+      core.warning("Task definition file will be used.");
+      taskDefPath = path.isAbsolute(taskDefinition) ?
+      taskDefinition : 
+      path.join(process.env.GITHUB_WORKSPACE, taskDefinition); 
       if (!fs.existsSync(taskDefPath)) {
-        throw new Error(`Task definition file does not exist: ${taskDefinitionFile}`);
+        throw new Error(`Task definition file does not exist: ${taskDefinition}`);
       }
+      taskDefContents = require(taskDefPath);
     }
 
     else if((taskDefinitionArn) || (taskDefinitionFamily && taskDefinitionRevision) || (taskDefinitionFamily && !taskDefinitionRevision)){
+      if(taskDefinitionArn){
+        core.warning("The task definition arn will be used to fetch task definition");
+      }
+      if(taskDefinitionFamily && taskDefinitionRevision && !taskDefinitionArn){
+        core.warning("The latest revision of the task definition family will be provided");
+      }
+      if(taskDefinitionFamily && !taskDefinitionRevision && !taskDefinitionArn){
+        core.warning("The latest revision of the task definition family will be provided");
+      }
+      if(taskDefinitionRevision && !taskDefinitionFamily && !taskDefinitionArn){
+        core.setFailed("You can't fetch task definition with just revision: Either use task definition, arn or family");
+      }  
+
       try{
         describeTaskDefResponse = await ecs.describeTaskDefinition({
         taskDefArn: taskDefinitionArn,
         taskDefFam: taskDefinitionFamily,
         taskDefRev: taskDefinitionRevision
-      })}
+      });
+      taskDefContents = require(describeTaskDefResponse.taskDefinition);
+    }
+
       catch (error) {
         core.setFailed("Failed to describe task definition in ECS: " + error.message);
         core.debug("Task definition contents:");
         core.debug(JSON.stringify(taskDefContents, undefined, 4));
         throw(error); 
-    
       }
+
     }
     else{
-      throw new Error("Either task definition file, task definition arn or task definition family must be provided");
+      throw new Error("Either task definition, task definition arn or task definition family must be provided");
     }
-
-    const taskDefContents = require(taskDefPath) || describeTaskDefResponse ;
 
     // Insert the image URI
     if (!Array.isArray(taskDefContents.containerDefinitions)) {
