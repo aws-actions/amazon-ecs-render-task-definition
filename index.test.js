@@ -669,7 +669,7 @@ describe('Render task definition', () => {
 
             await run(); 
             
-            expect(core.setFailed).toBeCalledWith("Either task definition, task definition arn or task definition family must be provided");
+            expect(core.setFailed).toBeCalledWith("You can't fetch task definition with just revision: Either use task definition, arn or family");
     });
 
     test('renders a task definition with docker labels', async () => {

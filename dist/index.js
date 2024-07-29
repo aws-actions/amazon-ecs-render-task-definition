@@ -48,7 +48,7 @@ async function run() {
       taskDefContents = require(taskDefPath);
     }
 
-    else if((taskDefinitionArn) || (taskDefinitionFamily && taskDefinitionRevision) || (taskDefinitionFamily && !taskDefinitionRevision)){
+    else if(taskDefinitionArn || taskDefinitionFamily || taskDefinitionRevision){
       if(taskDefinitionArn){
         core.warning("The task definition arn will be used to fetch task definition");
       }
