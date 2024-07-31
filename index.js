@@ -22,15 +22,16 @@ async function run() {
     const dockerLabels = core.getInput('docker-labels', { required: false });
     const command = core.getInput('command', { required: false });
     
-     //New inputs to fetch task definition 
-     const taskDefinitionArn = core.getInput('task-definition-arn', { required: false });
-     const taskDefinitionFamily = core.getInput('task-definition-family', { required: false });
-     const taskDefinitionRevision = Number(core.getInput('task-definition-revision', { required: false}));
+    //New inputs to fetch task definition 
+    const taskDefinitionArn = core.getInput('task-definition-arn', { required: false }) || undefined;
+    const taskDefinitionFamily = core.getInput('task-definition-family', { required: false }) || undefined;
+    const taskDefinitionRevision = Number(core.getInput('task-definition-revision', { required: false})) || null;
 
     let taskDefPath;
     let taskDefContents;
     let describeTaskDefResponse;
-
+    let params;
+    
     if(taskDefinition){
       core.warning("Task definition file will be used.");
       taskDefPath = path.isAbsolute(taskDefinition) ?
@@ -41,41 +42,38 @@ async function run() {
       }
       taskDefContents = require(taskDefPath);
     }
-
+    
     else if(taskDefinitionArn || taskDefinitionFamily || taskDefinitionRevision){
       if(taskDefinitionArn){
         core.warning("The task definition arn will be used to fetch task definition");
-      }
-      if(taskDefinitionFamily && taskDefinitionRevision && !taskDefinitionArn){
+        params = {taskDefinition: taskDefinitionArn};
+      }else if(taskDefinitionFamily && taskDefinitionRevision && !taskDefinitionArn){
         core.warning("The latest revision of the task definition family will be provided");
-      }
-      if(taskDefinitionFamily && !taskDefinitionRevision && !taskDefinitionArn){
+        params = {taskDefinition: `${taskDefinitionFamily}: ${taskDefinitionRevision}` };
+      }else if(taskDefinitionFamily && !taskDefinitionRevision && !taskDefinitionArn){
         core.warning("The latest revision of the task definition family will be provided");
+        params = {taskDefinition: taskDefinitionFamily};
       }
-      if(taskDefinitionRevision && !taskDefinitionFamily && !taskDefinitionArn){
+      else if(taskDefinitionRevision && !taskDefinitionFamily && !taskDefinitionArn){
         core.setFailed("You can't fetch task definition with just revision: Either use task definition, arn or family");
-      }  
-
+      } else{
+        throw new Error('Either task definition ARN, family, or family and revision must be provided');
+      }
+      
       try{
-        describeTaskDefResponse = await ecs.describeTaskDefinition({
-        taskDefArn: taskDefinitionArn,
-        taskDefFam: taskDefinitionFamily,
-        taskDefRev: taskDefinitionRevision
+        describeTaskDefResponse = await ecs.describeTaskDefinition(params).promise().then(data =>{
+        return data.taskDefinition;
       });
       taskDefContents = require(describeTaskDefResponse.taskDefinition);
+    }catch (error) {
+      core.setFailed("Failed to describe task definition in ECS: " + error.message);
+      core.debug("Task definition contents:");
+      core.debug(JSON.stringify(taskDefContents, undefined, 4));
+      throw(error); 
     }
-
-      catch (error) {
-        core.setFailed("Failed to describe task definition in ECS: " + error.message);
-        core.debug("Task definition contents:");
-        core.debug(JSON.stringify(taskDefContents, undefined, 4));
-        throw(error); 
-      }
-
-    }
-    else{
-      throw new Error("Either task definition, task definition arn or task definition family must be provided");
-    }
+  }else{
+     throw new Error("Either task definition, task definition arn or task definition family must be provided");
+  }
 
     // Insert the image URI
     if (!Array.isArray(taskDefContents.containerDefinitions)) {

@@ -4,7 +4,6 @@ branding:
   icon: 'cloud'
   color: 'orange'
 inputs:
-
   task-definition:
     description: 'The path to the ECS task definition JSON file'
     required: false

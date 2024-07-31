@@ -520,9 +520,7 @@ describe('Render task definition', () => {
 
             expect(mockEcsClient.describeTaskDefinition).toHaveBeenCalledTimes(1);
             expect(mockEcsDescribeTaskDef).toHaveBeenCalledWith({
-                taskDefArn: "",
-                taskDefFam: "task-definition-family",
-                taskDefRev: 10
+                taskDefinition: "task-definition-family: 10"
             });  
     });
 
@@ -546,9 +544,7 @@ describe('Render task definition', () => {
 
             expect(mockEcsClient.describeTaskDefinition).toHaveBeenCalledTimes(1);
             expect(mockEcsDescribeTaskDef).toHaveBeenCalledWith({
-                taskDefArn: "",
-                taskDefFam: "task-definition-family",
-                taskDefRev: 0
+               taskDefinition: "task-definition-family"
             });  
             expect(core.warning).toBeCalledWith("The latest revision of the task definition family will be provided");
     });
@@ -569,13 +565,18 @@ describe('Render task definition', () => {
             .mockReturnValueOnce('')                           //task definition family
             .mockReturnValueOnce(0);                          //task definition revision
 
+            console.log ("BEFORE TEST : ");
+
+
             await run();
+
+            console.log ("AFTER TEST : ");
+
 
             expect(mockEcsClient.describeTaskDefinition).toHaveBeenCalledTimes(1);
             expect(mockEcsDescribeTaskDef).toHaveBeenCalledWith({
-                taskDefArn: "task-definition-arn",
-                taskDefFam: "",
-                taskDefRev: 0
+                taskDefinition: "task-definition-arn"
+
             });
         expect(core.warning).toBeCalledWith("The task definition arn will be used to fetch task definition");
        
@@ -645,9 +646,7 @@ describe('Render task definition', () => {
 
             expect(mockEcsClient.describeTaskDefinition).toHaveBeenCalledTimes(1);
             expect(mockEcsDescribeTaskDef).toHaveBeenCalledWith({
-                taskDefArn: "task-definition-arn",
-                taskDefFam: "task-definition-family",
-                taskDefRev: 0
+                taskDefinition: "task-definition-arn"
             });
     });
 
