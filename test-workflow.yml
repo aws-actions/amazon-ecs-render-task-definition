@@ -24,7 +24,7 @@ jobs:
 
     - name: Configure AWS credentials
       uses: aws-actions/configure-aws-credentials@v4
-      with:        
+      with:
         role-to-assume: arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID }}:role/GitHubActionsRenderTaskIntegrationTests
         role-session-name: render_task_integration_tests
         aws-region: us-west-2
