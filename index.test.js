@@ -520,7 +520,7 @@ describe('Render task definition', () => {
 
             expect(mockEcsClient.describeTaskDefinition).toHaveBeenCalledTimes(1);
             expect(mockEcsDescribeTaskDef).toHaveBeenCalledWith({
-                taskDefinition: "task-definition-family: 10"
+                taskDefinition: "task-definition-family:10"
             });  
     });
 

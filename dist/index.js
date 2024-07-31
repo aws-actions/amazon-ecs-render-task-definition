@@ -52,7 +52,7 @@ async function run() {
         params = {taskDefinition: taskDefinitionArn};
       } else if(taskDefinitionFamily && taskDefinitionRevision){
         core.warning("The latest revision of the task definition family will be provided");
-        params = {taskDefinition: `${taskDefinitionFamily}: ${taskDefinitionRevision}` };
+        params = {taskDefinition: `${taskDefinitionFamily}:${taskDefinitionRevision}` };
       } else if(taskDefinitionFamily){
         core.warning("The latest revision of the task definition family will be provided");
         params = {taskDefinition: taskDefinitionFamily};
