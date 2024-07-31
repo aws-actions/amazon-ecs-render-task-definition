@@ -23,9 +23,9 @@ async function run() {
     const command = core.getInput('command', { required: false });
 
     //New inputs to fetch task definition 
-    const taskDefinitionArn = core.getInput('task-definition-arn', { required: false });
-    const taskDefinitionFamily = core.getInput('task-definition-family', { required: false });
-    const taskDefinitionRevision = Number(core.getInput('task-definition-revision', { required: false }));
+    const taskDefinitionArn = core.getInput('task-definition-arn', { required: false }) || undefined;
+    const taskDefinitionFamily = core.getInput('task-definition-family', { required: false }) || undefined;
+    const taskDefinitionRevision = Number(core.getInput('task-definition-revision', { required: false })) || null;
 
     let taskDefPath;
     let taskDefContents;
