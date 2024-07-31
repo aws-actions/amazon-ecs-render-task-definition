@@ -3,6 +3,7 @@ const core = require('@actions/core');
 const tmp = require('tmp');
 const fs = require('fs');
 const {ECS} = require('@aws-sdk/client-ecs');
+
 jest.mock('@actions/core');
 jest.mock('tmp');
 jest.mock('fs', () => ({
@@ -37,19 +38,18 @@ describe('Render task definition', () => {
 
         core.getInput = jest
             .fn()
-            .mockReturnValueOnce('task-definition.json') // task-definition file
-            .mockReturnValueOnce('web')                  // container-name
-            .mockReturnValueOnce('nginx:latest')         // image
-            .mockReturnValueOnce('FOO=bar\nHELLO=world') // environment-variables
+            .mockReturnValueOnce('task-definition.json')                                // task-definition file
+            .mockReturnValueOnce('web')                                                 // container-name
+            .mockReturnValueOnce('nginx:latest')                                        // image
+            .mockReturnValueOnce('FOO=bar\nHELLO=world')                                // environment-variables
             .mockReturnValueOnce('arn:aws:s3:::s3_bucket_name/envfile_object_name.env') // env-files
-            .mockReturnValueOnce('') // log Configuration Log Driver
-            .mockReturnValueOnce('') // log Configuration Options
-            .mockReturnValueOnce('') // docker labels
-            .mockReturnValueOnce('') // command
-            .mockReturnValueOnce('') // task-definition arn
-            .mockReturnValueOnce('') // task-definition family
-            .mockReturnValueOnce(0); // task-definition revision
-
+            .mockReturnValueOnce('')                                                    // log Configuration Log Driver
+            .mockReturnValueOnce('')                                                    // log Configuration Options
+            .mockReturnValueOnce('')                                                    // docker labels
+            .mockReturnValueOnce('')                                                    // command
+            .mockReturnValueOnce('')                                                    // task-definition arn
+            .mockReturnValueOnce('')                                                    // task-definition family
+            .mockReturnValueOnce('');                                                   // task-definition revision
 
         process.env = Object.assign(process.env, { GITHUB_WORKSPACE: __dirname });
         process.env = Object.assign(process.env, { RUNNER_TEMP: '/home/runner/work/_temp' });
@@ -95,7 +95,7 @@ describe('Render task definition', () => {
             taskDefinition: {
                 taskDefinitionArn: "task-definition-arn",
                 taskDefinitionFamily: "task-definition-family",
-                taskDefinitionRevision: 0,
+                taskDefinitionRevision: '',
 
                 containerDefinitions: [
                     {
@@ -127,7 +127,6 @@ describe('Render task definition', () => {
     
         })); 
         ECS.mockImplementation(() => mockEcsClient);
-
     });
 
     test('renders the task definition and creates a new task def file', async () => {
@@ -179,16 +178,15 @@ describe('Render task definition', () => {
         expect(core.setOutput).toHaveBeenNthCalledWith(1, 'task-definition', 'new-task-def-file-name');
         expect(mockEcsClient.describeTaskDefinition).toHaveBeenCalledTimes(0);
         expect(mockEcsDescribeTaskDef).toHaveBeenCalledTimes(0);
-        
     });
 
     test('renders a task definition at an absolute path, and with initial environment empty', async () => {
         core.getInput = jest
             .fn()
-            .mockReturnValueOnce('/hello/task-definition.json') // task-definition
-            .mockReturnValueOnce('web')                  // container-name
-            .mockReturnValueOnce('nginx:latest')         // image
-            .mockReturnValueOnce('EXAMPLE=here')         // environment-variables
+            .mockReturnValueOnce('/hello/task-definition.json')                          // task-definition
+            .mockReturnValueOnce('web')                                                  // container-name
+            .mockReturnValueOnce('nginx:latest')                                         // image
+            .mockReturnValueOnce('EXAMPLE=here')                                         // environment-variables
             .mockReturnValueOnce('arn:aws:s3:::s3_bucket_name/envfile_object_name.env'); // env-files
 
         jest.mock('/hello/task-definition.json', () => ({
@@ -308,92 +306,7 @@ describe('Render task definition', () => {
         expect(mockEcsDescribeTaskDef).toHaveBeenCalledTimes(0);
     });
 
-    //NEW TESTS - describe api
-    test('describeTaskDefResponse container configurations', async () => {
-        mockEcsDescribeTaskDef.mockImplementation(() => Promise.resolve({
-            taskDefinition: {
-                taskDefinitionArn: "task-definition-arn",
-                taskDefinitionFamily: "task-definition-family",
-                taskDefinitionRevision: 10,
-    
-                    containerDefinitions: [
-                        {
-                            name: "web",
-                            image: "some-other-image",
-                            environment: [
-                                {
-                                    name: "FOO",
-                                    value: "not bar"
-                                },
-                                {
-                                    name: "DONT-TOUCH",
-                                    value: "me"
-                                }
-                            ],
-                            environmentFiles: [
-                                {
-                                    value: "arn:aws:s3:::s3_bucket_name/envfile_object_name.env",
-                                    type: "s3"
-                                }
-                            ]
-                        },
-                        {
-                            name: "sidecar",
-                            image: "hello"
-                        }
-                    ]
-                }
-            
-            }));
-            
-        
-            await run();
-
-            expect(mockEcsClient.describeTaskDefinition).toHaveBeenCalledTimes(0);
-            expect(mockEcsDescribeTaskDef).toHaveBeenCalledTimes(0);
-
-            expect(tmp.fileSync).toHaveBeenCalledTimes(1);
-            expect(fs.writeFileSync).toHaveBeenCalledTimes(1);
-    });
-
-    test('describeTaskDefResponse conatiner with inital enviorment empty', async () => {
-        mockEcsDescribeTaskDef.mockImplementation(() => Promise.resolve({
-            taskDefinition: {
-                taskDefinitionArn: "task-definition-arn",
-                taskDefinitionFamily: "task-definition-family",
-                taskDefinitionRevision: 10,
-
-                containerDefinitions: [
-                    {
-                        name: "web",
-                        image: "nginx:latest",
-                        environmentFiles: [
-                            {
-                                value: "arn:aws:s3:::s3_bucket_name/envfile_object_name.env",
-                                type: "s3"
-                            }
-                        ],
-                        environment: [
-                            {
-                                name: "EXAMPLE",
-                                value: "here"
-                            }
-                        ]
-                    }
-                ]
-            }
-        }));
-        
-        await run();
-
-        expect(mockEcsClient.describeTaskDefinition).toHaveBeenCalledTimes(0);
-        expect(mockEcsDescribeTaskDef).toHaveBeenCalledTimes(0);
-
-        expect(tmp.fileSync).toHaveBeenCalledTimes(1);
-        expect(fs.writeFileSync).toHaveBeenCalledTimes(1);
-    });
-
-    test('describeTaskDefResponse conatiner with log configurations', async () => {
+    test('testing the complete flow of describeTaskDefResponse with log configurations', async () => {
         mockEcsDescribeTaskDef.mockImplementation(() => Promise.resolve({
             taskDefinition: {
                 taskDefinitionArn: "task-definition-arn",
@@ -446,12 +359,11 @@ describe('Render task definition', () => {
 
         expect(mockEcsClient.describeTaskDefinition).toHaveBeenCalledTimes(0);
         expect(mockEcsDescribeTaskDef).toHaveBeenCalledTimes(0);
-
         expect(tmp.fileSync).toHaveBeenCalledTimes(1);
         expect(fs.writeFileSync).toHaveBeenCalledTimes(1);
     });
 
-    test('error returned for missing task definition', async () => {
+    test('error returned for missing task definition file', async () => {
         fs.existsSync.mockReturnValue(false);
         core.getInput = jest
             .fn()
@@ -482,193 +394,188 @@ describe('Render task definition', () => {
     test('warning returned for providing both task definition, task definition arn, and task definition family ', async () => {
         core.getInput = jest
             .fn()
-            .mockReturnValueOnce('task-definition.json')                             //task definition
-            .mockReturnValueOnce('web')                                              //conatiner name
-            .mockReturnValueOnce('nginx:latest')                                     //image
-            .mockReturnValueOnce('EXAMPLE=here')                                    // environment-variables
+            .mockReturnValueOnce('task-definition.json')                                // task definition
+            .mockReturnValueOnce('web')                                                 // conatiner name
+            .mockReturnValueOnce('nginx:latest')                                        // image
+            .mockReturnValueOnce('EXAMPLE=here')                                        // environment-variables
             .mockReturnValueOnce('arn:aws:s3:::s3_bucket_name/envfile_object_name.env') // env-files
-            .mockReturnValueOnce('')                                                //log Configuration Log Driver
-            .mockReturnValueOnce('')                                                //log Configuration Options
-            .mockReturnValueOnce('')                                                //Docker Labels
-            .mockReturnValueOnce('')                                                //Command Options 
-            .mockReturnValueOnce('task-definition-arn')                             //task definition arn
-            .mockReturnValueOnce('task-definition-family')                                                //task definition family
-            .mockReturnValueOnce(0);                                                //task definition revision
+            .mockReturnValueOnce('')                                                    // log Configuration Log Driver
+            .mockReturnValueOnce('')                                                    // log Configuration Options
+            .mockReturnValueOnce('')                                                    // Docker Labels
+            .mockReturnValueOnce('')                                                    // Command Options 
+            .mockReturnValueOnce('task-definition-arn')                                 // task definition arn
+            .mockReturnValueOnce('task-definition-family')                              // task definition family
+            .mockReturnValueOnce(0);                                                    // task definition revision
 
-            await run();
+        await run();
 
-            expect(core.warning).toBeCalledWith("Task definition file will be used.");
+        expect(core.warning).toBeCalledWith("Task definition file will be used.");
     });
     
     test('if inputs are task definition family and revision, that specific task definition revision is chosen', async () => {
         core.getInput = jest
             .fn()
-            .mockReturnValueOnce('')                           //task definition
-            .mockReturnValueOnce('')                           //conatiner name
-            .mockReturnValueOnce('')                           //image
+            .mockReturnValueOnce('')                           // task definition
+            .mockReturnValueOnce('')                           // conatiner name
+            .mockReturnValueOnce('')                           // image
             .mockReturnValueOnce('')                           // environment-variables
             .mockReturnValueOnce('')                           // env-files
-            .mockReturnValueOnce('')                           //log Configuration Log Driver
-            .mockReturnValueOnce('')                           //log Configuration Options
-            .mockReturnValueOnce('')                           //Docker Labels
-            .mockReturnValueOnce('')                           //Command Options 
-            .mockReturnValueOnce('')                           //task definition arn
-            .mockReturnValueOnce("task-definition-family")     //task definition family
-            .mockReturnValueOnce(10);                          //task definition revision
+            .mockReturnValueOnce('')                           // log Configuration Log Driver
+            .mockReturnValueOnce('')                           // log Configuration Options
+            .mockReturnValueOnce('')                           // Docker Labels
+            .mockReturnValueOnce('')                           // Command Options 
+            .mockReturnValueOnce('')                           // task definition arn
+            .mockReturnValueOnce("task-definition-family")     // task definition family
+            .mockReturnValueOnce(10);                          // task definition revision
 
-            await run();
+        await run();
 
-            expect(mockEcsClient.describeTaskDefinition).toHaveBeenCalledTimes(1);
-            expect(mockEcsDescribeTaskDef).toHaveBeenCalledWith({
-                taskDefinition: "task-definition-family:10"
-            });  
+        expect(mockEcsClient.describeTaskDefinition).toHaveBeenCalledTimes(1);
+        expect(mockEcsDescribeTaskDef).toHaveBeenCalledWith({
+            taskDefinition: "task-definition-family:10"
+        });  
     });
 
     test('if the only input is task definition family and no revision, the latest verion for task definition family is provided', async () => {
         core.getInput = jest
             .fn()
-            .mockReturnValueOnce('')                           //task definition 
-            .mockReturnValueOnce('')                           //conatiner name
-            .mockReturnValueOnce('')                           //image
+            .mockReturnValueOnce('')                           // task definition 
+            .mockReturnValueOnce('')                           // conatiner name
+            .mockReturnValueOnce('')                           // image
             .mockReturnValueOnce('')                           // environment-variables
             .mockReturnValueOnce('')                           // env-files
-            .mockReturnValueOnce('')                           //log Configuration Log Driver
-            .mockReturnValueOnce('')                           //log Configuration Options
-            .mockReturnValueOnce('')                           //Docker Labels
-            .mockReturnValueOnce('')                           //Command Options 
-            .mockReturnValueOnce('')                           //task definition arn
-            .mockReturnValueOnce("task-definition-family")     //task definition family
-            .mockReturnValueOnce(0);                          //task definition revision
+            .mockReturnValueOnce('')                           // log Configuration Log Driver
+            .mockReturnValueOnce('')                           // log Configuration Options
+            .mockReturnValueOnce('')                           // Docker Labels
+            .mockReturnValueOnce('')                           // Command Options 
+            .mockReturnValueOnce('')                           // task definition arn
+            .mockReturnValueOnce("task-definition-family")     // task definition family
+            .mockReturnValueOnce(0);                           // task definition revision
 
-            await run();
+        await run();
 
-            expect(mockEcsClient.describeTaskDefinition).toHaveBeenCalledTimes(1);
-            expect(mockEcsDescribeTaskDef).toHaveBeenCalledWith({
-               taskDefinition: "task-definition-family"
-            });  
-            expect(core.warning).toBeCalledWith("The latest revision of the task definition family will be provided");
+        expect(mockEcsClient.describeTaskDefinition).toHaveBeenCalledTimes(1);
+        expect(mockEcsDescribeTaskDef).toHaveBeenCalledWith({
+            taskDefinition: "task-definition-family"
+        });  
+        expect(core.warning).toBeCalledWith("The latest revision of the task definition family will be provided");
     });
 
     test('if only arn is provided to fetch task definition', async () => {
         core.getInput = jest
             .fn()
-            .mockReturnValueOnce('')                           //task definition
-            .mockReturnValueOnce('')                                              //conatiner name
-            .mockReturnValueOnce('')                                     //image
-            .mockReturnValueOnce('')                                    // environment-variables
-            .mockReturnValueOnce('') // env-files
-            .mockReturnValueOnce('')                           //log Configuration Log Driver
-            .mockReturnValueOnce('')                           //log Configuration Options
-            .mockReturnValueOnce('')                           //Docker Labels
-            .mockReturnValueOnce('')                           //Command Options 
-            .mockReturnValueOnce('task-definition-arn')                           //task definition arn
-            .mockReturnValueOnce('')                           //task definition family
-            .mockReturnValueOnce(0);                          //task definition revision
+            .mockReturnValueOnce('')                           // task definition
+            .mockReturnValueOnce('')                           // conatiner name
+            .mockReturnValueOnce('')                           // image
+            .mockReturnValueOnce('')                           // environment-variables
+            .mockReturnValueOnce('')                           // env-files
+            .mockReturnValueOnce('')                           // log Configuration Log Driver
+            .mockReturnValueOnce('')                           // log Configuration Options
+            .mockReturnValueOnce('')                           // Docker Labels
+            .mockReturnValueOnce('')                           // Command Options 
+            .mockReturnValueOnce('task-definition-arn')        // task definition arn
+            .mockReturnValueOnce('')                           // task definition family
+            .mockReturnValueOnce(0);                           // task definition revision
 
-            console.log ("BEFORE TEST : ");
+        await run();
 
+        expect(mockEcsClient.describeTaskDefinition).toHaveBeenCalledTimes(1);
+        expect(mockEcsDescribeTaskDef).toHaveBeenCalledWith({
+            taskDefinition: "task-definition-arn"
 
-            await run();
-
-            console.log ("AFTER TEST : ");
-
-
-            expect(mockEcsClient.describeTaskDefinition).toHaveBeenCalledTimes(1);
-            expect(mockEcsDescribeTaskDef).toHaveBeenCalledWith({
-                taskDefinition: "task-definition-arn"
-
-            });
+        });
         expect(core.warning).toBeCalledWith("The task definition arn will be used to fetch task definition");
-       
     });
 
     test('if file and arn are provided to fetch task definition', async () => {
         core.getInput = jest
             .fn()
-            .mockReturnValueOnce('task-definition.json')                           //task definition
-            .mockReturnValueOnce('web')                                              //conatiner name
-            .mockReturnValueOnce('nginx:latest')                                     //image
-            .mockReturnValueOnce('EXAMPLE=here')                                    // environment-variables
+            .mockReturnValueOnce('task-definition.json')                                // task definition
+            .mockReturnValueOnce('web')                                                 // conatiner name
+            .mockReturnValueOnce('nginx:latest')                                        // image
+            .mockReturnValueOnce('EXAMPLE=here')                                        // environment-variables
             .mockReturnValueOnce('arn:aws:s3:::s3_bucket_name/envfile_object_name.env') // env-files
-            .mockReturnValueOnce('')                           //log Configuration Log Driver
-            .mockReturnValueOnce('')                           //log Configuration Options
-            .mockReturnValueOnce('')                           //Docker Labels
-            .mockReturnValueOnce('')                           //Command Options 
-            .mockReturnValueOnce('task-definition-arn')                           //task definition arn
-            .mockReturnValueOnce('')                           //task definition family
-            .mockReturnValueOnce(0);                          //task definition revision
+            .mockReturnValueOnce('')                                                    // log Configuration Log Driver
+            .mockReturnValueOnce('')                                                    // log Configuration Options
+            .mockReturnValueOnce('')                                                    // Docker Labels
+            .mockReturnValueOnce('')                                                    // Command Options 
+            .mockReturnValueOnce('task-definition-arn')                                 // task definition arn
+            .mockReturnValueOnce('')                                                    // task definition family
+            .mockReturnValueOnce(0);                                                    //task definition revision
 
-            await run();
+        await run();
 
-            expect(mockEcsClient.describeTaskDefinition).toHaveBeenCalledTimes(0);
-            expect(mockEcsDescribeTaskDef).toHaveBeenCalledTimes(0);
+        expect(mockEcsClient.describeTaskDefinition).toHaveBeenCalledTimes(0);
+        expect(mockEcsDescribeTaskDef).toHaveBeenCalledTimes(0);
+        expect(core.warning).toBeCalledWith("Task definition file will be used.");
     });
 
     test('if file, arn, family and revision are all provided to fetch task definition', async () => {
         core.getInput = jest
             .fn()
-            .mockReturnValueOnce('task-definition.json')                           //task definition 
-            .mockReturnValueOnce('web')                                              //conatiner name
-            .mockReturnValueOnce('nginx:latest')                                     //image
-            .mockReturnValueOnce('EXAMPLE=here')                                    // environment-variables
+            .mockReturnValueOnce('task-definition.json')                                // task definition 
+            .mockReturnValueOnce('web')                                                 // conatiner name
+            .mockReturnValueOnce('nginx:latest')                                        // image
+            .mockReturnValueOnce('EXAMPLE=here')                                        // environment-variables
             .mockReturnValueOnce('arn:aws:s3:::s3_bucket_name/envfile_object_name.env') // env-files
-            .mockReturnValueOnce('')                           //log Configuration Log Driver
-            .mockReturnValueOnce('')                           //log Configuration Options
-            .mockReturnValueOnce('')                           //Docker Labels
-            .mockReturnValueOnce('')                           //Command Options 
-            .mockReturnValueOnce('task-definition-arn')                           //task definition arn
-            .mockReturnValueOnce('task-definition-family')                           //task definition family
-            .mockReturnValueOnce(10);                          //task definition revision
+            .mockReturnValueOnce('')                                                    // log Configuration Log Driver
+            .mockReturnValueOnce('')                                                    // log Configuration Options
+            .mockReturnValueOnce('')                                                    // Docker Labels
+            .mockReturnValueOnce('')                                                    // Command Options 
+            .mockReturnValueOnce('task-definition-arn')                                 //task definition arn
+            .mockReturnValueOnce('task-definition-family')                              //task definition family
+            .mockReturnValueOnce(10);                                                   //task definition revision
 
-            await run();
+        await run();
 
-            expect(mockEcsClient.describeTaskDefinition).toHaveBeenCalledTimes(0);
-            expect(mockEcsDescribeTaskDef).toHaveBeenCalledTimes(0);
+        expect(mockEcsClient.describeTaskDefinition).toHaveBeenCalledTimes(0);
+         expect(mockEcsDescribeTaskDef).toHaveBeenCalledTimes(0);
+        expect(core.warning).toBeCalledWith("Task definition file will be used.");
     });
 
     test('if arn and family are provided to fetch task definition', async () => {
         core.getInput = jest
             .fn()
-            .mockReturnValueOnce('')                           //task definition
-            .mockReturnValueOnce('')                                              //conatiner name
-            .mockReturnValueOnce('')                                     //image
-            .mockReturnValueOnce('')                                    // environment-variables
-            .mockReturnValueOnce('') // env-files
-            .mockReturnValueOnce('')                           //log Configuration Log Driver
-            .mockReturnValueOnce('')                           //log Configuration Options
-            .mockReturnValueOnce('')                           //Docker Labels
-            .mockReturnValueOnce('')                           //Command Options 
-            .mockReturnValueOnce('task-definition-arn')                           //task definition arn
-            .mockReturnValueOnce('task-definition-family')                           //task definition family
-            .mockReturnValueOnce(0);                          //task definition revision
+            .mockReturnValueOnce('')                           // task definition
+            .mockReturnValueOnce('')                           // conatiner name
+            .mockReturnValueOnce('')                           // image
+            .mockReturnValueOnce('')                           // environment-variables
+            .mockReturnValueOnce('')                           // env-files
+            .mockReturnValueOnce('')                           // log Configuration Log Driver
+            .mockReturnValueOnce('')                           // log Configuration Options
+            .mockReturnValueOnce('')                           // Docker Labels
+            .mockReturnValueOnce('')                           // Command Options 
+            .mockReturnValueOnce('task-definition-arn')        // task definition arn
+            .mockReturnValueOnce('task-definition-family')     // task definition family
+            .mockReturnValueOnce(0);                           // task definition revision
 
-            await run();
+        await run();
 
-            expect(mockEcsClient.describeTaskDefinition).toHaveBeenCalledTimes(1);
-            expect(mockEcsDescribeTaskDef).toHaveBeenCalledWith({
-                taskDefinition: "task-definition-arn"
-            });
+        expect(mockEcsClient.describeTaskDefinition).toHaveBeenCalledTimes(1);
+        expect(mockEcsDescribeTaskDef).toHaveBeenCalledWith({
+            taskDefinition: "task-definition-arn"
+        });
     });
 
     test('if only revision is provided to fetch task definition', async () => {
         core.getInput = jest
             .fn()
-            .mockReturnValueOnce('')                           //task definition
-            .mockReturnValueOnce('')                                              //conatiner name
-            .mockReturnValueOnce('')                                     //image
-            .mockReturnValueOnce('')                                    // environment-variables
-            .mockReturnValueOnce('') // env-files
-            .mockReturnValueOnce('')                           //log Configuration Log Driver
-            .mockReturnValueOnce('')                           //log Configuration Options
-            .mockReturnValueOnce('')                           //Docker Labels
-            .mockReturnValueOnce('')                           //Command Options 
-            .mockReturnValueOnce('')                           //task definition arn
-            .mockReturnValueOnce('')                           //task definition family
-            .mockReturnValueOnce(10);                          //task definition revision
+            .mockReturnValueOnce('')                           // task definition
+            .mockReturnValueOnce('')                           // conatiner name
+            .mockReturnValueOnce('')                           // image
+            .mockReturnValueOnce('')                           // environment-variables
+            .mockReturnValueOnce('')                           // env-files
+            .mockReturnValueOnce('')                           // log Configuration Log Driver
+            .mockReturnValueOnce('')                           // log Configuration Options
+            .mockReturnValueOnce('')                           // Docker Labels
+            .mockReturnValueOnce('')                           // Command Options 
+            .mockReturnValueOnce('')                           // task definition arn
+            .mockReturnValueOnce('')                           // task definition family
+            .mockReturnValueOnce(10);                          // task definition revision
 
-            await run(); 
+        await run(); 
             
-            expect(core.setFailed).toBeCalledWith("You can't fetch task definition with just revision: Either use task definition, arn or family");
+        expect(core.setFailed).toBeCalledWith("You can't fetch task definition with just revision: Either use task definition, arn or family");
     });
 
     test('renders a task definition with docker labels', async () => {

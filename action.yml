@@ -8,10 +8,10 @@ inputs:
     description: 'The path to the ECS task definition JSON file'
     required: false
   task-definition-arn:
-    description: 'The full Amazon Resource Name (ARN) of the task definition to describe'
+    description: 'The full Amazon Resource Name (ARN) of the task definition to be used'
     required: false
   task-definition-family:
-    description: 'The name of a family that this task definition is registered to'
+    description: 'The name of a family that the task definition is registered to'
     required: false
   task-definition-revision:
     description: 'The revision of the task definition being used'

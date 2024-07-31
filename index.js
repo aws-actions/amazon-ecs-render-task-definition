@@ -9,6 +9,7 @@ async function run() {
     const ecs = new ECS({
       customUserAgent: 'amazon-ecs-render-task-definition-for-github-actions'
     });
+
     // Get inputs
     const taskDefinitionFile = core.getInput('task-definition', { required: false });
     const containerName = core.getInput('container-name', { required: true });
@@ -22,9 +23,9 @@ async function run() {
     const command = core.getInput('command', { required: false });
 
     //New inputs to fetch task definition 
-    const taskDefinitionArn = core.getInput('task-definition-arn', { required: false }) || undefined;
-    const taskDefinitionFamily = core.getInput('task-definition-family', { required: false }) || undefined;
-    const taskDefinitionRevision = Number(core.getInput('task-definition-revision', { required: false})) || null;
+    const taskDefinitionArn = core.getInput('task-definition-arn', { required: false });
+    const taskDefinitionFamily = core.getInput('task-definition-family', { required: false });
+    const taskDefinitionRevision = Number(core.getInput('task-definition-revision', { required: false }));
 
     let taskDefPath;
     let taskDefContents;
@@ -35,30 +36,29 @@ async function run() {
       core.warning("Task definition file will be used.");
       taskDefPath = path.isAbsolute(taskDefinitionFile) ?
       taskDefinitionFile : 
-      path.join(process.env.GITHUB_WORKSPACE, taskDefinitionFile); 
+      path.join(process.env.GITHUB_WORKSPACE, taskDefinitionFile);
       if (!fs.existsSync(taskDefPath)) {
         throw new Error(`Task definition file does not exist: ${taskDefinitionFile}`);
       }
       taskDefContents = require(taskDefPath);
-    } else if (taskDefinitionArn || taskDefinitionFamily || taskDefinitionRevision){
-      if (taskDefinitionArn){
+    } else if (taskDefinitionArn || taskDefinitionFamily || taskDefinitionRevision) {
+      if (taskDefinitionArn) {
         core.warning("The task definition arn will be used to fetch task definition");
         params = {taskDefinition: taskDefinitionArn};
-      } else if (taskDefinitionFamily && taskDefinitionRevision){
+      } else if (taskDefinitionFamily && taskDefinitionRevision) {
         core.warning("The latest revision of the task definition family will be provided");
         params = {taskDefinition: `${taskDefinitionFamily}:${taskDefinitionRevision}` };
-      } else if (taskDefinitionFamily){
+      } else if (taskDefinitionFamily) {
         core.warning("The latest revision of the task definition family will be provided");
         params = {taskDefinition: taskDefinitionFamily};
-      } else if (taskDefinitionRevision){
+      } else if (taskDefinitionRevision) {
         core.setFailed("You can't fetch task definition with just revision: Either use task definition, arn or family");
       } else {
         throw new Error('Either task definition ARN, family, or family and revision must be provided');
       }
-      
+
       try {
         describeTaskDefResponse = await ecs.describeTaskDefinition(params);
-        console.log("Success", describeTaskDefResponse.taskDefinition);
       } catch (error) {
         core.setFailed("Failed to describe task definition in ECS: " + error.message);
         core.debug("Task definition contents:");
@@ -66,9 +66,9 @@ async function run() {
         throw(error); 
       }
       taskDefContents = describeTaskDefResponse.taskDefinition;
-  } else{
-     throw new Error("Either task definition, task definition arn or task definition family must be provided");
-  }
+    } else {
+      throw new Error("Either task definition, task definition arn or task definition family must be provided");
+    }
 
     // Insert the image URI
     if (!Array.isArray(taskDefContents.containerDefinitions)) {
