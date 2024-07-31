@@ -37,7 +37,7 @@ async function run() {
     let describeTaskDefResponse;
     let params;
     
-    if(taskDefinitionFile){
+    if (taskDefinitionFile) {
       core.warning("Task definition file will be used.");
       taskDefPath = path.isAbsolute(taskDefinitionFile) ?
       taskDefinitionFile : 
@@ -46,22 +46,23 @@ async function run() {
         throw new Error(`Task definition file does not exist: ${taskDefinitionFile}`);
       }
       taskDefContents = require(taskDefPath);
-    } else if(taskDefinitionArn || taskDefinitionFamily || taskDefinitionRevision){
-      if(taskDefinitionArn){
+    } else if (taskDefinitionArn || taskDefinitionFamily || taskDefinitionRevision){
+      if (taskDefinitionArn){
         core.warning("The task definition arn will be used to fetch task definition");
         params = {taskDefinition: taskDefinitionArn};
-      } else if(taskDefinitionFamily && taskDefinitionRevision){
+      } else if (taskDefinitionFamily && taskDefinitionRevision){
         core.warning("The latest revision of the task definition family will be provided");
         params = {taskDefinition: `${taskDefinitionFamily}:${taskDefinitionRevision}` };
-      } else if(taskDefinitionFamily){
+      } else if (taskDefinitionFamily){
         core.warning("The latest revision of the task definition family will be provided");
         params = {taskDefinition: taskDefinitionFamily};
-      } else if(taskDefinitionRevision){
+      } else if (taskDefinitionRevision){
         core.setFailed("You can't fetch task definition with just revision: Either use task definition, arn or family");
-      } else{
+      } else {
         throw new Error('Either task definition ARN, family, or family and revision must be provided');
       }
-      try{
+      
+      try {
         describeTaskDefResponse = await ecs.describeTaskDefinition(params);
         console.log("Success", describeTaskDefResponse.taskDefinition);
       } catch (error) {
