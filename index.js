@@ -56,16 +56,16 @@ async function run() {
         throw new Error('Either task definition ARN, family, or family and revision must be provided');
       }
       try{
-        describeTaskDefResponse = await ecs.describeTaskDefinition(params).promise();
+        describeTaskDefResponse = await ecs.describeTaskDefinition(params);
         console.log("Success", data.taskDefinition);
         taskDefContents = require(describeTaskDefResponse.taskDefinition);
       }
       catch (error) {
-      core.setFailed("Failed to describe task definition in ECS: " + error.message);
-      core.debug("Task definition contents:");
-      core.debug(JSON.stringify(taskDefContents, undefined, 4));
-      throw(error); 
-    }
+        core.setFailed("Failed to describe task definition in ECS: " + error.message);
+        core.debug("Task definition contents:");
+        core.debug(JSON.stringify(taskDefContents, undefined, 4));
+        throw(error); 
+      }
   } else{
      throw new Error("Either task definition, task definition arn or task definition family must be provided");
   }
