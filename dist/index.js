@@ -62,7 +62,7 @@ async function run() {
         throw new Error('Either task definition ARN, family, or family and revision must be provided');
       }
       try{
-        describeTaskDefResponse = await ecs.describeTaskDefinition(params).promise().then(data =>{
+        describeTaskDefResponse = await ecs.describeTaskDefinition(params).then(data =>{
         return data.taskDefinition;
       });
       taskDefContents = require(describeTaskDefResponse.taskDefinition);
