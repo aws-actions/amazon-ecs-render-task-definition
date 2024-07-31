@@ -63,7 +63,7 @@ async function run() {
       }
       try{
         describeTaskDefResponse = await ecs.describeTaskDefinition(params);
-        console.log("Success", data.taskDefinition);
+        console.log("Success");
         taskDefContents = require(describeTaskDefResponse.taskDefinition);
       }
       catch (error) {
