@@ -41,7 +41,7 @@ jobs:
 
     - name: Register Amazon ECS task definition
       env:
-        TASK_DEF_FILE: ${{ steps.render-task-definition.outputs.task-definition }}
+        TASK_DEF_FILE: ${{ steps.render-task-definition-file.outputs.task-definition }}
       run: |
         aws ecs register-task-definition --cli-input-json file://$TASK_DEF_FILE
 
