@@ -27,7 +27,7 @@ jobs:
 
     - name: Render Amazon ECS task definition with task definition file 
       id: render-task-definition-file
-      uses: aws-actions/amazon-ecs-render-task-definition@v1
+      uses: shesaave/amazon-ecs-render-task-definition@v1
       with:
         task-definition: task-definition.json
         container-name: sample-app
@@ -35,7 +35,7 @@ jobs:
 
     - name: Render Amazon ECS task definition with task definition arn (amazon resource name)
       id: render-task-definition-arn
-      uses: aws-actions/amazon-ecs-render-task-definition@v1
+      uses: shesaave/amazon-ecs-render-task-definition@v1
       with:
         task-definition-arn: task-definition-arn
         container-name: sample-app
@@ -43,7 +43,7 @@ jobs:
 
     - name: Render Amazon ECS task definition with task definition family 
       id: render-task-definition-family
-      uses: aws-actions/amazon-ecs-render-task-definition@v1
+      uses: shesaave/amazon-ecs-render-task-definition@v1
       with:
         task-definition-family: task-definition-family
         container-name: sample-app
@@ -51,7 +51,7 @@ jobs:
 
     - name: Render Amazon ECS task definition with task definition family and revision
       id: render-task-definition-family-revision
-      uses: aws-actions/amazon-ecs-render-task-definition@v1
+      uses: shesaave/amazon-ecs-render-task-definition@v1
       with:
         task-definition-famiy: task-definition-family
         task-definition-revision: task-definition-revision
