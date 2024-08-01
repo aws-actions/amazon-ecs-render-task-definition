@@ -53,8 +53,7 @@ describe('Render task definition', () => {
 
         process.env = Object.assign(process.env, { GITHUB_WORKSPACE: __dirname });
         process.env = Object.assign(process.env, { RUNNER_TEMP: '/home/runner/work/_temp' });
-
-
+        
         tmp.fileSync.mockReturnValue({
             name: 'new-task-def-file-name'
         });
