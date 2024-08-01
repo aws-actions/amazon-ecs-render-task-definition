@@ -37,7 +37,7 @@ jobs:
       id: render-task-definition-arn
       uses: shesaave/amazon-ecs-render-task-definition@8a6aa737d95c816e467f33352a951067707a09ab
       with:
-        task-definition-arn: task-definition-arn
+        task-definition-arn: arn:aws:ecs:us-west-2:851725652419:task-definition/fetch-def-task-definition:16
         container-name: sample-app
         image: amazon/amazon-ecs-sample:latest
 
