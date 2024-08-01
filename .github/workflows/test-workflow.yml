@@ -33,6 +33,18 @@ jobs:
         container-name: sample-app
         image: amazon/amazon-ecs-sample:latest
 
+    - name: Validate Amazon ECS task definition file 
+      env:
+        TASK_DEF_FILE: ${{ steps.render-task-definition-file.outputs.task-definition }}
+      run: |
+        diff expected-task-definition.json $TASK_DEF_FILE
+
+    - name: Register Amazon ECS task definition
+      env:
+        TASK_DEF_FILE: ${{ steps.render-task-definition.outputs.task-definition }}
+      run: |
+        aws ecs register-task-definition --cli-input-json file://$TASK_DEF_FILE
+
     - name: Render Amazon ECS task definition with task definition arn (amazon resource name)
       id: render-task-definition-arn
       uses: aws-actions/amazon-ecs-render-task-definition@e246ecdd89c8de5a4a8c248830566528cbed06dd
@@ -57,15 +69,3 @@ jobs:
         task-definition-revision: 1
         container-name: sample-app
         image: amazon/amazon-ecs-sample:latest
-
-    - name: Validate Amazon ECS task definition file 
-      env:
-        TASK_DEF_FILE: ${{ steps.render-task-definition-file.outputs.task-definition }}
-      run: |
-        diff expected-task-definition.json $TASK_DEF_FILE
-
-    - name: Register Amazon ECS task definition
-      env:
-        TASK_DEF_FILE: ${{ steps.render-task-definition.outputs.task-definition }}
-      run: |
-        aws ecs register-task-definition --cli-input-json file://$TASK_DEF_FILE

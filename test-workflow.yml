@@ -27,34 +27,9 @@ jobs:
 
     - name: Render Amazon ECS task definition with task definition file 
       id: render-task-definition-file
-      uses: shesaave/amazon-ecs-render-task-definition@v1
+      uses: aws-actions/amazon-ecs-render-task-definition@v1
       with:
         task-definition: task-definition.json
-        container-name: sample-app
-        image: amazon/amazon-ecs-sample:latest
-
-    - name: Render Amazon ECS task definition with task definition arn (amazon resource name)
-      id: render-task-definition-arn
-      uses: shesaave/amazon-ecs-render-task-definition@v1
-      with:
-        task-definition-arn: task-definition-arn
-        container-name: sample-app
-        image: amazon/amazon-ecs-sample:latest
-
-    - name: Render Amazon ECS task definition with task definition family 
-      id: render-task-definition-family
-      uses: shesaave/amazon-ecs-render-task-definition@v1
-      with:
-        task-definition-family: task-definition-family
-        container-name: sample-app
-        image: amazon/amazon-ecs-sample:latest
-
-    - name: Render Amazon ECS task definition with task definition family and revision
-      id: render-task-definition-family-revision
-      uses: shesaave/amazon-ecs-render-task-definition@v1
-      with:
-        task-definition-family: task-definition-family
-        task-definition-revision: 1
         container-name: sample-app
         image: amazon/amazon-ecs-sample:latest
 
@@ -70,4 +45,27 @@ jobs:
       run: |
         aws ecs register-task-definition --cli-input-json file://$TASK_DEF_FILE
 
-   
+    - name: Render Amazon ECS task definition with task definition arn (amazon resource name)
+      id: render-task-definition-arn
+      uses: aws-actions/amazon-ecs-render-task-definition@v1
+      with:
+        task-definition-arn: task-definition-arn
+        container-name: sample-app
+        image: amazon/amazon-ecs-sample:latest
+
+    - name: Render Amazon ECS task definition with task definition family 
+      id: render-task-definition-family
+      uses: aws-actions/amazon-ecs-render-task-definition@v1
+      with:
+        task-definition-family: task-definition-family
+        container-name: sample-app
+        image: amazon/amazon-ecs-sample:latest
+
+    - name: Render Amazon ECS task definition with task definition family and revision
+      id: render-task-definition-family-revision
+      uses: aws-actions/amazon-ecs-render-task-definition@v1
+      with:
+        task-definition-family: task-definition-family
+        task-definition-revision: 1
+        container-name: sample-app
+        image: amazon/amazon-ecs-sample:latest
