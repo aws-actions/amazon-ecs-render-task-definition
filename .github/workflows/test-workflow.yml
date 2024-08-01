@@ -70,6 +70,6 @@ jobs:
       uses: aws-actions/amazon-ecs-deploy-task-definition@abe77ebded86b685c231c58bd5936280c6fcc011
       with:
         task-definition: task-definition.json
-        service: github-actions-deploy-task-def-integ-test
-        cluster: github-actions-deploy-task-def-integ-test
+        service: fetch-def-service
+        cluster: fetch-def-cluster
         wait-for-service-stability: true
