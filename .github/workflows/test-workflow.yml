@@ -58,6 +58,8 @@ jobs:
         container-name: sample-app
         image: amazon/amazon-ecs-sample:latest
 
+    #validation 
+
     - name: Validate Amazon ECS task definition file 
       env:
         TASK_DEF_FILE: ${{ steps.render-task-definition.outputs.task-definition }}
@@ -83,6 +85,8 @@ jobs:
       run: |
         diff expected-task-definition-family $TASK_DEF_FAM
         diff expected-task-definition-family $TASK_DEF_REV
+
+    #registration
 
     - name: Register Amazon ECS task definition with task definition file 
       env:
