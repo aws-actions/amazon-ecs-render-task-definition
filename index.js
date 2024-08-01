@@ -35,8 +35,8 @@ async function run() {
     if (taskDefinitionFile) {
       core.warning("Task definition file will be used.");
       taskDefPath = path.isAbsolute(taskDefinitionFile) ?
-      taskDefinitionFile : 
-      path.join(process.env.GITHUB_WORKSPACE, taskDefinitionFile);
+            taskDefinitionFile : 
+            path.join(process.env.GITHUB_WORKSPACE, taskDefinitionFile);
       if (!fs.existsSync(taskDefPath)) {
         throw new Error(`Task definition file does not exist: ${taskDefinitionFile}`);
       }
