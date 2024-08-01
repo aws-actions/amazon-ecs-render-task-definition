@@ -457,7 +457,7 @@ describe('Render task definition', () => {
         expect(mockEcsDescribeTaskDef).toHaveBeenCalledWith({
             taskDefinition: "task-definition-family"
         });  
-        expect(core.warning).toBeCalledWith("The latest revision of the task definition family will be provided");
+        expect(core.warning).toBeCalledWith("The latest revision of the task definition family will be used to fetch task definition");
     });
 
     test('if only arn is provided to fetch task definition', async () => {
@@ -574,7 +574,7 @@ describe('Render task definition', () => {
 
         await run(); 
             
-        expect(core.setFailed).toBeCalledWith("You can't fetch task definition with just revision: Either use task definition, arn or family");
+        expect(core.setFailed).toBeCalledWith("You can't fetch task definition with just revision: Either use task definition file, arn or family name");
     });
 
     test('renders a task definition with docker labels', async () => {

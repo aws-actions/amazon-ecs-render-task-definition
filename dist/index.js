@@ -52,26 +52,26 @@ async function run() {
         core.warning("The task definition arn will be used to fetch task definition");
         params = {taskDefinition: taskDefinitionArn};
       } else if (taskDefinitionFamily && taskDefinitionRevision) {
-        core.warning("The latest revision of the task definition family will be provided");
+        core.warning("The specified revision of the task definition family will be used to fetch task definition");
         params = {taskDefinition: `${taskDefinitionFamily}:${taskDefinitionRevision}` };
       } else if (taskDefinitionFamily) {
-        core.warning("The latest revision of the task definition family will be provided");
+        core.warning("The latest revision of the task definition family will be used to fetch task definition");
         params = {taskDefinition: taskDefinitionFamily};
       } else if (taskDefinitionRevision) {
-        core.setFailed("You can't fetch task definition with just revision: Either use task definition, arn or family");
+        core.setFailed("You can't fetch task definition with just revision: Either use task definition file, arn or family name");
       } else {
-        throw new Error('Either task definition ARN, family, or family and revision must be provided');
+        throw new Error('Either task definition file, ARN, family, or family and revision must be provided to fetch task definition');
       }
 
       try {
         describeTaskDefResponse = await ecs.describeTaskDefinition(params);
       } catch (error) {
         core.setFailed("Failed to describe task definition in ECS: " + error.message);
-        core.debug("Task definition contents:");
-        core.debug(JSON.stringify(taskDefContents, undefined, 4));
         throw(error); 
       }
       taskDefContents = describeTaskDefResponse.taskDefinition;
+      core.debug("Task definition contents:");
+      core.debug(JSON.stringify(taskDefContents, undefined, 4));
     } else {
       throw new Error("Either task definition, task definition arn or task definition family must be provided");
     }
