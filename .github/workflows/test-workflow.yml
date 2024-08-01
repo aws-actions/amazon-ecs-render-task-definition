@@ -68,20 +68,20 @@ jobs:
 
     - name: Validate Amazon ECS task definition arn 
       env:
-        TASK_DEF_ARN: ${{ steps.render-task-definition-arn.outputs.task-definition-arn }}
+        TASK_DEF_ARN: ${{ steps.render-task-definition-arn.outputs.task-definition }}
       run: |
         diff expected-task-definition.json $TASK_DEF_ARN
 
     - name: Validate Amazon ECS task definition with family 
       env:
-        TASK_DEF_FAM: ${{ steps.render-task-definition-family.outputs.task-definition-family }}
+        TASK_DEF_FAM: ${{ steps.render-task-definition-family.outputs.task-definition }}
       run: |
         diff expected-task-definition.json $TASK_DEF_FAM
     
     - name: Validate Amazon ECS task definition with family and revision
       env:
-        TASK_DEF_FAM: ${{ steps.render-task-definition-family.outputs.task-definition-family }}
-        TASK_DEF_REV: ${{ steps.render-task-definition-revision.outputs.task-definition-revision }}
+        TASK_DEF_FAM: ${{ steps.render-task-definition-family.outputs.task-definition }}
+        TASK_DEF_REV: ${{ steps.render-task-definition-revision.outputs.task-definition }}
       run: |
         diff expected-task-definition.json $TASK_DEF_FAM
         diff expected-task-definition.json $TASK_DEF_REV
