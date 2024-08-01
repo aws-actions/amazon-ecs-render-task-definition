@@ -53,7 +53,7 @@ jobs:
       id: render-task-definition-family-revision
       uses: shesaave/amazon-ecs-render-task-definition@8a6aa737d95c816e467f33352a951067707a09ab
       with:
-        task-definition-famiy: fetch-def-task-definition
+        task-definition-family: fetch-def-task-definition
         task-definition-revision: 1
         container-name: fetch-app
         image: amazon/amazon-ecs-sample:latest
