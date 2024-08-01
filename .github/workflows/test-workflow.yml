@@ -39,7 +39,7 @@ jobs:
       run: |
         diff expected-task-definition.json $TASK_DEF_FILE
 
-    - name: Register Amazon ECS task definition
+    - name: Register Amazon ECS task definition file
       env:
         TASK_DEF_FILE: ${{ steps.render-task-definition-file.outputs.task-definition }}
       run: |
