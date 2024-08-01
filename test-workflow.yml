@@ -66,26 +66,26 @@ jobs:
 
     - name: Register Amazon ECS task definition with task definition file 
       env:
-        TASK_DEF_FILE: ${{ steps.render-task-definition.outputs.task-definition }}
+        TASK_DEF_FILE: ${{ steps.render-task-definition-file.outputs.task-definition }}
       run: |
         aws ecs register-task-definition --cli-input-json file://$TASK_DEF_FILE
 
     - name: Register Amazon ECS task definition with task definition arn 
       env:
-        TASK_DEF_ARN: ${{ steps.render-task-definition.outputs.task-definition-arn }}
+        TASK_DEF_ARN: ${{ steps.render-task-definition-arn.outputs.task-definition-arn }}
       run: |
         aws ecs register-task-definition --cli-input-json file://$TASK_DEF_ARN
 
     - name: Register Amazon ECS task definition with task definition family 
       env:
-        TASK_DEF_FAM: ${{ steps.render-task-definition.outputs.task-definition-family }}
+        TASK_DEF_FAM: ${{ steps.render-task-definition-family.outputs.task-definition-family }}
       run: |
         aws ecs register-task-definition --cli-input-json file://$TASK_DEF_FAM
 
     - name: Register Amazon ECS task definition with task definition family and revision 
       env:
-        TASK_DEF_FAM : ${{ steps.render-task-definition.outputs.task-definition-family }}
-        TASK_DEF_REV : ${{ steps.render-task-definition.outputs.task-definition-revision }}
+        TASK_DEF_FAM : ${{ steps.render-task-definition-family.outputs.task-definition-family }}
+        TASK_DEF_REV : ${{ steps.render-task-definition-revision.outputs.task-definition-revision }}
       run: |
         aws ecs register-task-definition --cli-input-json file://$TASK_DEF_FAM
         aws ecs register-task-definition --cli-input-json file://$TASK_DEF_REV
