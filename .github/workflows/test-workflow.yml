@@ -45,17 +45,17 @@ jobs:
       id: render-task-definition-family
       uses: shesaave/amazon-ecs-render-task-definition@8a6aa737d95c816e467f33352a951067707a09ab
       with:
-        task-definition-family: task-definition-family
-        container-name: sample-app
+        task-definition-family: fetch-def-task-definition
+        container-name: fetch-app
         image: amazon/amazon-ecs-sample:latest
 
     - name: Render Amazon ECS task definition with task definition family and revision
       id: render-task-definition-family-revision
       uses: shesaave/amazon-ecs-render-task-definition@8a6aa737d95c816e467f33352a951067707a09ab
       with:
-        task-definition-famiy: task-definition-family
-        task-definition-revision: task-definition-revision
-        container-name: sample-app
+        task-definition-famiy: fetch-def-task-definition
+        task-definition-revision: 1
+        container-name: fetch-app
         image: amazon/amazon-ecs-sample:latest
 
     #validation 

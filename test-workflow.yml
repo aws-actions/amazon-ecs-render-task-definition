@@ -38,24 +38,24 @@ jobs:
       uses: shesaave/amazon-ecs-render-task-definition@v1
       with:
         task-definition-arn: arn:aws:ecs:us-west-2:851725652419:task-definition/fetch-def-task-definition:16
-        container-name: sample-app
+        container-name: fetch-app
         image: amazon/amazon-ecs-sample:latest
 
     - name: Render Amazon ECS task definition with task definition family 
       id: render-task-definition-family
       uses: shesaave/amazon-ecs-render-task-definition@v1
       with:
-        task-definition-family: task-definition-family
-        container-name: sample-app
+        task-definition-family: fetch-def-task-definition
+        container-name: fetch-app
         image: amazon/amazon-ecs-sample:latest
 
     - name: Render Amazon ECS task definition with task definition family and revision
       id: render-task-definition-family-revision
       uses: shesaave/amazon-ecs-render-task-definition@v1
       with:
-        task-definition-famiy: task-definition-family
-        task-definition-revision: task-definition-revision
-        container-name: sample-app
+        task-definition-famiy: fetch-def-task-definition
+        task-definition-revision: 1
+        container-name: fetch-app
         image: amazon/amazon-ecs-sample:latest
 
     - name: Validate Amazon ECS task definition file 
