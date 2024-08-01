@@ -38,7 +38,7 @@ jobs:
       uses: shesaave/amazon-ecs-render-task-definition@8a6aa737d95c816e467f33352a951067707a09ab
       with:
         task-definition-arn: arn:aws:ecs:us-west-2:851725652419:task-definition/fetch-def-task-definition:16
-        container-name: sample-app
+        container-name: fetch-app
         image: amazon/amazon-ecs-sample:latest
 
     - name: Render Amazon ECS task definition with task definition family 
