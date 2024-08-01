@@ -5,6 +5,10 @@ on:
 
 name: Integration Test
 
+permissions:
+  id-token: write
+  contents: read
+
 jobs:
   deploy:
     name: Deploy
@@ -16,15 +20,15 @@ jobs:
 
     - name: Print current build ID
       run: |
-        echo Integration test run: githubactionsamazonecsrende-wVtTCLjhID2l:5c64e2f8-6db9-4839-abf2-821b21bf246c
+        echo Integration test run: githubactionsamazonecsrende-wVtTCLjhID2l:9468de4e-7b40-4234-8d73-7fe8e80a9ee3
 
     - name: Configure AWS credentials
       uses: aws-actions/configure-aws-credentials@v4
       with:
-        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        role-to-assume: arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID }}:role/GitHubActionsRenderTaskIntegrationTests
+        role-session-name: render_task_integration_tests
         aws-region: us-west-2
-
+        
     - name: Render Amazon ECS task definition with task definition file
       id: render-task-definition-file
       uses: aws-actions/amazon-ecs-render-task-definition@e246ecdd89c8de5a4a8c248830566528cbed06dd
