@@ -25,7 +25,7 @@ jobs:
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         aws-region: us-west-2
 
-    - name: Render Amazon ECS task definition
+    - name: Render Amazon ECS task definition with task definition file 
       id: render-task-definition
       uses: aws-actions/amazon-ecs-render-task-definition@964c59d79b99c32ccbda305c9e6afb0cec542076
       with:
@@ -33,14 +33,79 @@ jobs:
         container-name: sample-app
         image: amazon/amazon-ecs-sample:latest
 
-    - name: Validate Amazon ECS task definition
+    - name: Render Amazon ECS task definition with task definition arn (amazon resource name)
+      id: render-task-definition
+      uses: aws-actions/amazon-ecs-render-task-definition@964c59d79b99c32ccbda305c9e6afb0cec542076
+      with:
+        task-definition-arn: task-definition-arn
+        container-name: sample-app
+        image: amazon/amazon-ecs-sample:latest
+
+    - name: Render Amazon ECS task definition with task definition family 
+      id: render-task-definition
+      uses: aws-actions/amazon-ecs-render-task-definition@964c59d79b99c32ccbda305c9e6afb0cec542076
+      with:
+        task-definition-family: task-definition-family
+        container-name: sample-app
+        image: amazon/amazon-ecs-sample:latest
+
+    - name: Render Amazon ECS task definition with task definition family and revision
+      id: render-task-definition
+      uses: aws-actions/amazon-ecs-render-task-definition@964c59d79b99c32ccbda305c9e6afb0cec542076
+      with:
+        task-definition-famiy: task-definition-family
+        task-definition-revision: task-definition-revision
+        container-name: sample-app
+        image: amazon/amazon-ecs-sample:latest
+
+    - name: Validate Amazon ECS task definition file 
       env:
         TASK_DEF_FILE: ${{ steps.render-task-definition.outputs.task-definition }}
       run: |
         diff expected-task-definition.json $TASK_DEF_FILE
 
-    - name: Register Amazon ECS task definition
+    - name: Validate Amazon ECS task definition arn 
+      env:
+        TASK_DEF_ARN: ${{ steps.render-task-definition.outputs.task-definition-arn }}
+      run: |
+        diff expected-task-definition-arn $TASK_DEF_ARN
+
+    - name: Validate Amazon ECS task definition with family 
+      env:
+        TASK_DEF_FAM: ${{ steps.render-task-definition.outputs.task-definition-family }}
+      run: |
+        diff expected-task-definition-family $TASK_DEF_FAM
+    
+    - name: Validate Amazon ECS task definition with family and revision
+      env:
+        TASK_DEF_FAM: ${{ steps.render-task-definition.outputs.task-definition-family }}
+        TASK_DEF_REV: ${{ steps.render-task-definition.outputs.task-definition-revision }}
+      run: |
+        diff expected-task-definition-family $TASK_DEF_FAM
+        diff expected-task-definition-family $TASK_DEF_REV
+
+    - name: Register Amazon ECS task definition with task definition file 
       env:
         TASK_DEF_FILE: ${{ steps.render-task-definition.outputs.task-definition }}
       run: |
         aws ecs register-task-definition --cli-input-json file://$TASK_DEF_FILE
+
+    - name: Register Amazon ECS task definition with task definition arn 
+      env:
+        TASK_DEF_ARN: ${{ steps.render-task-definition.outputs.task-definition-arn }}
+      run: |
+        aws ecs register-task-definition --cli-input-json file://$TASK_DEF_ARN
+
+    - name: Register Amazon ECS task definition with task definition family 
+      env:
+        TASK_DEF_FAM: ${{ steps.render-task-definition.outputs.task-definition-family }}
+      run: |
+        aws ecs register-task-definition --cli-input-json file://$TASK_DEF_FAM
+
+    - name: Register Amazon ECS task definition with task definition family and revision 
+      env:
+        TASK_DEF_FAM : ${{ steps.render-task-definition.outputs.task-definition-family }}
+        TASK_DEF_REV : ${{ steps.render-task-definition.outputs.task-definition-revision }}
+      run: |
+        aws ecs register-task-definition --cli-input-json file://$TASK_DEF_FAM
+        aws ecs register-task-definition --cli-input-json file://$TASK_DEF_REV
