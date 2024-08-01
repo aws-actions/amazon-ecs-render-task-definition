@@ -28,7 +28,7 @@ jobs:
         role-to-assume: arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID }}:role/GitHubActionsRenderTaskIntegrationTests
         role-session-name: render_task_integration_tests
         aws-region: us-west-2
-        
+
     - name: Render Amazon ECS task definition with task definition file
       id: render-task-definition-file
       uses: aws-actions/amazon-ecs-render-task-definition@e246ecdd89c8de5a4a8c248830566528cbed06dd
