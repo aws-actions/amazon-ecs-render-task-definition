@@ -26,7 +26,7 @@ jobs:
         aws-region: us-west-2
 
     - name: Render Amazon ECS task definition with task definition file 
-      id: render-task-definition
+      id: render-task-definition-file
       uses: aws-actions/amazon-ecs-render-task-definition@964c59d79b99c32ccbda305c9e6afb0cec542076
       with:
         task-definition: task-definition.json
@@ -34,7 +34,7 @@ jobs:
         image: amazon/amazon-ecs-sample:latest
 
     - name: Render Amazon ECS task definition with task definition arn (amazon resource name)
-      id: render-task-definition
+      id: render-task-definition-arn
       uses: aws-actions/amazon-ecs-render-task-definition@964c59d79b99c32ccbda305c9e6afb0cec542076
       with:
         task-definition-arn: task-definition-arn
@@ -42,7 +42,7 @@ jobs:
         image: amazon/amazon-ecs-sample:latest
 
     - name: Render Amazon ECS task definition with task definition family 
-      id: render-task-definition
+      id: render-task-definition-family
       uses: aws-actions/amazon-ecs-render-task-definition@964c59d79b99c32ccbda305c9e6afb0cec542076
       with:
         task-definition-family: task-definition-family
@@ -50,7 +50,7 @@ jobs:
         image: amazon/amazon-ecs-sample:latest
 
     - name: Render Amazon ECS task definition with task definition family and revision
-      id: render-task-definition
+      id: render-task-definition-family-revision
       uses: aws-actions/amazon-ecs-render-task-definition@964c59d79b99c32ccbda305c9e6afb0cec542076
       with:
         task-definition-famiy: task-definition-family
