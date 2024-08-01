@@ -27,7 +27,7 @@ jobs:
 
     - name: Render Amazon ECS task definition with task definition file 
       id: render-task-definition-file
-      uses: shesaave/amazon-ecs-render-task-definition@8a6aa737d95c816e467f33352a951067707a09ab
+      uses: aws-actions/amazon-ecs-render-task-definition@e246ecdd89c8de5a4a8c248830566528cbed06dd
       with:
         task-definition: task-definition.json
         container-name: sample-app
@@ -35,27 +35,27 @@ jobs:
 
     - name: Render Amazon ECS task definition with task definition arn (amazon resource name)
       id: render-task-definition-arn
-      uses: shesaave/amazon-ecs-render-task-definition@8a6aa737d95c816e467f33352a951067707a09ab
+      uses: aws-actions/amazon-ecs-render-task-definition@e246ecdd89c8de5a4a8c248830566528cbed06dd
       with:
-        task-definition-arn: arn:aws:ecs:us-west-2:851725652419:task-definition/fetch-def-task-definition:16
-        container-name: fetch-app
+        task-definition-arn: task-definition-arn
+        container-name: sample-app
         image: amazon/amazon-ecs-sample:latest
 
     - name: Render Amazon ECS task definition with task definition family 
       id: render-task-definition-family
-      uses: shesaave/amazon-ecs-render-task-definition@8a6aa737d95c816e467f33352a951067707a09ab
+      uses: aws-actions/amazon-ecs-render-task-definition@e246ecdd89c8de5a4a8c248830566528cbed06dd
       with:
         task-definition-family: fetch-def-task-definition
-        container-name: fetch-app
+        container-name: sample-app
         image: amazon/amazon-ecs-sample:latest
 
     - name: Render Amazon ECS task definition with task definition family and revision
       id: render-task-definition-family-revision
-      uses: shesaave/amazon-ecs-render-task-definition@8a6aa737d95c816e467f33352a951067707a09ab
+      uses: aws-actions/amazon-ecs-render-task-definition@e246ecdd89c8de5a4a8c248830566528cbed06dd
       with:
         task-definition-family: fetch-def-task-definition
         task-definition-revision: 1
-        container-name: fetch-app
+        container-name: sample-app
         image: amazon/amazon-ecs-sample:latest
 
     - name: Validate Amazon ECS task definition file 
@@ -64,10 +64,8 @@ jobs:
       run: |
         diff expected-task-definition.json $TASK_DEF_FILE
 
-    - name: Deploy Amazon ECS task definition with ECS Service
-      uses: aws-actions/amazon-ecs-deploy-task-definition@abe77ebded86b685c231c58bd5936280c6fcc011
-      with:
-        task-definition: ${{ steps.render-task-definition-arn.outputs.task-definition }}
-        service: fetch-def-service
-        cluster: fetch-def-cluster
-        wait-for-service-stability: true
+    - name: Register Amazon ECS task definition
+      env:
+        TASK_DEF_FILE: ${{ steps.render-task-definition.outputs.task-definition }}
+      run: |
+        aws ecs register-task-definition --cli-input-json file://$TASK_DEF_FILE
