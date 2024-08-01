@@ -57,7 +57,7 @@ jobs:
       id: render-task-definition-family
       uses: aws-actions/amazon-ecs-render-task-definition@e246ecdd89c8de5a4a8c248830566528cbed06dd
       with:
-        task-definition-family: fetch-def-task-definition
+        task-definition-family: task-definition-family
         container-name: sample-app
         image: amazon/amazon-ecs-sample:latest
 
@@ -65,7 +65,7 @@ jobs:
       id: render-task-definition-family-revision
       uses: aws-actions/amazon-ecs-render-task-definition@e246ecdd89c8de5a4a8c248830566528cbed06dd
       with:
-        task-definition-family: fetch-def-task-definition
+        task-definition-family: task-definition-family
         task-definition-revision: 1
         container-name: sample-app
         image: amazon/amazon-ecs-sample:latest
