@@ -25,7 +25,7 @@ jobs:
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         aws-region: us-west-2
 
-    - name: Render Amazon ECS task definition with task definition file 
+    - name: Render Amazon ECS task definition with task definition file
       id: render-task-definition-file
       uses: aws-actions/amazon-ecs-render-task-definition@v1
       with:
@@ -53,7 +53,7 @@ jobs:
         container-name: sample-app
         image: amazon/amazon-ecs-sample:latest
 
-    - name: Render Amazon ECS task definition with task definition family 
+    - name: Render Amazon ECS task definition with task definition family
       id: render-task-definition-family
       uses: aws-actions/amazon-ecs-render-task-definition@v1
       with:
