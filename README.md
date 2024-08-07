@@ -33,7 +33,7 @@ To insert the image URI `amazon/amazon-ecs-sample:latest` as the image for the `
         environment-variables: "LOG_LEVEL=info"
 
     - name: Deploy to Amazon ECS service
-      uses: aws-actions/amazon-ecs-deploy-task-definition@v1
+      uses: aws-actions/amazon-ecs-deploy-task-definition@v2
       with:
         task-definition: ${{ steps.render-web-container.outputs.task-definition }}
         service: my-service
@@ -69,7 +69,7 @@ input of the second:
         image: amazon/amazon-ecs-sample-2:latest
 
     - name: Deploy to Amazon ECS service
-      uses: aws-actions/amazon-ecs-deploy-task-definition@v1
+      uses: aws-actions/amazon-ecs-deploy-task-definition@v2
       with:
         task-definition: ${{ steps.render-app-container.outputs.task-definition }}
         service: my-service
