@@ -33,7 +33,7 @@ async function run() {
     let params;
     
     if (taskDefinitionFile) {
-      core.warning("Task definition file will be used.");
+      core.info("Task definition file will be used.");
       taskDefPath = path.isAbsolute(taskDefinitionFile) ?
         taskDefinitionFile : 
         path.join(process.env.GITHUB_WORKSPACE, taskDefinitionFile);
@@ -43,13 +43,13 @@ async function run() {
       taskDefContents = require(taskDefPath);
     } else if (taskDefinitionArn || taskDefinitionFamily || taskDefinitionRevision) {
       if (taskDefinitionArn) {
-        core.warning("The task definition arn will be used to fetch task definition");
+        core.info("The task definition arn will be used to fetch task definition");
         params = {taskDefinition: taskDefinitionArn};
       } else if (taskDefinitionFamily && taskDefinitionRevision) {
-        core.warning("The specified revision of the task definition family will be used to fetch task definition");
+        core.info("The specified revision of the task definition family will be used to fetch task definition");
         params = {taskDefinition: `${taskDefinitionFamily}:${taskDefinitionRevision}` };
       } else if (taskDefinitionFamily) {
-        core.warning("The latest revision of the task definition family will be used to fetch task definition");
+        core.info("The latest revision of the task definition family will be used to fetch task definition");
         params = {taskDefinition: taskDefinitionFamily};
       } else if (taskDefinitionRevision) {
         core.setFailed("You can't fetch task definition with just revision: Either use task definition file, arn or family name");
