@@ -390,7 +390,7 @@ describe('Render task definition', () => {
         expect(core.setFailed).toBeCalledWith("Either task definition, task definition arn or task definition family must be provided");
     });
 
-    test('warning returned for providing both task definition, task definition arn, and task definition family ', async () => {
+    test('info returned for providing both task definition, task definition arn, and task definition family ', async () => {
         core.getInput = jest
             .fn()
             .mockReturnValueOnce('task-definition.json')                                // task definition
@@ -408,7 +408,7 @@ describe('Render task definition', () => {
 
         await run();
 
-        expect(core.warning).toBeCalledWith("Task definition file will be used.");
+        expect(core.info).toBeCalledWith("Task definition file will be used.");
     });
     
     test('if inputs are task definition family and revision, that specific task definition revision is chosen', async () => {
@@ -457,7 +457,7 @@ describe('Render task definition', () => {
         expect(mockEcsDescribeTaskDef).toHaveBeenCalledWith({
             taskDefinition: "task-definition-family"
         });  
-        expect(core.warning).toBeCalledWith("The latest revision of the task definition family will be used to fetch task definition");
+        expect(core.info).toBeCalledWith("The latest revision of the task definition family will be used to fetch task definition");
     });
 
     test('if only arn is provided to fetch task definition', async () => {
@@ -483,7 +483,7 @@ describe('Render task definition', () => {
             taskDefinition: "task-definition-arn"
 
         });
-        expect(core.warning).toBeCalledWith("The task definition arn will be used to fetch task definition");
+        expect(core.info).toBeCalledWith("The task definition arn will be used to fetch task definition");
     });
 
     test('if file and arn are provided to fetch task definition', async () => {
@@ -506,7 +506,7 @@ describe('Render task definition', () => {
 
         expect(mockEcsClient.describeTaskDefinition).toHaveBeenCalledTimes(0);
         expect(mockEcsDescribeTaskDef).toHaveBeenCalledTimes(0);
-        expect(core.warning).toBeCalledWith("Task definition file will be used.");
+        expect(core.info).toBeCalledWith("Task definition file will be used.");
     });
 
     test('if file, arn, family and revision are all provided to fetch task definition', async () => {
@@ -529,7 +529,7 @@ describe('Render task definition', () => {
 
         expect(mockEcsClient.describeTaskDefinition).toHaveBeenCalledTimes(0);
          expect(mockEcsDescribeTaskDef).toHaveBeenCalledTimes(0);
-        expect(core.warning).toBeCalledWith("Task definition file will be used.");
+        expect(core.info).toBeCalledWith("Task definition file will be used.");
     });
 
     test('if arn and family are provided to fetch task definition', async () => {
