@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.5.1](https://github.com/aws-actions/amazon-ecs-render-task-definition/compare/v1.5.0...v1.5.1) (2024-08-28)
+
+
+### Bug Fixes
+
+* Downgrade warning logs for fetch task definition feature ([#323](https://github.com/aws-actions/amazon-ecs-render-task-definition/issues/323)) ([b33b6ea](https://github.com/aws-actions/amazon-ecs-render-task-definition/commit/b33b6ea7210b1bbbd20b61f96a9c632d4886465a))
+
 ## [1.5.0](https://github.com/aws-actions/amazon-ecs-render-task-definition/compare/v1.4.0...v1.5.0) (2024-08-08)
 
 
