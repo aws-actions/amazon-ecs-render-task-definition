@@ -161,8 +161,6 @@ async function run() {
         core.setFailed("Failed to describe task definition in ECS: " + error.message);
         throw(error); 
       }
-      core.debug("Task definition before merging tags:");
-      core.debug(JSON.stringify(describeTaskDefResponse, undefined, 4));
       taskDefContentsOutput = describeTaskDefResponse.taskDefinition
       // merge tags into taskDefinition
       taskDefContentsOutput.tags = describeTaskDefResponse.tags;
