@@ -148,13 +148,13 @@ async function run() {
     } else if (taskDefinitionArn || taskDefinitionFamily || taskDefinitionRevision) {
       if (taskDefinitionArn) {
         core.info("The task definition arn will be used to fetch task definition");
-        params = {taskDefinition: taskDefinitionArn};
+        params = {taskDefinition: taskDefinitionArn, include: ['TAGS']};
       } else if (taskDefinitionFamily && taskDefinitionRevision) {
         core.info("The specified revision of the task definition family will be used to fetch task definition");
-        params = {taskDefinition: `${taskDefinitionFamily}:${taskDefinitionRevision}` };
+        params = {taskDefinition: `${taskDefinitionFamily}:${taskDefinitionRevision}`, include: ['TAGS'] };
       } else if (taskDefinitionFamily) {
         core.info("The latest revision of the task definition family will be used to fetch task definition");
-        params = {taskDefinition: taskDefinitionFamily};
+        params = {taskDefinition: taskDefinitionFamily, include: ['TAGS']};
       } else if (taskDefinitionRevision) {
         core.setFailed("You can't fetch task definition with just revision: Either use task definition file, arn or family name");
       } else {
@@ -167,7 +167,11 @@ async function run() {
         core.setFailed("Failed to describe task definition in ECS: " + error.message);
         throw(error); 
       }
-      taskDefContentsOutput = describeTaskDefResponse.taskDefinition;
+      core.debug("Task definition before merging tags:");
+      core.debug(JSON.stringify(describeTaskDefResponse, undefined, 4));
+      taskDefContentsOutput = describeTaskDefResponse.taskDefinition
+      // merge tags into taskDefinition
+      taskDefContentsOutput.tags = describeTaskDefResponse.tags;
       core.debug("Task definition contents:");
       core.debug(JSON.stringify(taskDefContentsOutput, undefined, 4));
       taskDefContents = maintainValidObjects(removeIgnoredAttributes(cleanNullKeys(taskDefContentsOutput)));
