@@ -99,8 +99,8 @@ describe('Render task definition', () => {
         mockEcsDescribeTaskDef.mockImplementation(() => Promise.resolve({
             taskDefinition: {
                 taskDefinitionArn: "task-definition-arn",
-                taskDefinitionFamily: "task-definition-family",
-                taskDefinitionRevision: '',
+                family: "task-definition-family",
+                revision: '',
 
                 containerDefinitions: [
                     {
@@ -333,8 +333,8 @@ describe('Render task definition', () => {
         mockEcsDescribeTaskDef.mockImplementation(() => Promise.resolve({
             taskDefinition: {
                 taskDefinitionArn: "task-definition-arn",
-                taskDefinitionFamily: "task-definition-family",
-                taskDefinitionRevision: 10,
+                family: "task-definition-family",
+                revision: 10,
 
                 containerDefinitions: [
                     {
