@@ -6,7 +6,16 @@ branding:
 inputs:
   task-definition:
     description: 'The path to the ECS task definition JSON file'
-    required: true
+    required: false
+  task-definition-arn:
+    description: 'The full Amazon Resource Name (ARN) of the task definition to be used'
+    required: false
+  task-definition-family:
+    description: 'The name of a family that the task definition is registered to'
+    required: false
+  task-definition-revision:
+    description: 'The revision of the task definition being used'
+    required: false
   container-name:
     description: 'The name of the container defined in the containerDefinitions section of the ECS task definition'
     required: true
@@ -33,6 +42,8 @@ inputs:
     required: false
   execution-role-arn:
     description: 'The ARN of the IAM role that the ECS task execution role will assume'
+  env-files:
+    description: 'S3 object arns to set env variables onto the container. You can specify multiple files with multi-line YAML strings.'
     required: false
 outputs:
   task-definition:
