@@ -16,52 +16,6 @@ const IGNORED_TASK_DEFINITION_ATTRIBUTES = [
   'registeredBy'
 ];
 
-function isEmptyValue(value) {
-  if (value === null || value === undefined || value === '') {
-    return true;
-  }
-
-  if (Array.isArray(value)) {
-    for (var element of value) {
-      if (!isEmptyValue(element)) {
-        // the array has at least one non-empty element
-        return false;
-      }
-    }
-    // the array has no non-empty elements
-    return true;
-  }
-
-  if (typeof value === 'object') {
-    for (var childValue of Object.values(value)) {
-      if (!isEmptyValue(childValue)) {
-        // the object has at least one non-empty property
-        return false;
-      }
-    }
-    // the object has no non-empty property
-    return true;
-  }
-
-  return false;
-}
-
-function emptyValueReplacer(_, value) {
-  if (isEmptyValue(value)) {
-    return undefined;
-  }
-
-  if (Array.isArray(value)) {
-    return value.filter(e => !isEmptyValue(e));
-  }
-
-  return value;
-}
-
-function cleanNullKeys(obj) {
-  return JSON.parse(JSON.stringify(obj, emptyValueReplacer));
-}
-
 function removeIgnoredAttributes(taskDef) {
   for (var attribute of IGNORED_TASK_DEFINITION_ATTRIBUTES) {
     if (taskDef[attribute]) {
@@ -70,36 +24,6 @@ function removeIgnoredAttributes(taskDef) {
   }
 
   return taskDef;
-}
-
-function maintainValidObjects(taskDef) {
-    if (validateProxyConfigurations(taskDef)) {
-        taskDef.proxyConfiguration.properties.forEach((property, index, arr) => {
-            if (!('value' in property)) {
-                arr[index].value = '';
-            }
-            if (!('name' in property)) {
-                arr[index].name = '';
-            }
-        });
-    }
-
-    if(taskDef && taskDef.containerDefinitions){
-      taskDef.containerDefinitions.forEach((container) => {
-        if(container.environment){
-          container.environment.forEach((property, index, arr) => {
-            if (!('value' in property)) {
-              arr[index].value = '';
-            }
-          });
-        }
-      });
-    }
-    return taskDef;
-}
-
-function validateProxyConfigurations(taskDef){
-  return 'proxyConfiguration' in taskDef && taskDef.proxyConfiguration.type && taskDef.proxyConfiguration.type == 'APPMESH' && taskDef.proxyConfiguration.properties && taskDef.proxyConfiguration.properties.length > 0;
 }
 
 async function run() {
@@ -161,12 +85,12 @@ async function run() {
         core.setFailed("Failed to describe task definition in ECS: " + error.message);
         throw(error); 
       }
-      taskDefContentsOutput = describeTaskDefResponse.taskDefinition
+      const taskDefContentsOutput = describeTaskDefResponse.taskDefinition
       // merge tags into taskDefinition
       taskDefContentsOutput.tags = describeTaskDefResponse.tags;
       core.debug("Task definition contents:");
       core.debug(JSON.stringify(taskDefContentsOutput, undefined, 4));
-      taskDefContents = maintainValidObjects(removeIgnoredAttributes(cleanNullKeys(taskDefContentsOutput)));
+      taskDefContents = removeIgnoredAttributes(taskDefContentsOutput);
       core.debug("Task definition contents after filtering (cleaned):");
       core.debug(JSON.stringify(taskDefContents, undefined, 4));
     } else {

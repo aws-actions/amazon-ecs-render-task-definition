@@ -128,14 +128,13 @@ describe('Render task definition', () => {
                         image: "hello"
                     }
                 ],
-                tags: [
-                    {
-                      key: "project",
-                      value: "mytaskdef"
-                    }
-                ]
-            }
-    
+            },
+            tags: [
+                {
+                    key: "project",
+                    value: "mytaskdef"
+                }
+            ]
         })); 
         ECS.mockImplementation(() => mockEcsClient);
     });
