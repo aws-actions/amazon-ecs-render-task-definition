@@ -20,7 +20,7 @@ async function run() {
     const taskDefinitionFile = core.getInput('task-definition', { required: false });
     const containerName = core.getInput('container-name', { required: true });
     const imageURI = core.getInput('image', { required: true });
-    const environmentVariables = core.getInput('environment-variables', { required: false });    
+    const environmentVariables = core.getInput('environment-variables', { required: false });
     const envFiles = core.getInput('env-files', { required: false });
 
     const logConfigurationLogDriver = core.getInput("log-configuration-log-driver", { required: false });

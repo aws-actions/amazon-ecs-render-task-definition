@@ -43,7 +43,6 @@ inputs:
   secrets:
     description: 'Secrets to add to the container. Each secret is of the form KEY=valueFrom, where valueFrom is a secret arn. You can specify multiple secrets with multi-line YAML strings.'
     required: false
-
 outputs:
   task-definition:
     description: 'The path to the rendered task definition file'
