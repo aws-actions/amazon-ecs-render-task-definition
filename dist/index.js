@@ -21,7 +21,7 @@ async function run() {
     const containerName = core.getInput('container-name', { required: true });
     const imageURI = core.getInput('image', { required: true });
     const environmentVariables = core.getInput('environment-variables', { required: false });    
-    const envFiles = core.getInput('env-files', { required: false });    
+    const envFiles = core.getInput('env-files', { required: false });
 
     const logConfigurationLogDriver = core.getInput("log-configuration-log-driver", { required: false });
     const logConfigurationOptions = core.getInput("log-configuration-options", { required: false });
@@ -32,7 +32,6 @@ async function run() {
     const taskDefinitionArn = core.getInput('task-definition-arn', { required: false }) || undefined;
     const taskDefinitionFamily = core.getInput('task-definition-family', { required: false }) || undefined;
     const taskDefinitionRevision = Number(core.getInput('task-definition-revision', { required: false })) || null;
-
     const secrets = core.getInput('secrets', { required: false });
 
     let taskDefPath;
