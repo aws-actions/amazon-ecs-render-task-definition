@@ -49,7 +49,10 @@ describe('Render task definition', () => {
             .mockReturnValueOnce('')                                                    // command
             .mockReturnValueOnce('')                                                    // task-definition arn
             .mockReturnValueOnce('')                                                    // task-definition family
-            .mockReturnValueOnce('');                                                   // task-definition revision
+            .mockReturnValueOnce('')                                                    // task-definition revision
+            .mockReturnValueOnce(                                                       // secrets
+                'SSM_SECRET=arn:aws:ssm:region:0123456789:parameter/secret\nSM_SECRET=arn:aws:secretsmanager:us-east-1:0123456789:secret:secretName'
+            );                                          
 
         process.env = Object.assign(process.env, { GITHUB_WORKSPACE: __dirname });
         process.env = Object.assign(process.env, { RUNNER_TEMP: '/home/runner/work/_temp' });
@@ -81,6 +84,17 @@ describe('Render task definition', () => {
                             value: "arn:aws:s3:::s3_bucket_name/envfile_object_name.env",
                             type: "s3"
                         }
+                    ],
+                    secrets: [
+                        {
+                            name: "EXISTING_SECRET",
+                            valueFrom: "arn:aws:ssm:region:0123456789:parameter/existingSecret"
+                        },
+                        {
+                            name: "SSM_SECRET",
+                            valueFrom: "arn:aws:ssm:region:0123456789:parameter/oldSsmSecret"
+                        }
+
                     ]
                 },
                 {
@@ -164,6 +178,21 @@ describe('Render task definition', () => {
                                 value: "arn:aws:s3:::s3_bucket_name/envfile_object_name.env",
                                 type: "s3"
                             }
+                        ],
+                        secrets: [
+                            {
+                                name: "EXISTING_SECRET",
+                                valueFrom: "arn:aws:ssm:region:0123456789:parameter/existingSecret"
+                            },    
+                            {
+                                name: "SSM_SECRET",
+                                valueFrom: 'arn:aws:ssm:region:0123456789:parameter/secret'
+                            },
+                            
+                            {
+                                name: "SM_SECRET",
+                                valueFrom: 'arn:aws:secretsmanager:us-east-1:0123456789:secret:secretName'
+                            }
                         ]
                     },
                     {
@@ -179,14 +208,22 @@ describe('Render task definition', () => {
         expect(mockEcsDescribeTaskDef).toHaveBeenCalledTimes(0);
     });
 
-    test('renders a task definition at an absolute path, and with initial environment empty', async () => {
+    test('renders a task definition at an absolute path, and with initial environment and secrets empty', async () => {
         core.getInput = jest
             .fn()
             .mockReturnValueOnce('/hello/task-definition.json')                          // task-definition
             .mockReturnValueOnce('web')                                                  // container-name
             .mockReturnValueOnce('nginx:latest')                                         // image
             .mockReturnValueOnce('EXAMPLE=here')                                         // environment-variables
-            .mockReturnValueOnce('arn:aws:s3:::s3_bucket_name/envfile_object_name.env'); // env-files
+            .mockReturnValueOnce('arn:aws:s3:::s3_bucket_name/envfile_object_name.env')   // env-files
+            .mockReturnValueOnce('')                                                      // log Configuration Log Driver
+            .mockReturnValueOnce('')                                                      // log Configuration Options
+            .mockReturnValueOnce('')                                                      // docker labels
+            .mockReturnValueOnce('')                                                      // command
+            .mockReturnValueOnce('')                                                      // task-definition arn
+            .mockReturnValueOnce('')                                                      // task-definition family
+            .mockReturnValueOnce('')                                                      // task-definition revision
+            .mockReturnValueOnce('')                                                      // secrets
 
         jest.mock('/hello/task-definition.json', () => ({
             family: 'task-def-family',
@@ -244,7 +281,7 @@ describe('Render task definition', () => {
             .mockReturnValueOnce('FOO=bar\nHELLO=world')
             .mockReturnValueOnce('arn:aws:s3:::s3_bucket_name/envfile_object_name.env')
             .mockReturnValueOnce('awslogs')
-            .mockReturnValueOnce(`awslogs-create-group=true\nawslogs-group=/ecs/web\nawslogs-region=us-east-1\nawslogs-stream-prefix=ecs`);
+            .mockReturnValueOnce(`awslogs-create-group=true\nawslogs-group=/ecs/web\nawslogs-region=us-east-1\nawslogs-stream-prefix=ecs`)
 
         await run()
 
@@ -282,6 +319,20 @@ describe('Render task definition', () => {
                             {
                                 value: "arn:aws:s3:::s3_bucket_name/envfile_object_name.env",
                                 type: "s3"
+                            }
+                        ],
+                        secrets: [
+                            {
+                                name: "EXISTING_SECRET",
+                                valueFrom: "arn:aws:ssm:region:0123456789:parameter/existingSecret"
+                            },
+                            {
+                                name: "SSM_SECRET",
+                                valueFrom: "arn:aws:ssm:region:0123456789:parameter/secret"
+                            },
+                            {
+                                name: "SM_SECRET",
+                                valueFrom: "arn:aws:secretsmanager:us-east-1:0123456789:secret:secretName"
                             }
                         ],
                         logConfiguration: {
@@ -362,7 +413,28 @@ describe('Render task definition', () => {
         expect(fs.writeFileSync).toHaveBeenCalledTimes(1);
     });
 
-    test('error returned for missing task definition file', async () => {
+    test('error returned for malformatted secret string', async () => {
+        core.getInput = jest
+            .fn()
+            .mockReturnValueOnce('task-definition.json')
+            .mockReturnValueOnce('web')
+            .mockReturnValueOnce('nginx:latest')
+            .mockReturnValueOnce('EXAMPLE=here')
+            .mockReturnValueOnce('')
+            .mockReturnValueOnce('')
+            .mockReturnValueOnce('')
+            .mockReturnValueOnce('')
+            .mockReturnValueOnce('')
+            .mockReturnValueOnce('')
+            .mockReturnValueOnce('')
+            .mockReturnValueOnce('')
+            .mockReturnValueOnce('SECRET');
+        await run();
+
+        expect(core.setFailed).toBeCalledWith(expect.stringContaining(`Cannot parse the secret 'SECRET'`));
+    });
+
+    test('error returned for invalid secret format', async () => {
         fs.existsSync.mockReturnValue(false);
         core.getInput = jest
             .fn()
@@ -630,6 +702,20 @@ describe('Render task definition', () => {
                                 type: "s3"
                             }
                         ],
+                        secrets: [
+                            {
+                              name: "EXISTING_SECRET",
+                              valueFrom: "arn:aws:ssm:region:0123456789:parameter/existingSecret"
+                            },
+                            {
+                              name: "SSM_SECRET",
+                              valueFrom: "arn:aws:ssm:region:0123456789:parameter/secret"
+                            },
+                            {
+                              name: "SM_SECRET",
+                              valueFrom: "arn:aws:secretsmanager:us-east-1:0123456789:secret:secretName"
+                            }
+                        ],
                         logConfiguration: {
                             logDriver: "awslogs",
                             options: {
@@ -789,6 +875,20 @@ describe('Render task definition', () => {
                             {
                                 value: "arn:aws:s3:::s3_bucket_name/envfile_object_name.env",
                                 type: "s3"
+                            }
+                        ],
+                        secrets: [
+                            {
+                              name: "EXISTING_SECRET",
+                              valueFrom: "arn:aws:ssm:region:0123456789:parameter/existingSecret"
+                            },
+                            {
+                              name: "SSM_SECRET",
+                              valueFrom: "arn:aws:ssm:region:0123456789:parameter/secret"
+                            },
+                            {
+                              name: "SM_SECRET",
+                              valueFrom: "arn:aws:secretsmanager:us-east-1:0123456789:secret:secretName"
                             }
                         ],
                         logConfiguration: {
