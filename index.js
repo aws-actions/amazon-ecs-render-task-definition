@@ -4,6 +4,28 @@ const tmp = require('tmp');
 const fs = require('fs');
 const {ECS} = require('@aws-sdk/client-ecs');
 
+// Attributes that are returned by DescribeTaskDefinition, but are not valid RegisterTaskDefinition inputs
+const IGNORED_TASK_DEFINITION_ATTRIBUTES = [
+  'compatibilities',
+  'taskDefinitionArn',
+  'requiresAttributes',
+  'revision',
+  'status',
+  'registeredAt',
+  'deregisteredAt',
+  'registeredBy'
+];
+
+function removeIgnoredAttributes(taskDef) {
+  for (var attribute of IGNORED_TASK_DEFINITION_ATTRIBUTES) {
+    if (taskDef[attribute]) {
+      delete taskDef[attribute];
+    }
+  }
+
+  return taskDef;
+}
+
 async function run() {
   try {
     const ecs = new ECS({
@@ -45,13 +67,13 @@ async function run() {
     } else if (taskDefinitionArn || taskDefinitionFamily || taskDefinitionRevision) {
       if (taskDefinitionArn) {
         core.info("The task definition arn will be used to fetch task definition");
-        params = {taskDefinition: taskDefinitionArn};
+        params = {taskDefinition: taskDefinitionArn, include: ['TAGS']};
       } else if (taskDefinitionFamily && taskDefinitionRevision) {
         core.info("The specified revision of the task definition family will be used to fetch task definition");
-        params = {taskDefinition: `${taskDefinitionFamily}:${taskDefinitionRevision}` };
+        params = {taskDefinition: `${taskDefinitionFamily}:${taskDefinitionRevision}`, include: ['TAGS'] };
       } else if (taskDefinitionFamily) {
         core.info("The latest revision of the task definition family will be used to fetch task definition");
-        params = {taskDefinition: taskDefinitionFamily};
+        params = {taskDefinition: taskDefinitionFamily, include: ['TAGS']};
       } else if (taskDefinitionRevision) {
         core.setFailed("You can't fetch task definition with just revision: Either use task definition file, arn or family name");
       } else {
@@ -64,8 +86,13 @@ async function run() {
         core.setFailed("Failed to describe task definition in ECS: " + error.message);
         throw(error); 
       }
-      taskDefContents = describeTaskDefResponse.taskDefinition;
+      const taskDefContentsOutput = describeTaskDefResponse.taskDefinition
+      // merge tags into taskDefinition
+      taskDefContentsOutput.tags = describeTaskDefResponse.tags;
       core.debug("Task definition contents:");
+      core.debug(JSON.stringify(taskDefContentsOutput, undefined, 4));
+      taskDefContents = removeIgnoredAttributes(taskDefContentsOutput);
+      core.debug("Task definition contents after filtering (cleaned):");
       core.debug(JSON.stringify(taskDefContents, undefined, 4));
     } else {
       throw new Error("Either task definition, task definition arn or task definition family must be provided");
