@@ -121,7 +121,7 @@ async function run() {
               // Else, create
               if (variable.value.length !== 0) {
                 containerDef.environment.push(variable); 
-                core.info(`"Updating ${variable.name} with value ${variableDef.value} from env file`); 
+                core.info(`"Updating ${variable.name} with value ${variable.value} from env file`); 
               }
             }
           })
