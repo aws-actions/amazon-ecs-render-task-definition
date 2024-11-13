@@ -25,6 +25,9 @@ inputs:
   image:
     description: 'The URI of the container image to insert into the ECS task definition'
     required: true
+  prefer-task-definition-environment-variables:
+    description: 'When env file is set, prefer the task def variables to the env file variable'
+    required: false
   aws-env-files:
     description: 'AWS env files'
     required: false

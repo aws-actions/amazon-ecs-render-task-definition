@@ -28,7 +28,8 @@ describe('Render task definition', () => {
             .mockReturnValueOnce('gunicorn api:app --worker-class uvicorn.workers.UvicornWorker --bind 0.0.0.0:80 --workers=8 --timeout=300')         // command
             .mockReturnValueOnce('/ecs/new')         // awslogs-group
             .mockReturnValueOnce('us-west-1')         // awslogs-region
-            .mockReturnValueOnce('/hello/env_one.json|/hello/env_two.json')        // aws-env-files
+            .mockReturnValueOnce('/hello/env_one.json|/hello/env_two.json')        // aws-env-file
+            .mockReturnValueOnce("true")        // prefer-task-definition-environment-variables
             .mockReturnValueOnce('FOO=bar\nHELLO=world') // environment-variables
             .mockReturnValueOnce('FOO=bar\nHELLO=world'); // environment-secrets
 
@@ -109,7 +110,7 @@ describe('Render task definition', () => {
             environment: [
                 {
                     name: "environment_var_1",
-                    value: "environment_var_1_value"
+                    value: "environment_var_1_value_file"
                 }
             ],
             secrets: [
@@ -123,7 +124,7 @@ describe('Render task definition', () => {
             environment: [
                 {
                     name: "environment_var_2",
-                    value: "environment_var_2_value"
+                    value: "environment_var_2_value_file"
                 }
             ],
             secrets: [
@@ -187,7 +188,7 @@ describe('Render task definition', () => {
                             },
                             {
                                 name: "environment_var_2",
-                                value: "environment_var_2_value"
+                                value: "environment_var_2_old_value"
                             },
                             {
                                 name: "FOO",
@@ -209,7 +210,7 @@ describe('Render task definition', () => {
                             },
                             {
                                 name: "environment_secret_2",
-                                valueFrom: "environment_secret_2_value"
+                                valueFrom: "environment_secret_2_old_value"
                             },
                             {
                                 name: "FOO",
@@ -253,6 +254,7 @@ describe('Render task definition', () => {
             .mockReturnValueOnce('/ecs/new')         // awslogs-group
             .mockReturnValueOnce('us-west-1')         // awslogs-region
             .mockReturnValueOnce('/hello/env_one.json|/hello/env_three.json')        // aws-env-files
+            .mockReturnValueOnce('')        // prefer-task-definition-environment-variables
             .mockReturnValueOnce('EXAMPLE=here')        // environment-variables
             .mockReturnValueOnce('EXAMPLE=here');        // environment-secrets
         jest.mock('/hello/task-definition.json', () => ({
