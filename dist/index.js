@@ -1207,6 +1207,7 @@ async function run() {
     const awslogsRegion = core.getInput('awslogs-region', { required: false });
 
     const awsEnvFiles = core.getInput('aws-env-files', { required: false });
+    const preferTaskDefEnvironmentVariables = core.getInput('prefer-task-definition-environment-variables', { required: false }) === "true";
     const environmentVariables = core.getInput('environment-variables', { required: false });
     const environmentSecrets = core.getInput('environment-secrets', { required: false });
 
@@ -1295,9 +1296,11 @@ async function run() {
           awsEnvFile.environment.forEach(function (variable) {
             // Search container definition environment for one matching name
             const variableDef = containerDef.environment.find((e) => e.name == variable.name);
+            core.info("Updating " + variableDef); 
             if (variableDef) {
               // If found, update
-              variableDef.value = variable.value;
+              variableDef.value = preferTaskDefEnvironmentVariables ? variableDef.value : variable.value;
+              core.info(`with value ${variableDef.value} from task def`); 
             } else {
               // Else, create
               if (variable.value.length !== 0) {
@@ -1316,7 +1319,7 @@ async function run() {
             const variableDef = containerDef.secrets.find((e) => e.name == secret.name);
             if (variableDef) {
               // If found, update
-              variableDef.valueFrom = secret.valueFrom;
+              variableDef.valueFrom = preferTaskDefEnvironmentVariables ? variableDef.valueFrom : secret.valueFrom;
             } else {
               // Else, create (only if not empty)
               if (secret.valueFrom.length !== 0) {
