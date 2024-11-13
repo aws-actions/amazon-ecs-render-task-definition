@@ -113,15 +113,15 @@ async function run() {
           awsEnvFile.environment.forEach(function (variable) {
             // Search container definition environment for one matching name
             const variableDef = containerDef.environment.find((e) => e.name == variable.name);
-            core.info("Updating " + variableDef); 
             if (variableDef) {
               // If found, update
               variableDef.value = preferTaskDefEnvironmentVariables ? variableDef.value : variable.value;
-              core.info(`with value ${variableDef.value} from task def`); 
+              core.info(`"Updating ${variable.name} with value ${variableDef.value} from task def`); 
             } else {
               // Else, create
               if (variable.value.length !== 0) {
                 containerDef.environment.push(variable); 
+                core.info(`"Updating ${variable.name} with value ${variable.value} from env file`); 
               }
             }
           })
