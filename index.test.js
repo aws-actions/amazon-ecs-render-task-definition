@@ -101,14 +101,20 @@ describe('Render task definition', () => {
                     name: "sidecar",
                     image: "hello"
                 }
+            ],
+            tags: [
+                {
+                  key: "project",
+                  value: "mytaskdef"
+                }
             ]
         }), { virtual: true });
 
         mockEcsDescribeTaskDef.mockImplementation(() => Promise.resolve({
             taskDefinition: {
                 taskDefinitionArn: "task-definition-arn",
-                taskDefinitionFamily: "task-definition-family",
-                taskDefinitionRevision: '',
+                family: "task-definition-family",
+                revision: '',
 
                 containerDefinitions: [
                     {
@@ -135,9 +141,14 @@ describe('Render task definition', () => {
                         name: "sidecar",
                         image: "hello"
                     }
-                ]
-            }
-    
+                ],
+            },
+            tags: [
+                {
+                    key: "project",
+                    value: "mytaskdef"
+                }
+            ]
         })); 
         ECS.mockImplementation(() => mockEcsClient);
     });
@@ -198,6 +209,12 @@ describe('Render task definition', () => {
                     {
                         name: "sidecar",
                         image: "hello"
+                    }
+                ],
+                tags: [
+                    {
+                      key: "project",
+                      value: "mytaskdef"
                     }
                 ]
             }, null, 2)
@@ -349,6 +366,12 @@ describe('Render task definition', () => {
                         name: "sidecar",
                         image: "hello"
                     }
+                ],
+                tags: [
+                    {
+                      key: "project",
+                      value: "mytaskdef"
+                    }
                 ]
             }, null, 2)
         );
@@ -360,8 +383,8 @@ describe('Render task definition', () => {
         mockEcsDescribeTaskDef.mockImplementation(() => Promise.resolve({
             taskDefinition: {
                 taskDefinitionArn: "task-definition-arn",
-                taskDefinitionFamily: "task-definition-family",
-                taskDefinitionRevision: 10,
+                family: "task-definition-family",
+                revision: 10,
 
                 containerDefinitions: [
                     {
@@ -503,7 +526,8 @@ describe('Render task definition', () => {
 
         expect(mockEcsClient.describeTaskDefinition).toHaveBeenCalledTimes(1);
         expect(mockEcsDescribeTaskDef).toHaveBeenCalledWith({
-            taskDefinition: "task-definition-family:10"
+            taskDefinition: "task-definition-family:10",
+            include: ["TAGS"],
         });  
     });
 
@@ -527,7 +551,8 @@ describe('Render task definition', () => {
 
         expect(mockEcsClient.describeTaskDefinition).toHaveBeenCalledTimes(1);
         expect(mockEcsDescribeTaskDef).toHaveBeenCalledWith({
-            taskDefinition: "task-definition-family"
+            taskDefinition: "task-definition-family",
+            include: ["TAGS"],
         });  
         expect(core.info).toBeCalledWith("The latest revision of the task definition family will be used to fetch task definition");
     });
@@ -552,8 +577,8 @@ describe('Render task definition', () => {
 
         expect(mockEcsClient.describeTaskDefinition).toHaveBeenCalledTimes(1);
         expect(mockEcsDescribeTaskDef).toHaveBeenCalledWith({
-            taskDefinition: "task-definition-arn"
-
+            taskDefinition: "task-definition-arn",
+            include: ["TAGS"],
         });
         expect(core.info).toBeCalledWith("The task definition arn will be used to fetch task definition");
     });
@@ -624,7 +649,8 @@ describe('Render task definition', () => {
 
         expect(mockEcsClient.describeTaskDefinition).toHaveBeenCalledTimes(1);
         expect(mockEcsDescribeTaskDef).toHaveBeenCalledWith({
-            taskDefinition: "task-definition-arn"
+            taskDefinition: "task-definition-arn",
+            include: ["TAGS"],
         });
     });
 
@@ -733,6 +759,12 @@ describe('Render task definition', () => {
                     {
                         name: "sidecar",
                         image: "hello"
+                    }
+                ],
+                tags: [
+                    {
+                      key: "project",
+                      value: "mytaskdef"
                     }
                 ]
             }, null, 2)
@@ -909,6 +941,12 @@ describe('Render task definition', () => {
                     {
                         name: "sidecar",
                         image: "hello"
+                    }
+                ],
+                tags: [
+                    {
+                      key: "project",
+                      value: "mytaskdef"
                     }
                 ]
             }, null, 2)
