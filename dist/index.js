@@ -1187,16 +1187,17 @@ const tmp = __webpack_require__(150);
 const fs = __webpack_require__(747);
 
 async function run() {
+  core.info(`Starting Amazon ECS Render Task Definition action`);
   try {
     // Get inputs
     const taskDefinitionFile = core.getInput('task-definition', { required: true });
-    
+
     const family = core.getInput('family', { required: false });
     const cpu = core.getInput('cpu', { required: false });
     const memory = core.getInput('memory', { required: false });
     const executionRoleArn = core.getInput('executionRoleArn', { required: false });
     const taskRoleArn = core.getInput('taskRoleArn', { required: false });
-    
+
     const containerName = core.getInput('container-name', { required: false });
     const overwriteContainerName = core.getInput('overwrite-container-name', { required: false });
     const imageURI = core.getInput('image', { required: true });
@@ -1225,6 +1226,7 @@ async function run() {
       throw new Error('Invalid task definition format: containerDefinitions section is not present or is not an array');
     }
     const lookupName = overwriteContainerName == "true" ? "placeholder_container_name" : containerName;
+    core.info(`Looking up container by name: "${lookupName}"`);
     const containerDef = taskDefContents.containerDefinitions.find(function(element) {
       return element.name == lookupName;
     });
@@ -1279,38 +1281,40 @@ async function run() {
     }
 
     if (awsEnvFiles) {
-      // Parse env file(s). 
+      core.info(`Has "aws-env-files" set`);
+      // Parse env file(s).
       // Precedence: Order of aws-env-files < environment-variables == environment-secrets
       awsEnvFiles.split('|').forEach(function (awsEnvFilePath) {
         let filePath = awsEnvFilePath.trim()
         filePath = path.isAbsolute(filePath) ? filePath : path.join(process.env.GITHUB_WORKSPACE, filePath);
         if (!fs.existsSync(filePath)) {
           throw new Error(`AWS env file does not exist: ${filePath}`);
-        } 
+        }
         const awsEnvFile = require(filePath);
         if (awsEnvFile.environment) {
           if (!Array.isArray(containerDef.environment)) {
             containerDef.environment = [];
           }
-  
+
           awsEnvFile.environment.forEach(function (variable) {
             // Search container definition environment for one matching name
             const variableDef = containerDef.environment.find((e) => e.name == variable.name);
             if (variableDef) {
               // If found, update
               variableDef.value = preferTaskDefEnvironmentVariables ? variableDef.value : variable.value;
-              core.info(`"Updating ${variable.name} with value ${variableDef.value} from task def`); 
+              core.info(`"Updating ${variable.name} with value ${variableDef.value} from task def`);
             } else {
               // Else, create
               if (variable.value.length !== 0) {
-                containerDef.environment.push(variable); 
-                core.info(`"Updating ${variable.name} with value ${variable.value} from env file`); 
+                containerDef.environment.push(variable);
+                core.info(`"Updating ${variable.name} with value ${variable.value} from env file`);
               }
             }
           })
         }
-  
+
         if (awsEnvFile.secrets) {
+          core.info(`Has "aws-env-files" secrets`);
           if (!Array.isArray(containerDef.secrets)) {
             containerDef.secrets = [];
           }
@@ -1364,7 +1368,7 @@ async function run() {
         } else {
           // Else, create
           if (variable.value.length !== 0) {
-            containerDef.environment.push(variable); 
+            containerDef.environment.push(variable);
           }
         }
       })
@@ -1403,7 +1407,7 @@ async function run() {
         } else {
           // Else, create (only if not empty)
           if (secret.valueFrom.length !== 0) {
-            containerDef.secrets.push(secret); 
+            containerDef.secrets.push(secret);
           }
         }
       })
@@ -1422,6 +1426,7 @@ async function run() {
       keep: true,
       discardDescriptor: true
     });
+    core.info(`Writing new task definition to "${updatedTaskDefFile.name}"`);
     const newTaskDefContents = JSON.stringify(taskDefContents, null, 2);
     fs.writeFileSync(updatedTaskDefFile.name, newTaskDefContents);
     core.setOutput('task-definition', updatedTaskDefFile.name);
@@ -1429,6 +1434,7 @@ async function run() {
   catch (error) {
     core.setFailed(error.message);
   }
+  core.info(`Finishing Amazon ECS Render Task Definition action`);
 }
 
 module.exports = run;
