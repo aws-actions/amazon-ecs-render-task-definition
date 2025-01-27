@@ -28,6 +28,8 @@ async function run() {
     const preferTaskDefEnvironmentVariables = core.getInput('prefer-task-definition-environment-variables', { required: false }) === "true";
     const environmentVariables = core.getInput('environment-variables', { required: false });
     const environmentSecrets = core.getInput('environment-secrets', { required: false });
+    const logConfigOptions = core.getInput('log-configuration-options', { required: false });
+    const logConfigSecretOptions = core.getInput('log-configuration-secret-options', { required: false });
 
     // Parse the task definition
     const taskDefPath = path.isAbsolute(taskDefinitionFile) ?
@@ -44,7 +46,7 @@ async function run() {
     }
     const lookupName = overwriteContainerName == "true" ? "placeholder_container_name" : containerName;
     core.info(`Looking up container by name: "${lookupName}"`);
-    const containerDef = taskDefContents.containerDefinitions.find(function(element) {
+    const containerDef = taskDefContents.containerDefinitions.find(function (element) {
       return element.name == lookupName;
     });
     if (!containerDef) {
@@ -161,33 +163,8 @@ async function run() {
 
       // Get pairs by splitting on newlines
       environmentVariables.split('\n').forEach(function (line) {
-        // Trim whitespace
-        const trimmedLine = line.trim();
-        // Skip if empty
-        if (trimmedLine.length === 0) { return; }
-        // Split on =
-        const separatorIdx = trimmedLine.indexOf("=");
-        // If there's nowhere to split
-        if (separatorIdx === -1) {
-            throw new Error(`Cannot parse the environment variable '${trimmedLine}'. Environment variable pairs must be of the form NAME=value.`);
-        }
-        // Build object
-        const variable = {
-          name: trimmedLine.substring(0, separatorIdx),
-          value: trimmedLine.substring(separatorIdx + 1),
-        };
-
-        // Search container definition environment for one matching name
-        const variableDef = containerDef.environment.find((e) => e.name == variable.name);
-        if (variableDef) {
-          // If found, update
-          variableDef.value = variable.value;
-        } else {
-          // Else, create
-          if (variable.value.length !== 0) {
-            containerDef.environment.push(variable);
-          }
-        }
+        const variable = getVarFromRaw(line, "environment variable", false);
+        set_or_replace(containerDef.environment, variable, false);
       })
     }
 
@@ -200,39 +177,44 @@ async function run() {
 
       // Get pairs by splitting on newlines
       environmentSecrets.split('\n').forEach(function (line) {
-        // Trim whitespace
-        const trimmedLine = line.trim();
-        // Skip if empty
-        if (trimmedLine.length === 0) { return; }
-        // Split on =
-        const separatorIdx = trimmedLine.indexOf("=");
-        // If there's nowhere to split
-        if (separatorIdx === -1) {
-            throw new Error(`Cannot parse the environment secret '${trimmedLine}'. Environment secret pairs must be of the form KEY=value.`);
-        }
-        // Build object
-        const secret = {
-          name: trimmedLine.substring(0, separatorIdx),
-          valueFrom: trimmedLine.substring(separatorIdx + 1),
-        };
-
-        // Search container definition environment for one matching name
-        const variableDef = containerDef.secrets.find((e) => e.name == secret.name);
-        if (variableDef) {
-          // If found, update
-          variableDef.valueFrom = secret.valueFrom;
-        } else {
-          // Else, create (only if not empty)
-          if (secret.valueFrom.length !== 0) {
-            containerDef.secrets.push(secret);
-          }
-        }
+        const secret = getVarFromRaw(line, "environment secret", true);
+        set_or_replace(containerDef.secrets, secret, true);
       })
     }
 
     if (awslogsGroup && awslogsRegion && containerDef.logConfiguration && containerDef.logConfiguration.options) {
       containerDef.logConfiguration.options["awslogs-group"] = awslogsGroup;
       containerDef.logConfiguration.options["awslogs-region"] = awslogsRegion;
+    }
+
+    if (logConfigOptions) {
+      // NOTE: We're mostly just assuming that log configuration is already there, and mostly configured
+      if (!containerDef.logConfiguration.options) {
+        containerDef.logConfiguration.options = {};
+      }
+      core.info(`alog configuration options"${JSON.stringify(containerDef.logConfiguration.options)}"`);
+      logConfigOptions.split('\n').forEach(function (line) {
+        const variable = getVarFromRaw(line, "log configuration option", false);
+        core.info(`Setting log configuration option "${JSON.stringify(variable)}"`);
+        if (variable.name in containerDef.logConfiguration.options) {
+          containerDef.logConfiguration.options[variable.name] = variable.value;
+        } else {
+          containerDef.logConfiguration.options[variable.name] = variable.value;
+        }
+      });
+      core.info(`blog configuration options"${JSON.stringify(containerDef.logConfiguration.options)}"`);
+    }
+
+    if (logConfigSecretOptions) {
+      // NOTE: We're mostly just assuming that log configuration is already there, and mostly configured
+      if (!containerDef.logConfiguration.secretOptions) {
+        containerDef.logConfiguration.secretOptions = [];
+      }
+      logConfigSecretOptions.split('\n').forEach(function (line) {
+        const variable = getVarFromRaw(line, "log configuration setcret option", true);
+        core.info(`Setting log configuration secret option "${JSON.stringify(variable)}"`);
+        set_or_replace(containerDef.logConfiguration.secretOptions, variable, true);
+      });
     }
 
     // Write out a new task definition file
@@ -254,9 +236,59 @@ async function run() {
   core.info(`Finishing Amazon ECS Render Task Definition action`);
 }
 
+function getVarFromRaw(line, kind, isSecret) {
+  // Trim whitespace
+  const trimmedLine = line.trim();
+  // Skip if empty
+  if (trimmedLine.length === 0) { return; }
+  // Split on =
+  const separatorIdx = trimmedLine.indexOf("=");
+  // If there's nowhere to split
+  if (separatorIdx === -1) {
+    throw new Error(`Cannot parse the ${kind} '${trimmedLine}'. Environment variable pairs must be of the form NAME=value.`);
+  }
+  // Build object
+  if (isSecret) {
+    return {
+      name: trimmedLine.substring(0, separatorIdx),
+      valueFrom: trimmedLine.substring(separatorIdx + 1),
+    };
+  } else {
+    return {
+      name: trimmedLine.substring(0, separatorIdx),
+      value: trimmedLine.substring(separatorIdx + 1),
+    };
+  }
+}
+
+function set_or_replace(map, variable, isSecret) {
+  // Search container definition environment for one matching name
+  core.info(`set_or_replace called with map: ${JSON.stringify(map)}`);
+  const variableDef = map.find((e) => e.name == variable.name);
+  if (variableDef) {
+    // If found, update
+    if (isSecret) {
+      variableDef.valueFrom = variable.valueFrom;
+    } else {
+      variableDef.value = variable.value;
+    }
+  } else {
+    // Else, create
+    if (isSecret) {
+      if (variable.valueFrom.length !== 0) {
+        map.push(variable);
+      }
+    } else {
+      if (variable.value.length !== 0) {
+        map.push(variable);
+      }
+    }
+  }
+}
+
 module.exports = run;
 
 /* istanbul ignore next */
 if (require.main === module) {
-    run();
+  run();
 }
