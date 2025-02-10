@@ -53,7 +53,7 @@ jobs:
       id: render-task-definition-arn
       uses: aws-actions/amazon-ecs-render-task-definition@1048d8f8eb80d018c1bed7b5e3b252148bd6dfe5
       with:
-        task-definition-arn: arn:aws:ecs:us-west-2:397300886559:task-definition/github-actions-render-task-definition-integ-tests:16
+        task-definition-arn: arn:aws:ecs:us-west-2:${{ secrets.AWS_ACCOUNT_ID }}:task-definition/github-actions-render-task-definition-integ-tests:16
         container-name: sample-app
         image: amazon/amazon-ecs-sample:latest
 

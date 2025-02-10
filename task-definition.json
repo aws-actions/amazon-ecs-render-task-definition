@@ -28,5 +28,11 @@
     "FARGATE"
   ],
   "networkMode": "awsvpc",
-  "cpu": "256"
+  "cpu": "256",
+  "tags": [
+    {
+      "key": "test-name",
+      "value": "github-actions-render-task-definition-integ-tests"
+    }
+  ]
 }
