@@ -10,6 +10,30 @@ const tmp = __nccwpck_require__(1288);
 const fs = __nccwpck_require__(9896);
 const {ECS} = __nccwpck_require__(212);
 
+// Attributes that are returned by DescribeTaskDefinition, but are not valid RegisterTaskDefinition inputs
+const IGNORED_TASK_DEFINITION_ATTRIBUTES = [
+  'compatibilities',
+  'taskDefinitionArn',
+  'requiresAttributes',
+  'revision',
+  'status',
+  'registeredAt',
+  'deregisteredAt',
+  'registeredBy'
+];
+
+function removeIgnoredAttributes(taskDef) {
+  // Creates a completely new object with its own reference
+  const cleanTaskDef = JSON.parse(JSON.stringify(taskDef));
+
+  // Modifications are made to the new object
+  IGNORED_TASK_DEFINITION_ATTRIBUTES.forEach(attr => {
+      delete cleanTaskDef[attr];
+  });
+
+  return cleanTaskDef;  // Returns a completely new object
+}
+
 async function run() {
   try {
     const ecs = new ECS({
@@ -51,13 +75,13 @@ async function run() {
     } else if (taskDefinitionArn || taskDefinitionFamily || taskDefinitionRevision) {
       if (taskDefinitionArn) {
         core.info("The task definition arn will be used to fetch task definition");
-        params = {taskDefinition: taskDefinitionArn};
+        params = {taskDefinition: taskDefinitionArn, include: ['TAGS']};
       } else if (taskDefinitionFamily && taskDefinitionRevision) {
         core.info("The specified revision of the task definition family will be used to fetch task definition");
-        params = {taskDefinition: `${taskDefinitionFamily}:${taskDefinitionRevision}` };
+        params = {taskDefinition: `${taskDefinitionFamily}:${taskDefinitionRevision}`, include: ['TAGS'] };
       } else if (taskDefinitionFamily) {
         core.info("The latest revision of the task definition family will be used to fetch task definition");
-        params = {taskDefinition: taskDefinitionFamily};
+        params = {taskDefinition: taskDefinitionFamily, include: ['TAGS']};
       } else if (taskDefinitionRevision) {
         core.setFailed("You can't fetch task definition with just revision: Either use task definition file, arn or family name");
       } else {
@@ -71,6 +95,8 @@ async function run() {
         throw(error); 
       }
       taskDefContents = describeTaskDefResponse.taskDefinition;
+      // merge tags into taskDefinition
+      taskDefContents.tags = describeTaskDefResponse.tags;
       core.debug("Task definition contents:");
       core.debug(JSON.stringify(taskDefContents, undefined, 4));
     } else {
@@ -233,7 +259,11 @@ async function run() {
       keep: true,
       discardDescriptor: true
     });
-    const newTaskDefContents = JSON.stringify(taskDefContents, null, 2);
+    // remove ignored attributes just before writting it
+    const cleanedTaskDef = removeIgnoredAttributes(taskDefContents);
+    const newTaskDefContents = JSON.stringify(cleanedTaskDef, null, 2);
+    core.debug('Content being written to file:');
+    core.debug(newTaskDefContents);
     fs.writeFileSync(updatedTaskDefFile.name, newTaskDefContents);
     core.setOutput('task-definition', updatedTaskDefFile.name);
   }
