@@ -3596,8 +3596,8 @@ var __copyProps = (to, from, except, desc) => {
 var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
 
 // src/index.ts
-var src_exports = {};
-__export(src_exports, {
+var index_exports = {};
+__export(index_exports, {
   AccessDeniedException: () => AccessDeniedException,
   AgentUpdateStatus: () => AgentUpdateStatus,
   ApplicationProtocol: () => ApplicationProtocol,
@@ -3773,7 +3773,7 @@ __export(src_exports, {
   waitUntilTasksRunning: () => waitUntilTasksRunning,
   waitUntilTasksStopped: () => waitUntilTasksStopped
 });
-module.exports = __toCommonJS(src_exports);
+module.exports = __toCommonJS(index_exports);
 
 // src/ECSClient.ts
 var import_middleware_host_header = __nccwpck_require__(2590);
@@ -3900,9 +3900,9 @@ var ECSClient = class extends import_smithy_client.Client {
     this.middlewareStack.use(
       (0, import_core.getHttpAuthSchemeEndpointRuleSetPlugin)(this.config, {
         httpAuthSchemeParametersProvider: import_httpAuthSchemeProvider.defaultECSHttpAuthSchemeParametersProvider,
-        identityProviderConfigProvider: async (config) => new import_core.DefaultIdentityProviderConfig({
+        identityProviderConfigProvider: /* @__PURE__ */ __name(async (config) => new import_core.DefaultIdentityProviderConfig({
           "aws.auth#sigv4": config.credentials
-        })
+        }), "identityProviderConfigProvider")
       })
     );
     this.middlewareStack.use((0, import_core.getHttpSigningPlugin)(this.config));
@@ -6215,8 +6215,8 @@ var de_UpdateInProgressExceptionRes = /* @__PURE__ */ __name(async (parsedOutput
 }, "de_UpdateInProgressExceptionRes");
 var se_CreatedAt = /* @__PURE__ */ __name((input, context) => {
   return (0, import_smithy_client.take)(input, {
-    after: (_) => _.getTime() / 1e3,
-    before: (_) => _.getTime() / 1e3
+    after: /* @__PURE__ */ __name((_) => _.getTime() / 1e3, "after"),
+    before: /* @__PURE__ */ __name((_) => _.getTime() / 1e3, "before")
   });
 }, "se_CreatedAt");
 var se_CreateTaskSetRequest = /* @__PURE__ */ __name((input, context) => {
@@ -6229,7 +6229,7 @@ var se_CreateTaskSetRequest = /* @__PURE__ */ __name((input, context) => {
     loadBalancers: import_smithy_client._json,
     networkConfiguration: import_smithy_client._json,
     platformVersion: [],
-    scale: (_) => se_Scale(_, context),
+    scale: /* @__PURE__ */ __name((_) => se_Scale(_, context), "scale"),
     service: [],
     serviceRegistries: import_smithy_client._json,
     tags: import_smithy_client._json,
@@ -6239,7 +6239,7 @@ var se_CreateTaskSetRequest = /* @__PURE__ */ __name((input, context) => {
 var se_ListServiceDeploymentsRequest = /* @__PURE__ */ __name((input, context) => {
   return (0, import_smithy_client.take)(input, {
     cluster: [],
-    createdAt: (_) => se_CreatedAt(_, context),
+    createdAt: /* @__PURE__ */ __name((_) => se_CreatedAt(_, context), "createdAt"),
     maxResults: [],
     nextToken: [],
     service: [],
@@ -6255,7 +6255,7 @@ var se_RegisterContainerInstanceRequest = /* @__PURE__ */ __name((input, context
     instanceIdentityDocumentSignature: [],
     platformDevices: import_smithy_client._json,
     tags: import_smithy_client._json,
-    totalResources: (_) => se_Resources(_, context),
+    totalResources: /* @__PURE__ */ __name((_) => se_Resources(_, context), "totalResources"),
     versionInfo: import_smithy_client._json
   });
 }, "se_RegisterContainerInstanceRequest");
@@ -6308,10 +6308,10 @@ var se_SubmitTaskStateChangeRequest = /* @__PURE__ */ __name((input, context) =>
     attachments: import_smithy_client._json,
     cluster: [],
     containers: import_smithy_client._json,
-    executionStoppedAt: (_) => _.getTime() / 1e3,
+    executionStoppedAt: /* @__PURE__ */ __name((_) => _.getTime() / 1e3, "executionStoppedAt"),
     managedAgents: import_smithy_client._json,
-    pullStartedAt: (_) => _.getTime() / 1e3,
-    pullStoppedAt: (_) => _.getTime() / 1e3,
+    pullStartedAt: /* @__PURE__ */ __name((_) => _.getTime() / 1e3, "pullStartedAt"),
+    pullStoppedAt: /* @__PURE__ */ __name((_) => _.getTime() / 1e3, "pullStoppedAt"),
     reason: [],
     status: [],
     task: []
@@ -6320,7 +6320,7 @@ var se_SubmitTaskStateChangeRequest = /* @__PURE__ */ __name((input, context) =>
 var se_UpdateTaskSetRequest = /* @__PURE__ */ __name((input, context) => {
   return (0, import_smithy_client.take)(input, {
     cluster: [],
-    scale: (_) => se_Scale(_, context),
+    scale: /* @__PURE__ */ __name((_) => se_Scale(_, context), "scale"),
     service: [],
     taskSet: []
   });
@@ -6335,7 +6335,7 @@ var de_Container = /* @__PURE__ */ __name((output, context) => {
     image: import_smithy_client.expectString,
     imageDigest: import_smithy_client.expectString,
     lastStatus: import_smithy_client.expectString,
-    managedAgents: (_) => de_ManagedAgents(_, context),
+    managedAgents: /* @__PURE__ */ __name((_) => de_ManagedAgents(_, context), "managedAgents"),
     memory: import_smithy_client.expectString,
     memoryReservation: import_smithy_client.expectString,
     name: import_smithy_client.expectString,
@@ -6355,11 +6355,11 @@ var de_ContainerInstance = /* @__PURE__ */ __name((output, context) => {
     capacityProviderName: import_smithy_client.expectString,
     containerInstanceArn: import_smithy_client.expectString,
     ec2InstanceId: import_smithy_client.expectString,
-    healthStatus: (_) => de_ContainerInstanceHealthStatus(_, context),
+    healthStatus: /* @__PURE__ */ __name((_) => de_ContainerInstanceHealthStatus(_, context), "healthStatus"),
     pendingTasksCount: import_smithy_client.expectInt32,
-    registeredAt: (_) => (0, import_smithy_client.expectNonNull)((0, import_smithy_client.parseEpochTimestamp)((0, import_smithy_client.expectNumber)(_))),
-    registeredResources: (_) => de_Resources(_, context),
-    remainingResources: (_) => de_Resources(_, context),
+    registeredAt: /* @__PURE__ */ __name((_) => (0, import_smithy_client.expectNonNull)((0, import_smithy_client.parseEpochTimestamp)((0, import_smithy_client.expectNumber)(_))), "registeredAt"),
+    registeredResources: /* @__PURE__ */ __name((_) => de_Resources(_, context), "registeredResources"),
+    remainingResources: /* @__PURE__ */ __name((_) => de_Resources(_, context), "remainingResources"),
     runningTasksCount: import_smithy_client.expectInt32,
     status: import_smithy_client.expectString,
     statusReason: import_smithy_client.expectString,
@@ -6370,7 +6370,7 @@ var de_ContainerInstance = /* @__PURE__ */ __name((output, context) => {
 }, "de_ContainerInstance");
 var de_ContainerInstanceHealthStatus = /* @__PURE__ */ __name((output, context) => {
   return (0, import_smithy_client.take)(output, {
-    details: (_) => de_InstanceHealthCheckResultList(_, context),
+    details: /* @__PURE__ */ __name((_) => de_InstanceHealthCheckResultList(_, context), "details"),
     overallStatus: import_smithy_client.expectString
   });
 }, "de_ContainerInstanceHealthStatus");
@@ -6388,34 +6388,34 @@ var de_Containers = /* @__PURE__ */ __name((output, context) => {
 }, "de_Containers");
 var de_CreateServiceResponse = /* @__PURE__ */ __name((output, context) => {
   return (0, import_smithy_client.take)(output, {
-    service: (_) => de_Service(_, context)
+    service: /* @__PURE__ */ __name((_) => de_Service(_, context), "service")
   });
 }, "de_CreateServiceResponse");
 var de_CreateTaskSetResponse = /* @__PURE__ */ __name((output, context) => {
   return (0, import_smithy_client.take)(output, {
-    taskSet: (_) => de_TaskSet(_, context)
+    taskSet: /* @__PURE__ */ __name((_) => de_TaskSet(_, context), "taskSet")
   });
 }, "de_CreateTaskSetResponse");
 var de_DeleteServiceResponse = /* @__PURE__ */ __name((output, context) => {
   return (0, import_smithy_client.take)(output, {
-    service: (_) => de_Service(_, context)
+    service: /* @__PURE__ */ __name((_) => de_Service(_, context), "service")
   });
 }, "de_DeleteServiceResponse");
 var de_DeleteTaskDefinitionsResponse = /* @__PURE__ */ __name((output, context) => {
   return (0, import_smithy_client.take)(output, {
     failures: import_smithy_client._json,
-    taskDefinitions: (_) => de_TaskDefinitionList(_, context)
+    taskDefinitions: /* @__PURE__ */ __name((_) => de_TaskDefinitionList(_, context), "taskDefinitions")
   });
 }, "de_DeleteTaskDefinitionsResponse");
 var de_DeleteTaskSetResponse = /* @__PURE__ */ __name((output, context) => {
   return (0, import_smithy_client.take)(output, {
-    taskSet: (_) => de_TaskSet(_, context)
+    taskSet: /* @__PURE__ */ __name((_) => de_TaskSet(_, context), "taskSet")
   });
 }, "de_DeleteTaskSetResponse");
 var de_Deployment = /* @__PURE__ */ __name((output, context) => {
   return (0, import_smithy_client.take)(output, {
     capacityProviderStrategy: import_smithy_client._json,
-    createdAt: (_) => (0, import_smithy_client.expectNonNull)((0, import_smithy_client.parseEpochTimestamp)((0, import_smithy_client.expectNumber)(_))),
+    createdAt: /* @__PURE__ */ __name((_) => (0, import_smithy_client.expectNonNull)((0, import_smithy_client.parseEpochTimestamp)((0, import_smithy_client.expectNumber)(_))), "createdAt"),
     desiredCount: import_smithy_client.expectInt32,
     failedTasks: import_smithy_client.expectInt32,
     fargateEphemeralStorage: import_smithy_client._json,
@@ -6432,7 +6432,7 @@ var de_Deployment = /* @__PURE__ */ __name((output, context) => {
     serviceConnectResources: import_smithy_client._json,
     status: import_smithy_client.expectString,
     taskDefinition: import_smithy_client.expectString,
-    updatedAt: (_) => (0, import_smithy_client.expectNonNull)((0, import_smithy_client.parseEpochTimestamp)((0, import_smithy_client.expectNumber)(_))),
+    updatedAt: /* @__PURE__ */ __name((_) => (0, import_smithy_client.expectNonNull)((0, import_smithy_client.parseEpochTimestamp)((0, import_smithy_client.expectNumber)(_))), "updatedAt"),
     volumeConfigurations: import_smithy_client._json,
     vpcLatticeConfigurations: import_smithy_client._json
   });
@@ -6445,66 +6445,66 @@ var de_Deployments = /* @__PURE__ */ __name((output, context) => {
 }, "de_Deployments");
 var de_DeregisterContainerInstanceResponse = /* @__PURE__ */ __name((output, context) => {
   return (0, import_smithy_client.take)(output, {
-    containerInstance: (_) => de_ContainerInstance(_, context)
+    containerInstance: /* @__PURE__ */ __name((_) => de_ContainerInstance(_, context), "containerInstance")
   });
 }, "de_DeregisterContainerInstanceResponse");
 var de_DeregisterTaskDefinitionResponse = /* @__PURE__ */ __name((output, context) => {
   return (0, import_smithy_client.take)(output, {
-    taskDefinition: (_) => de_TaskDefinition(_, context)
+    taskDefinition: /* @__PURE__ */ __name((_) => de_TaskDefinition(_, context), "taskDefinition")
   });
 }, "de_DeregisterTaskDefinitionResponse");
 var de_DescribeContainerInstancesResponse = /* @__PURE__ */ __name((output, context) => {
   return (0, import_smithy_client.take)(output, {
-    containerInstances: (_) => de_ContainerInstances(_, context),
+    containerInstances: /* @__PURE__ */ __name((_) => de_ContainerInstances(_, context), "containerInstances"),
     failures: import_smithy_client._json
   });
 }, "de_DescribeContainerInstancesResponse");
 var de_DescribeServiceDeploymentsResponse = /* @__PURE__ */ __name((output, context) => {
   return (0, import_smithy_client.take)(output, {
     failures: import_smithy_client._json,
-    serviceDeployments: (_) => de_ServiceDeployments(_, context)
+    serviceDeployments: /* @__PURE__ */ __name((_) => de_ServiceDeployments(_, context), "serviceDeployments")
   });
 }, "de_DescribeServiceDeploymentsResponse");
 var de_DescribeServiceRevisionsResponse = /* @__PURE__ */ __name((output, context) => {
   return (0, import_smithy_client.take)(output, {
     failures: import_smithy_client._json,
-    serviceRevisions: (_) => de_ServiceRevisions(_, context)
+    serviceRevisions: /* @__PURE__ */ __name((_) => de_ServiceRevisions(_, context), "serviceRevisions")
   });
 }, "de_DescribeServiceRevisionsResponse");
 var de_DescribeServicesResponse = /* @__PURE__ */ __name((output, context) => {
   return (0, import_smithy_client.take)(output, {
     failures: import_smithy_client._json,
-    services: (_) => de_Services(_, context)
+    services: /* @__PURE__ */ __name((_) => de_Services(_, context), "services")
   });
 }, "de_DescribeServicesResponse");
 var de_DescribeTaskDefinitionResponse = /* @__PURE__ */ __name((output, context) => {
   return (0, import_smithy_client.take)(output, {
     tags: import_smithy_client._json,
-    taskDefinition: (_) => de_TaskDefinition(_, context)
+    taskDefinition: /* @__PURE__ */ __name((_) => de_TaskDefinition(_, context), "taskDefinition")
   });
 }, "de_DescribeTaskDefinitionResponse");
 var de_DescribeTaskSetsResponse = /* @__PURE__ */ __name((output, context) => {
   return (0, import_smithy_client.take)(output, {
     failures: import_smithy_client._json,
-    taskSets: (_) => de_TaskSets(_, context)
+    taskSets: /* @__PURE__ */ __name((_) => de_TaskSets(_, context), "taskSets")
   });
 }, "de_DescribeTaskSetsResponse");
 var de_DescribeTasksResponse = /* @__PURE__ */ __name((output, context) => {
   return (0, import_smithy_client.take)(output, {
     failures: import_smithy_client._json,
-    tasks: (_) => de_Tasks(_, context)
+    tasks: /* @__PURE__ */ __name((_) => de_Tasks(_, context), "tasks")
   });
 }, "de_DescribeTasksResponse");
 var de_GetTaskProtectionResponse = /* @__PURE__ */ __name((output, context) => {
   return (0, import_smithy_client.take)(output, {
     failures: import_smithy_client._json,
-    protectedTasks: (_) => de_ProtectedTasks(_, context)
+    protectedTasks: /* @__PURE__ */ __name((_) => de_ProtectedTasks(_, context), "protectedTasks")
   });
 }, "de_GetTaskProtectionResponse");
 var de_InstanceHealthCheckResult = /* @__PURE__ */ __name((output, context) => {
   return (0, import_smithy_client.take)(output, {
-    lastStatusChange: (_) => (0, import_smithy_client.expectNonNull)((0, import_smithy_client.parseEpochTimestamp)((0, import_smithy_client.expectNumber)(_))),
-    lastUpdated: (_) => (0, import_smithy_client.expectNonNull)((0, import_smithy_client.parseEpochTimestamp)((0, import_smithy_client.expectNumber)(_))),
+    lastStatusChange: /* @__PURE__ */ __name((_) => (0, import_smithy_client.expectNonNull)((0, import_smithy_client.parseEpochTimestamp)((0, import_smithy_client.expectNumber)(_))), "lastStatusChange"),
+    lastUpdated: /* @__PURE__ */ __name((_) => (0, import_smithy_client.expectNonNull)((0, import_smithy_client.parseEpochTimestamp)((0, import_smithy_client.expectNumber)(_))), "lastUpdated"),
     status: import_smithy_client.expectString,
     type: import_smithy_client.expectString
   });
@@ -6518,12 +6518,12 @@ var de_InstanceHealthCheckResultList = /* @__PURE__ */ __name((output, context) 
 var de_ListServiceDeploymentsResponse = /* @__PURE__ */ __name((output, context) => {
   return (0, import_smithy_client.take)(output, {
     nextToken: import_smithy_client.expectString,
-    serviceDeployments: (_) => de_ServiceDeploymentsBrief(_, context)
+    serviceDeployments: /* @__PURE__ */ __name((_) => de_ServiceDeploymentsBrief(_, context), "serviceDeployments")
   });
 }, "de_ListServiceDeploymentsResponse");
 var de_ManagedAgent = /* @__PURE__ */ __name((output, context) => {
   return (0, import_smithy_client.take)(output, {
-    lastStartedAt: (_) => (0, import_smithy_client.expectNonNull)((0, import_smithy_client.parseEpochTimestamp)((0, import_smithy_client.expectNumber)(_))),
+    lastStartedAt: /* @__PURE__ */ __name((_) => (0, import_smithy_client.expectNonNull)((0, import_smithy_client.parseEpochTimestamp)((0, import_smithy_client.expectNumber)(_))), "lastStartedAt"),
     lastStatus: import_smithy_client.expectString,
     name: import_smithy_client.expectString,
     reason: import_smithy_client.expectString
@@ -6537,7 +6537,7 @@ var de_ManagedAgents = /* @__PURE__ */ __name((output, context) => {
 }, "de_ManagedAgents");
 var de_ProtectedTask = /* @__PURE__ */ __name((output, context) => {
   return (0, import_smithy_client.take)(output, {
-    expirationDate: (_) => (0, import_smithy_client.expectNonNull)((0, import_smithy_client.parseEpochTimestamp)((0, import_smithy_client.expectNumber)(_))),
+    expirationDate: /* @__PURE__ */ __name((_) => (0, import_smithy_client.expectNonNull)((0, import_smithy_client.parseEpochTimestamp)((0, import_smithy_client.expectNumber)(_))), "expirationDate"),
     protectionEnabled: import_smithy_client.expectBoolean,
     taskArn: import_smithy_client.expectString
   });
@@ -6550,13 +6550,13 @@ var de_ProtectedTasks = /* @__PURE__ */ __name((output, context) => {
 }, "de_ProtectedTasks");
 var de_RegisterContainerInstanceResponse = /* @__PURE__ */ __name((output, context) => {
   return (0, import_smithy_client.take)(output, {
-    containerInstance: (_) => de_ContainerInstance(_, context)
+    containerInstance: /* @__PURE__ */ __name((_) => de_ContainerInstance(_, context), "containerInstance")
   });
 }, "de_RegisterContainerInstanceResponse");
 var de_RegisterTaskDefinitionResponse = /* @__PURE__ */ __name((output, context) => {
   return (0, import_smithy_client.take)(output, {
     tags: import_smithy_client._json,
-    taskDefinition: (_) => de_TaskDefinition(_, context)
+    taskDefinition: /* @__PURE__ */ __name((_) => de_TaskDefinition(_, context), "taskDefinition")
   });
 }, "de_RegisterTaskDefinitionResponse");
 var de_Resource = /* @__PURE__ */ __name((output, context) => {
@@ -6579,13 +6579,13 @@ var de_Rollback = /* @__PURE__ */ __name((output, context) => {
   return (0, import_smithy_client.take)(output, {
     reason: import_smithy_client.expectString,
     serviceRevisionArn: import_smithy_client.expectString,
-    startedAt: (_) => (0, import_smithy_client.expectNonNull)((0, import_smithy_client.parseEpochTimestamp)((0, import_smithy_client.expectNumber)(_)))
+    startedAt: /* @__PURE__ */ __name((_) => (0, import_smithy_client.expectNonNull)((0, import_smithy_client.parseEpochTimestamp)((0, import_smithy_client.expectNumber)(_))), "startedAt")
   });
 }, "de_Rollback");
 var de_RunTaskResponse = /* @__PURE__ */ __name((output, context) => {
   return (0, import_smithy_client.take)(output, {
     failures: import_smithy_client._json,
-    tasks: (_) => de_Tasks(_, context)
+    tasks: /* @__PURE__ */ __name((_) => de_Tasks(_, context), "tasks")
   });
 }, "de_RunTaskResponse");
 var de_Scale = /* @__PURE__ */ __name((output, context) => {
@@ -6599,15 +6599,15 @@ var de_Service = /* @__PURE__ */ __name((output, context) => {
     availabilityZoneRebalancing: import_smithy_client.expectString,
     capacityProviderStrategy: import_smithy_client._json,
     clusterArn: import_smithy_client.expectString,
-    createdAt: (_) => (0, import_smithy_client.expectNonNull)((0, import_smithy_client.parseEpochTimestamp)((0, import_smithy_client.expectNumber)(_))),
+    createdAt: /* @__PURE__ */ __name((_) => (0, import_smithy_client.expectNonNull)((0, import_smithy_client.parseEpochTimestamp)((0, import_smithy_client.expectNumber)(_))), "createdAt"),
     createdBy: import_smithy_client.expectString,
     deploymentConfiguration: import_smithy_client._json,
     deploymentController: import_smithy_client._json,
-    deployments: (_) => de_Deployments(_, context),
+    deployments: /* @__PURE__ */ __name((_) => de_Deployments(_, context), "deployments"),
     desiredCount: import_smithy_client.expectInt32,
     enableECSManagedTags: import_smithy_client.expectBoolean,
     enableExecuteCommand: import_smithy_client.expectBoolean,
-    events: (_) => de_ServiceEvents(_, context),
+    events: /* @__PURE__ */ __name((_) => de_ServiceEvents(_, context), "events"),
     healthCheckGracePeriodSeconds: import_smithy_client.expectInt32,
     launchType: import_smithy_client.expectString,
     loadBalancers: import_smithy_client._json,
@@ -6627,37 +6627,37 @@ var de_Service = /* @__PURE__ */ __name((output, context) => {
     status: import_smithy_client.expectString,
     tags: import_smithy_client._json,
     taskDefinition: import_smithy_client.expectString,
-    taskSets: (_) => de_TaskSets(_, context)
+    taskSets: /* @__PURE__ */ __name((_) => de_TaskSets(_, context), "taskSets")
   });
 }, "de_Service");
 var de_ServiceDeployment = /* @__PURE__ */ __name((output, context) => {
   return (0, import_smithy_client.take)(output, {
     alarms: import_smithy_client._json,
     clusterArn: import_smithy_client.expectString,
-    createdAt: (_) => (0, import_smithy_client.expectNonNull)((0, import_smithy_client.parseEpochTimestamp)((0, import_smithy_client.expectNumber)(_))),
+    createdAt: /* @__PURE__ */ __name((_) => (0, import_smithy_client.expectNonNull)((0, import_smithy_client.parseEpochTimestamp)((0, import_smithy_client.expectNumber)(_))), "createdAt"),
     deploymentCircuitBreaker: import_smithy_client._json,
     deploymentConfiguration: import_smithy_client._json,
-    finishedAt: (_) => (0, import_smithy_client.expectNonNull)((0, import_smithy_client.parseEpochTimestamp)((0, import_smithy_client.expectNumber)(_))),
-    rollback: (_) => de_Rollback(_, context),
+    finishedAt: /* @__PURE__ */ __name((_) => (0, import_smithy_client.expectNonNull)((0, import_smithy_client.parseEpochTimestamp)((0, import_smithy_client.expectNumber)(_))), "finishedAt"),
+    rollback: /* @__PURE__ */ __name((_) => de_Rollback(_, context), "rollback"),
     serviceArn: import_smithy_client.expectString,
     serviceDeploymentArn: import_smithy_client.expectString,
     sourceServiceRevisions: import_smithy_client._json,
-    startedAt: (_) => (0, import_smithy_client.expectNonNull)((0, import_smithy_client.parseEpochTimestamp)((0, import_smithy_client.expectNumber)(_))),
+    startedAt: /* @__PURE__ */ __name((_) => (0, import_smithy_client.expectNonNull)((0, import_smithy_client.parseEpochTimestamp)((0, import_smithy_client.expectNumber)(_))), "startedAt"),
     status: import_smithy_client.expectString,
     statusReason: import_smithy_client.expectString,
-    stoppedAt: (_) => (0, import_smithy_client.expectNonNull)((0, import_smithy_client.parseEpochTimestamp)((0, import_smithy_client.expectNumber)(_))),
+    stoppedAt: /* @__PURE__ */ __name((_) => (0, import_smithy_client.expectNonNull)((0, import_smithy_client.parseEpochTimestamp)((0, import_smithy_client.expectNumber)(_))), "stoppedAt"),
     targetServiceRevision: import_smithy_client._json,
-    updatedAt: (_) => (0, import_smithy_client.expectNonNull)((0, import_smithy_client.parseEpochTimestamp)((0, import_smithy_client.expectNumber)(_)))
+    updatedAt: /* @__PURE__ */ __name((_) => (0, import_smithy_client.expectNonNull)((0, import_smithy_client.parseEpochTimestamp)((0, import_smithy_client.expectNumber)(_))), "updatedAt")
   });
 }, "de_ServiceDeployment");
 var de_ServiceDeploymentBrief = /* @__PURE__ */ __name((output, context) => {
   return (0, import_smithy_client.take)(output, {
     clusterArn: import_smithy_client.expectString,
-    createdAt: (_) => (0, import_smithy_client.expectNonNull)((0, import_smithy_client.parseEpochTimestamp)((0, import_smithy_client.expectNumber)(_))),
-    finishedAt: (_) => (0, import_smithy_client.expectNonNull)((0, import_smithy_client.parseEpochTimestamp)((0, import_smithy_client.expectNumber)(_))),
+    createdAt: /* @__PURE__ */ __name((_) => (0, import_smithy_client.expectNonNull)((0, import_smithy_client.parseEpochTimestamp)((0, import_smithy_client.expectNumber)(_))), "createdAt"),
+    finishedAt: /* @__PURE__ */ __name((_) => (0, import_smithy_client.expectNonNull)((0, import_smithy_client.parseEpochTimestamp)((0, import_smithy_client.expectNumber)(_))), "finishedAt"),
     serviceArn: import_smithy_client.expectString,
     serviceDeploymentArn: import_smithy_client.expectString,
-    startedAt: (_) => (0, import_smithy_client.expectNonNull)((0, import_smithy_client.parseEpochTimestamp)((0, import_smithy_client.expectNumber)(_))),
+    startedAt: /* @__PURE__ */ __name((_) => (0, import_smithy_client.expectNonNull)((0, import_smithy_client.parseEpochTimestamp)((0, import_smithy_client.expectNumber)(_))), "startedAt"),
     status: import_smithy_client.expectString,
     statusReason: import_smithy_client.expectString,
     targetServiceRevisionArn: import_smithy_client.expectString
@@ -6677,7 +6677,7 @@ var de_ServiceDeploymentsBrief = /* @__PURE__ */ __name((output, context) => {
 }, "de_ServiceDeploymentsBrief");
 var de_ServiceEvent = /* @__PURE__ */ __name((output, context) => {
   return (0, import_smithy_client.take)(output, {
-    createdAt: (_) => (0, import_smithy_client.expectNonNull)((0, import_smithy_client.parseEpochTimestamp)((0, import_smithy_client.expectNumber)(_))),
+    createdAt: /* @__PURE__ */ __name((_) => (0, import_smithy_client.expectNonNull)((0, import_smithy_client.parseEpochTimestamp)((0, import_smithy_client.expectNumber)(_))), "createdAt"),
     id: import_smithy_client.expectString,
     message: import_smithy_client.expectString
   });
@@ -6693,7 +6693,7 @@ var de_ServiceRevision = /* @__PURE__ */ __name((output, context) => {
     capacityProviderStrategy: import_smithy_client._json,
     clusterArn: import_smithy_client.expectString,
     containerImages: import_smithy_client._json,
-    createdAt: (_) => (0, import_smithy_client.expectNonNull)((0, import_smithy_client.parseEpochTimestamp)((0, import_smithy_client.expectNumber)(_))),
+    createdAt: /* @__PURE__ */ __name((_) => (0, import_smithy_client.expectNonNull)((0, import_smithy_client.parseEpochTimestamp)((0, import_smithy_client.expectNumber)(_))), "createdAt"),
     fargateEphemeralStorage: import_smithy_client._json,
     guardDutyEnabled: import_smithy_client.expectBoolean,
     launchType: import_smithy_client.expectString,
@@ -6725,12 +6725,12 @@ var de_Services = /* @__PURE__ */ __name((output, context) => {
 var de_StartTaskResponse = /* @__PURE__ */ __name((output, context) => {
   return (0, import_smithy_client.take)(output, {
     failures: import_smithy_client._json,
-    tasks: (_) => de_Tasks(_, context)
+    tasks: /* @__PURE__ */ __name((_) => de_Tasks(_, context), "tasks")
   });
 }, "de_StartTaskResponse");
 var de_StopTaskResponse = /* @__PURE__ */ __name((output, context) => {
   return (0, import_smithy_client.take)(output, {
-    task: (_) => de_Task(_, context)
+    task: /* @__PURE__ */ __name((_) => de_Task(_, context), "task")
   });
 }, "de_StopTaskResponse");
 var de_Task = /* @__PURE__ */ __name((output, context) => {
@@ -6741,15 +6741,15 @@ var de_Task = /* @__PURE__ */ __name((output, context) => {
     capacityProviderName: import_smithy_client.expectString,
     clusterArn: import_smithy_client.expectString,
     connectivity: import_smithy_client.expectString,
-    connectivityAt: (_) => (0, import_smithy_client.expectNonNull)((0, import_smithy_client.parseEpochTimestamp)((0, import_smithy_client.expectNumber)(_))),
+    connectivityAt: /* @__PURE__ */ __name((_) => (0, import_smithy_client.expectNonNull)((0, import_smithy_client.parseEpochTimestamp)((0, import_smithy_client.expectNumber)(_))), "connectivityAt"),
     containerInstanceArn: import_smithy_client.expectString,
-    containers: (_) => de_Containers(_, context),
+    containers: /* @__PURE__ */ __name((_) => de_Containers(_, context), "containers"),
     cpu: import_smithy_client.expectString,
-    createdAt: (_) => (0, import_smithy_client.expectNonNull)((0, import_smithy_client.parseEpochTimestamp)((0, import_smithy_client.expectNumber)(_))),
+    createdAt: /* @__PURE__ */ __name((_) => (0, import_smithy_client.expectNonNull)((0, import_smithy_client.parseEpochTimestamp)((0, import_smithy_client.expectNumber)(_))), "createdAt"),
     desiredStatus: import_smithy_client.expectString,
     enableExecuteCommand: import_smithy_client.expectBoolean,
     ephemeralStorage: import_smithy_client._json,
-    executionStoppedAt: (_) => (0, import_smithy_client.expectNonNull)((0, import_smithy_client.parseEpochTimestamp)((0, import_smithy_client.expectNumber)(_))),
+    executionStoppedAt: /* @__PURE__ */ __name((_) => (0, import_smithy_client.expectNonNull)((0, import_smithy_client.parseEpochTimestamp)((0, import_smithy_client.expectNumber)(_))), "executionStoppedAt"),
     fargateEphemeralStorage: import_smithy_client._json,
     group: import_smithy_client.expectString,
     healthStatus: import_smithy_client.expectString,
@@ -6760,14 +6760,14 @@ var de_Task = /* @__PURE__ */ __name((output, context) => {
     overrides: import_smithy_client._json,
     platformFamily: import_smithy_client.expectString,
     platformVersion: import_smithy_client.expectString,
-    pullStartedAt: (_) => (0, import_smithy_client.expectNonNull)((0, import_smithy_client.parseEpochTimestamp)((0, import_smithy_client.expectNumber)(_))),
-    pullStoppedAt: (_) => (0, import_smithy_client.expectNonNull)((0, import_smithy_client.parseEpochTimestamp)((0, import_smithy_client.expectNumber)(_))),
-    startedAt: (_) => (0, import_smithy_client.expectNonNull)((0, import_smithy_client.parseEpochTimestamp)((0, import_smithy_client.expectNumber)(_))),
+    pullStartedAt: /* @__PURE__ */ __name((_) => (0, import_smithy_client.expectNonNull)((0, import_smithy_client.parseEpochTimestamp)((0, import_smithy_client.expectNumber)(_))), "pullStartedAt"),
+    pullStoppedAt: /* @__PURE__ */ __name((_) => (0, import_smithy_client.expectNonNull)((0, import_smithy_client.parseEpochTimestamp)((0, import_smithy_client.expectNumber)(_))), "pullStoppedAt"),
+    startedAt: /* @__PURE__ */ __name((_) => (0, import_smithy_client.expectNonNull)((0, import_smithy_client.parseEpochTimestamp)((0, import_smithy_client.expectNumber)(_))), "startedAt"),
     startedBy: import_smithy_client.expectString,
     stopCode: import_smithy_client.expectString,
-    stoppedAt: (_) => (0, import_smithy_client.expectNonNull)((0, import_smithy_client.parseEpochTimestamp)((0, import_smithy_client.expectNumber)(_))),
+    stoppedAt: /* @__PURE__ */ __name((_) => (0, import_smithy_client.expectNonNull)((0, import_smithy_client.parseEpochTimestamp)((0, import_smithy_client.expectNumber)(_))), "stoppedAt"),
     stoppedReason: import_smithy_client.expectString,
-    stoppingAt: (_) => (0, import_smithy_client.expectNonNull)((0, import_smithy_client.parseEpochTimestamp)((0, import_smithy_client.expectNumber)(_))),
+    stoppingAt: /* @__PURE__ */ __name((_) => (0, import_smithy_client.expectNonNull)((0, import_smithy_client.parseEpochTimestamp)((0, import_smithy_client.expectNumber)(_))), "stoppingAt"),
     tags: import_smithy_client._json,
     taskArn: import_smithy_client.expectString,
     taskDefinitionArn: import_smithy_client.expectString,
@@ -6779,7 +6779,7 @@ var de_TaskDefinition = /* @__PURE__ */ __name((output, context) => {
     compatibilities: import_smithy_client._json,
     containerDefinitions: import_smithy_client._json,
     cpu: import_smithy_client.expectString,
-    deregisteredAt: (_) => (0, import_smithy_client.expectNonNull)((0, import_smithy_client.parseEpochTimestamp)((0, import_smithy_client.expectNumber)(_))),
+    deregisteredAt: /* @__PURE__ */ __name((_) => (0, import_smithy_client.expectNonNull)((0, import_smithy_client.parseEpochTimestamp)((0, import_smithy_client.expectNumber)(_))), "deregisteredAt"),
     enableFaultInjection: import_smithy_client.expectBoolean,
     ephemeralStorage: import_smithy_client._json,
     executionRoleArn: import_smithy_client.expectString,
@@ -6791,7 +6791,7 @@ var de_TaskDefinition = /* @__PURE__ */ __name((output, context) => {
     pidMode: import_smithy_client.expectString,
     placementConstraints: import_smithy_client._json,
     proxyConfiguration: import_smithy_client._json,
-    registeredAt: (_) => (0, import_smithy_client.expectNonNull)((0, import_smithy_client.parseEpochTimestamp)((0, import_smithy_client.expectNumber)(_))),
+    registeredAt: /* @__PURE__ */ __name((_) => (0, import_smithy_client.expectNonNull)((0, import_smithy_client.parseEpochTimestamp)((0, import_smithy_client.expectNumber)(_))), "registeredAt"),
     registeredBy: import_smithy_client.expectString,
     requiresAttributes: import_smithy_client._json,
     requiresCompatibilities: import_smithy_client._json,
@@ -6820,7 +6820,7 @@ var de_TaskSet = /* @__PURE__ */ __name((output, context) => {
     capacityProviderStrategy: import_smithy_client._json,
     clusterArn: import_smithy_client.expectString,
     computedDesiredCount: import_smithy_client.expectInt32,
-    createdAt: (_) => (0, import_smithy_client.expectNonNull)((0, import_smithy_client.parseEpochTimestamp)((0, import_smithy_client.expectNumber)(_))),
+    createdAt: /* @__PURE__ */ __name((_) => (0, import_smithy_client.expectNonNull)((0, import_smithy_client.parseEpochTimestamp)((0, import_smithy_client.expectNumber)(_))), "createdAt"),
     externalId: import_smithy_client.expectString,
     fargateEphemeralStorage: import_smithy_client._json,
     id: import_smithy_client.expectString,
@@ -6831,17 +6831,17 @@ var de_TaskSet = /* @__PURE__ */ __name((output, context) => {
     platformFamily: import_smithy_client.expectString,
     platformVersion: import_smithy_client.expectString,
     runningCount: import_smithy_client.expectInt32,
-    scale: (_) => de_Scale(_, context),
+    scale: /* @__PURE__ */ __name((_) => de_Scale(_, context), "scale"),
     serviceArn: import_smithy_client.expectString,
     serviceRegistries: import_smithy_client._json,
     stabilityStatus: import_smithy_client.expectString,
-    stabilityStatusAt: (_) => (0, import_smithy_client.expectNonNull)((0, import_smithy_client.parseEpochTimestamp)((0, import_smithy_client.expectNumber)(_))),
+    stabilityStatusAt: /* @__PURE__ */ __name((_) => (0, import_smithy_client.expectNonNull)((0, import_smithy_client.parseEpochTimestamp)((0, import_smithy_client.expectNumber)(_))), "stabilityStatusAt"),
     startedBy: import_smithy_client.expectString,
     status: import_smithy_client.expectString,
     tags: import_smithy_client._json,
     taskDefinition: import_smithy_client.expectString,
     taskSetArn: import_smithy_client.expectString,
-    updatedAt: (_) => (0, import_smithy_client.expectNonNull)((0, import_smithy_client.parseEpochTimestamp)((0, import_smithy_client.expectNumber)(_)))
+    updatedAt: /* @__PURE__ */ __name((_) => (0, import_smithy_client.expectNonNull)((0, import_smithy_client.parseEpochTimestamp)((0, import_smithy_client.expectNumber)(_))), "updatedAt")
   });
 }, "de_TaskSet");
 var de_TaskSets = /* @__PURE__ */ __name((output, context) => {
@@ -6852,34 +6852,34 @@ var de_TaskSets = /* @__PURE__ */ __name((output, context) => {
 }, "de_TaskSets");
 var de_UpdateContainerAgentResponse = /* @__PURE__ */ __name((output, context) => {
   return (0, import_smithy_client.take)(output, {
-    containerInstance: (_) => de_ContainerInstance(_, context)
+    containerInstance: /* @__PURE__ */ __name((_) => de_ContainerInstance(_, context), "containerInstance")
   });
 }, "de_UpdateContainerAgentResponse");
 var de_UpdateContainerInstancesStateResponse = /* @__PURE__ */ __name((output, context) => {
   return (0, import_smithy_client.take)(output, {
-    containerInstances: (_) => de_ContainerInstances(_, context),
+    containerInstances: /* @__PURE__ */ __name((_) => de_ContainerInstances(_, context), "containerInstances"),
     failures: import_smithy_client._json
   });
 }, "de_UpdateContainerInstancesStateResponse");
 var de_UpdateServicePrimaryTaskSetResponse = /* @__PURE__ */ __name((output, context) => {
   return (0, import_smithy_client.take)(output, {
-    taskSet: (_) => de_TaskSet(_, context)
+    taskSet: /* @__PURE__ */ __name((_) => de_TaskSet(_, context), "taskSet")
   });
 }, "de_UpdateServicePrimaryTaskSetResponse");
 var de_UpdateServiceResponse = /* @__PURE__ */ __name((output, context) => {
   return (0, import_smithy_client.take)(output, {
-    service: (_) => de_Service(_, context)
+    service: /* @__PURE__ */ __name((_) => de_Service(_, context), "service")
   });
 }, "de_UpdateServiceResponse");
 var de_UpdateTaskProtectionResponse = /* @__PURE__ */ __name((output, context) => {
   return (0, import_smithy_client.take)(output, {
     failures: import_smithy_client._json,
-    protectedTasks: (_) => de_ProtectedTasks(_, context)
+    protectedTasks: /* @__PURE__ */ __name((_) => de_ProtectedTasks(_, context), "protectedTasks")
   });
 }, "de_UpdateTaskProtectionResponse");
 var de_UpdateTaskSetResponse = /* @__PURE__ */ __name((output, context) => {
   return (0, import_smithy_client.take)(output, {
-    taskSet: (_) => de_TaskSet(_, context)
+    taskSet: /* @__PURE__ */ __name((_) => de_TaskSet(_, context), "taskSet")
   });
 }, "de_UpdateTaskSetResponse");
 var deserializeMetadata = /* @__PURE__ */ __name((output) => ({
@@ -28429,11 +28429,11 @@ const consider = {
 function toNumber(str, options = {}){
     options = Object.assign({}, consider, options );
     if(!str || typeof str !== "string" ) return str;
-    else if(str==="0") return 0;
-
+    
     let trimmedStr  = str.trim();
-
+    
     if(options.skipLike !== undefined && options.skipLike.test(trimmedStr)) return str;
+    else if(str==="0") return 0;
     else if (options.hex && hexRegex.test(trimmedStr)) {
         return parse_int(trimmedStr, 16);
     // }else if (options.oct && octRegex.test(str)) {
@@ -54796,7 +54796,7 @@ module.exports = parseParams
 /***/ ((module) => {
 
 "use strict";
-module.exports = /*#__PURE__*/JSON.parse('{"name":"@aws-sdk/client-ecs","description":"AWS SDK for JavaScript Ecs Client for Node.js, Browser and React Native","version":"3.752.0","scripts":{"build":"concurrently \'yarn:build:cjs\' \'yarn:build:es\' \'yarn:build:types\'","build:cjs":"node ../../scripts/compilation/inline client-ecs","build:es":"tsc -p tsconfig.es.json","build:include:deps":"lerna run --scope $npm_package_name --include-dependencies build","build:types":"tsc -p tsconfig.types.json","build:types:downlevel":"downlevel-dts dist-types dist-types/ts3.4","clean":"rimraf ./dist-* && rimraf *.tsbuildinfo","extract:docs":"api-extractor run --local","generate:client":"node ../../scripts/generate-clients/single-service --solo ecs"},"main":"./dist-cjs/index.js","types":"./dist-types/index.d.ts","module":"./dist-es/index.js","sideEffects":false,"dependencies":{"@aws-crypto/sha256-browser":"5.2.0","@aws-crypto/sha256-js":"5.2.0","@aws-sdk/core":"3.750.0","@aws-sdk/credential-provider-node":"3.750.0","@aws-sdk/middleware-host-header":"3.734.0","@aws-sdk/middleware-logger":"3.734.0","@aws-sdk/middleware-recursion-detection":"3.734.0","@aws-sdk/middleware-user-agent":"3.750.0","@aws-sdk/region-config-resolver":"3.734.0","@aws-sdk/types":"3.734.0","@aws-sdk/util-endpoints":"3.743.0","@aws-sdk/util-user-agent-browser":"3.734.0","@aws-sdk/util-user-agent-node":"3.750.0","@smithy/config-resolver":"^4.0.1","@smithy/core":"^3.1.4","@smithy/fetch-http-handler":"^5.0.1","@smithy/hash-node":"^4.0.1","@smithy/invalid-dependency":"^4.0.1","@smithy/middleware-content-length":"^4.0.1","@smithy/middleware-endpoint":"^4.0.5","@smithy/middleware-retry":"^4.0.6","@smithy/middleware-serde":"^4.0.2","@smithy/middleware-stack":"^4.0.1","@smithy/node-config-provider":"^4.0.1","@smithy/node-http-handler":"^4.0.2","@smithy/protocol-http":"^5.0.1","@smithy/smithy-client":"^4.1.5","@smithy/types":"^4.1.0","@smithy/url-parser":"^4.0.1","@smithy/util-base64":"^4.0.0","@smithy/util-body-length-browser":"^4.0.0","@smithy/util-body-length-node":"^4.0.0","@smithy/util-defaults-mode-browser":"^4.0.6","@smithy/util-defaults-mode-node":"^4.0.6","@smithy/util-endpoints":"^3.0.1","@smithy/util-middleware":"^4.0.1","@smithy/util-retry":"^4.0.1","@smithy/util-utf8":"^4.0.0","@smithy/util-waiter":"^4.0.2","@types/uuid":"^9.0.1","tslib":"^2.6.2","uuid":"^9.0.1"},"devDependencies":{"@tsconfig/node18":"18.2.4","@types/node":"^18.19.69","concurrently":"7.0.0","downlevel-dts":"0.10.1","rimraf":"3.0.2","typescript":"~5.2.2"},"engines":{"node":">=18.0.0"},"typesVersions":{"<4.0":{"dist-types/*":["dist-types/ts3.4/*"]}},"files":["dist-*/**"],"author":{"name":"AWS SDK for JavaScript Team","url":"https://aws.amazon.com/javascript/"},"license":"Apache-2.0","browser":{"./dist-es/runtimeConfig":"./dist-es/runtimeConfig.browser"},"react-native":{"./dist-es/runtimeConfig":"./dist-es/runtimeConfig.native"},"homepage":"https://github.com/aws/aws-sdk-js-v3/tree/main/clients/client-ecs","repository":{"type":"git","url":"https://github.com/aws/aws-sdk-js-v3.git","directory":"clients/client-ecs"}}');
+module.exports = /*#__PURE__*/JSON.parse('{"name":"@aws-sdk/client-ecs","description":"AWS SDK for JavaScript Ecs Client for Node.js, Browser and React Native","version":"3.766.0","scripts":{"build":"concurrently \'yarn:build:cjs\' \'yarn:build:es\' \'yarn:build:types\'","build:cjs":"node ../../scripts/compilation/inline client-ecs","build:es":"tsc -p tsconfig.es.json","build:include:deps":"lerna run --scope $npm_package_name --include-dependencies build","build:types":"tsc -p tsconfig.types.json","build:types:downlevel":"downlevel-dts dist-types dist-types/ts3.4","clean":"rimraf ./dist-* && rimraf *.tsbuildinfo","extract:docs":"api-extractor run --local","generate:client":"node ../../scripts/generate-clients/single-service --solo ecs"},"main":"./dist-cjs/index.js","types":"./dist-types/index.d.ts","module":"./dist-es/index.js","sideEffects":false,"dependencies":{"@aws-crypto/sha256-browser":"5.2.0","@aws-crypto/sha256-js":"5.2.0","@aws-sdk/core":"3.758.0","@aws-sdk/credential-provider-node":"3.758.0","@aws-sdk/middleware-host-header":"3.734.0","@aws-sdk/middleware-logger":"3.734.0","@aws-sdk/middleware-recursion-detection":"3.734.0","@aws-sdk/middleware-user-agent":"3.758.0","@aws-sdk/region-config-resolver":"3.734.0","@aws-sdk/types":"3.734.0","@aws-sdk/util-endpoints":"3.743.0","@aws-sdk/util-user-agent-browser":"3.734.0","@aws-sdk/util-user-agent-node":"3.758.0","@smithy/config-resolver":"^4.0.1","@smithy/core":"^3.1.5","@smithy/fetch-http-handler":"^5.0.1","@smithy/hash-node":"^4.0.1","@smithy/invalid-dependency":"^4.0.1","@smithy/middleware-content-length":"^4.0.1","@smithy/middleware-endpoint":"^4.0.6","@smithy/middleware-retry":"^4.0.7","@smithy/middleware-serde":"^4.0.2","@smithy/middleware-stack":"^4.0.1","@smithy/node-config-provider":"^4.0.1","@smithy/node-http-handler":"^4.0.3","@smithy/protocol-http":"^5.0.1","@smithy/smithy-client":"^4.1.6","@smithy/types":"^4.1.0","@smithy/url-parser":"^4.0.1","@smithy/util-base64":"^4.0.0","@smithy/util-body-length-browser":"^4.0.0","@smithy/util-body-length-node":"^4.0.0","@smithy/util-defaults-mode-browser":"^4.0.7","@smithy/util-defaults-mode-node":"^4.0.7","@smithy/util-endpoints":"^3.0.1","@smithy/util-middleware":"^4.0.1","@smithy/util-retry":"^4.0.1","@smithy/util-utf8":"^4.0.0","@smithy/util-waiter":"^4.0.2","@types/uuid":"^9.0.1","tslib":"^2.6.2","uuid":"^9.0.1"},"devDependencies":{"@tsconfig/node18":"18.2.4","@types/node":"^18.19.69","concurrently":"7.0.0","downlevel-dts":"0.10.1","rimraf":"3.0.2","typescript":"~5.2.2"},"engines":{"node":">=18.0.0"},"typesVersions":{"<4.0":{"dist-types/*":["dist-types/ts3.4/*"]}},"files":["dist-*/**"],"author":{"name":"AWS SDK for JavaScript Team","url":"https://aws.amazon.com/javascript/"},"license":"Apache-2.0","browser":{"./dist-es/runtimeConfig":"./dist-es/runtimeConfig.browser"},"react-native":{"./dist-es/runtimeConfig":"./dist-es/runtimeConfig.native"},"homepage":"https://github.com/aws/aws-sdk-js-v3/tree/main/clients/client-ecs","repository":{"type":"git","url":"https://github.com/aws/aws-sdk-js-v3.git","directory":"clients/client-ecs"}}');
 
 /***/ }),
 
@@ -54804,7 +54804,7 @@ module.exports = /*#__PURE__*/JSON.parse('{"name":"@aws-sdk/client-ecs","descrip
 /***/ ((module) => {
 
 "use strict";
-module.exports = /*#__PURE__*/JSON.parse('{"name":"@aws-sdk/client-sso","description":"AWS SDK for JavaScript Sso Client for Node.js, Browser and React Native","version":"3.750.0","scripts":{"build":"concurrently \'yarn:build:cjs\' \'yarn:build:es\' \'yarn:build:types\'","build:cjs":"node ../../scripts/compilation/inline client-sso","build:es":"tsc -p tsconfig.es.json","build:include:deps":"lerna run --scope $npm_package_name --include-dependencies build","build:types":"tsc -p tsconfig.types.json","build:types:downlevel":"downlevel-dts dist-types dist-types/ts3.4","clean":"rimraf ./dist-* && rimraf *.tsbuildinfo","extract:docs":"api-extractor run --local","generate:client":"node ../../scripts/generate-clients/single-service --solo sso"},"main":"./dist-cjs/index.js","types":"./dist-types/index.d.ts","module":"./dist-es/index.js","sideEffects":false,"dependencies":{"@aws-crypto/sha256-browser":"5.2.0","@aws-crypto/sha256-js":"5.2.0","@aws-sdk/core":"3.750.0","@aws-sdk/middleware-host-header":"3.734.0","@aws-sdk/middleware-logger":"3.734.0","@aws-sdk/middleware-recursion-detection":"3.734.0","@aws-sdk/middleware-user-agent":"3.750.0","@aws-sdk/region-config-resolver":"3.734.0","@aws-sdk/types":"3.734.0","@aws-sdk/util-endpoints":"3.743.0","@aws-sdk/util-user-agent-browser":"3.734.0","@aws-sdk/util-user-agent-node":"3.750.0","@smithy/config-resolver":"^4.0.1","@smithy/core":"^3.1.4","@smithy/fetch-http-handler":"^5.0.1","@smithy/hash-node":"^4.0.1","@smithy/invalid-dependency":"^4.0.1","@smithy/middleware-content-length":"^4.0.1","@smithy/middleware-endpoint":"^4.0.5","@smithy/middleware-retry":"^4.0.6","@smithy/middleware-serde":"^4.0.2","@smithy/middleware-stack":"^4.0.1","@smithy/node-config-provider":"^4.0.1","@smithy/node-http-handler":"^4.0.2","@smithy/protocol-http":"^5.0.1","@smithy/smithy-client":"^4.1.5","@smithy/types":"^4.1.0","@smithy/url-parser":"^4.0.1","@smithy/util-base64":"^4.0.0","@smithy/util-body-length-browser":"^4.0.0","@smithy/util-body-length-node":"^4.0.0","@smithy/util-defaults-mode-browser":"^4.0.6","@smithy/util-defaults-mode-node":"^4.0.6","@smithy/util-endpoints":"^3.0.1","@smithy/util-middleware":"^4.0.1","@smithy/util-retry":"^4.0.1","@smithy/util-utf8":"^4.0.0","tslib":"^2.6.2"},"devDependencies":{"@tsconfig/node18":"18.2.4","@types/node":"^18.19.69","concurrently":"7.0.0","downlevel-dts":"0.10.1","rimraf":"3.0.2","typescript":"~5.2.2"},"engines":{"node":">=18.0.0"},"typesVersions":{"<4.0":{"dist-types/*":["dist-types/ts3.4/*"]}},"files":["dist-*/**"],"author":{"name":"AWS SDK for JavaScript Team","url":"https://aws.amazon.com/javascript/"},"license":"Apache-2.0","browser":{"./dist-es/runtimeConfig":"./dist-es/runtimeConfig.browser"},"react-native":{"./dist-es/runtimeConfig":"./dist-es/runtimeConfig.native"},"homepage":"https://github.com/aws/aws-sdk-js-v3/tree/main/clients/client-sso","repository":{"type":"git","url":"https://github.com/aws/aws-sdk-js-v3.git","directory":"clients/client-sso"}}');
+module.exports = /*#__PURE__*/JSON.parse('{"name":"@aws-sdk/client-sso","description":"AWS SDK for JavaScript Sso Client for Node.js, Browser and React Native","version":"3.758.0","scripts":{"build":"concurrently \'yarn:build:cjs\' \'yarn:build:es\' \'yarn:build:types\'","build:cjs":"node ../../scripts/compilation/inline client-sso","build:es":"tsc -p tsconfig.es.json","build:include:deps":"lerna run --scope $npm_package_name --include-dependencies build","build:types":"tsc -p tsconfig.types.json","build:types:downlevel":"downlevel-dts dist-types dist-types/ts3.4","clean":"rimraf ./dist-* && rimraf *.tsbuildinfo","extract:docs":"api-extractor run --local","generate:client":"node ../../scripts/generate-clients/single-service --solo sso"},"main":"./dist-cjs/index.js","types":"./dist-types/index.d.ts","module":"./dist-es/index.js","sideEffects":false,"dependencies":{"@aws-crypto/sha256-browser":"5.2.0","@aws-crypto/sha256-js":"5.2.0","@aws-sdk/core":"3.758.0","@aws-sdk/middleware-host-header":"3.734.0","@aws-sdk/middleware-logger":"3.734.0","@aws-sdk/middleware-recursion-detection":"3.734.0","@aws-sdk/middleware-user-agent":"3.758.0","@aws-sdk/region-config-resolver":"3.734.0","@aws-sdk/types":"3.734.0","@aws-sdk/util-endpoints":"3.743.0","@aws-sdk/util-user-agent-browser":"3.734.0","@aws-sdk/util-user-agent-node":"3.758.0","@smithy/config-resolver":"^4.0.1","@smithy/core":"^3.1.5","@smithy/fetch-http-handler":"^5.0.1","@smithy/hash-node":"^4.0.1","@smithy/invalid-dependency":"^4.0.1","@smithy/middleware-content-length":"^4.0.1","@smithy/middleware-endpoint":"^4.0.6","@smithy/middleware-retry":"^4.0.7","@smithy/middleware-serde":"^4.0.2","@smithy/middleware-stack":"^4.0.1","@smithy/node-config-provider":"^4.0.1","@smithy/node-http-handler":"^4.0.3","@smithy/protocol-http":"^5.0.1","@smithy/smithy-client":"^4.1.6","@smithy/types":"^4.1.0","@smithy/url-parser":"^4.0.1","@smithy/util-base64":"^4.0.0","@smithy/util-body-length-browser":"^4.0.0","@smithy/util-body-length-node":"^4.0.0","@smithy/util-defaults-mode-browser":"^4.0.7","@smithy/util-defaults-mode-node":"^4.0.7","@smithy/util-endpoints":"^3.0.1","@smithy/util-middleware":"^4.0.1","@smithy/util-retry":"^4.0.1","@smithy/util-utf8":"^4.0.0","tslib":"^2.6.2"},"devDependencies":{"@tsconfig/node18":"18.2.4","@types/node":"^18.19.69","concurrently":"7.0.0","downlevel-dts":"0.10.1","rimraf":"3.0.2","typescript":"~5.2.2"},"engines":{"node":">=18.0.0"},"typesVersions":{"<4.0":{"dist-types/*":["dist-types/ts3.4/*"]}},"files":["dist-*/**"],"author":{"name":"AWS SDK for JavaScript Team","url":"https://aws.amazon.com/javascript/"},"license":"Apache-2.0","browser":{"./dist-es/runtimeConfig":"./dist-es/runtimeConfig.browser"},"react-native":{"./dist-es/runtimeConfig":"./dist-es/runtimeConfig.native"},"homepage":"https://github.com/aws/aws-sdk-js-v3/tree/main/clients/client-sso","repository":{"type":"git","url":"https://github.com/aws/aws-sdk-js-v3.git","directory":"clients/client-sso"}}');
 
 /***/ }),
 
@@ -54812,7 +54812,7 @@ module.exports = /*#__PURE__*/JSON.parse('{"name":"@aws-sdk/client-sso","descrip
 /***/ ((module) => {
 
 "use strict";
-module.exports = /*#__PURE__*/JSON.parse('{"name":"@aws-sdk/nested-clients","version":"3.750.0","description":"Nested clients for AWS SDK packages.","main":"./dist-cjs/index.js","module":"./dist-es/index.js","types":"./dist-types/index.d.ts","scripts":{"build":"yarn lint && concurrently \'yarn:build:cjs\' \'yarn:build:es\' \'yarn:build:types\'","build:cjs":"node ../../scripts/compilation/inline nested-clients","build:es":"tsc -p tsconfig.es.json","build:include:deps":"lerna run --scope $npm_package_name --include-dependencies build","build:types":"tsc -p tsconfig.types.json","build:types:downlevel":"downlevel-dts dist-types dist-types/ts3.4","clean":"rimraf ./dist-* && rimraf *.tsbuildinfo","lint":"node ../../scripts/validation/submodules-linter.js --pkg nested-clients","test":"yarn g:vitest run","test:watch":"yarn g:vitest watch"},"engines":{"node":">=18.0.0"},"author":{"name":"AWS SDK for JavaScript Team","url":"https://aws.amazon.com/javascript/"},"license":"Apache-2.0","dependencies":{"@aws-crypto/sha256-browser":"5.2.0","@aws-crypto/sha256-js":"5.2.0","@aws-sdk/core":"3.750.0","@aws-sdk/middleware-host-header":"3.734.0","@aws-sdk/middleware-logger":"3.734.0","@aws-sdk/middleware-recursion-detection":"3.734.0","@aws-sdk/middleware-user-agent":"3.750.0","@aws-sdk/region-config-resolver":"3.734.0","@aws-sdk/types":"3.734.0","@aws-sdk/util-endpoints":"3.743.0","@aws-sdk/util-user-agent-browser":"3.734.0","@aws-sdk/util-user-agent-node":"3.750.0","@smithy/config-resolver":"^4.0.1","@smithy/core":"^3.1.4","@smithy/fetch-http-handler":"^5.0.1","@smithy/hash-node":"^4.0.1","@smithy/invalid-dependency":"^4.0.1","@smithy/middleware-content-length":"^4.0.1","@smithy/middleware-endpoint":"^4.0.5","@smithy/middleware-retry":"^4.0.6","@smithy/middleware-serde":"^4.0.2","@smithy/middleware-stack":"^4.0.1","@smithy/node-config-provider":"^4.0.1","@smithy/node-http-handler":"^4.0.2","@smithy/protocol-http":"^5.0.1","@smithy/smithy-client":"^4.1.5","@smithy/types":"^4.1.0","@smithy/url-parser":"^4.0.1","@smithy/util-base64":"^4.0.0","@smithy/util-body-length-browser":"^4.0.0","@smithy/util-body-length-node":"^4.0.0","@smithy/util-defaults-mode-browser":"^4.0.6","@smithy/util-defaults-mode-node":"^4.0.6","@smithy/util-endpoints":"^3.0.1","@smithy/util-middleware":"^4.0.1","@smithy/util-retry":"^4.0.1","@smithy/util-utf8":"^4.0.0","tslib":"^2.6.2"},"devDependencies":{"concurrently":"7.0.0","downlevel-dts":"0.10.1","rimraf":"3.0.2","typescript":"~5.2.2"},"typesVersions":{"<4.0":{"dist-types/*":["dist-types/ts3.4/*"]}},"files":["./sso-oidc.d.ts","./sso-oidc.js","./sts.d.ts","./sts.js","dist-*/**"],"browser":{"./dist-es/submodules/sso-oidc/runtimeConfig":"./dist-es/submodules/sso-oidc/runtimeConfig.browser","./dist-es/submodules/sts/runtimeConfig":"./dist-es/submodules/sts/runtimeConfig.browser"},"react-native":{},"homepage":"https://github.com/aws/aws-sdk-js-v3/tree/main/packages/nested-clients","repository":{"type":"git","url":"https://github.com/aws/aws-sdk-js-v3.git","directory":"packages/nested-clients"},"exports":{"./sso-oidc":{"module":"./dist-es/submodules/sso-oidc/index.js","node":"./dist-cjs/submodules/sso-oidc/index.js","import":"./dist-es/submodules/sso-oidc/index.js","require":"./dist-cjs/submodules/sso-oidc/index.js","types":"./dist-types/submodules/sso-oidc/index.d.ts"},"./sts":{"module":"./dist-es/submodules/sts/index.js","node":"./dist-cjs/submodules/sts/index.js","import":"./dist-es/submodules/sts/index.js","require":"./dist-cjs/submodules/sts/index.js","types":"./dist-types/submodules/sts/index.d.ts"}}}');
+module.exports = /*#__PURE__*/JSON.parse('{"name":"@aws-sdk/nested-clients","version":"3.758.0","description":"Nested clients for AWS SDK packages.","main":"./dist-cjs/index.js","module":"./dist-es/index.js","types":"./dist-types/index.d.ts","scripts":{"build":"yarn lint && concurrently \'yarn:build:cjs\' \'yarn:build:es\' \'yarn:build:types\'","build:cjs":"node ../../scripts/compilation/inline nested-clients","build:es":"tsc -p tsconfig.es.json","build:include:deps":"lerna run --scope $npm_package_name --include-dependencies build","build:types":"tsc -p tsconfig.types.json","build:types:downlevel":"downlevel-dts dist-types dist-types/ts3.4","clean":"rimraf ./dist-* && rimraf *.tsbuildinfo","lint":"node ../../scripts/validation/submodules-linter.js --pkg nested-clients","test":"yarn g:vitest run","test:watch":"yarn g:vitest watch"},"engines":{"node":">=18.0.0"},"author":{"name":"AWS SDK for JavaScript Team","url":"https://aws.amazon.com/javascript/"},"license":"Apache-2.0","dependencies":{"@aws-crypto/sha256-browser":"5.2.0","@aws-crypto/sha256-js":"5.2.0","@aws-sdk/core":"3.758.0","@aws-sdk/middleware-host-header":"3.734.0","@aws-sdk/middleware-logger":"3.734.0","@aws-sdk/middleware-recursion-detection":"3.734.0","@aws-sdk/middleware-user-agent":"3.758.0","@aws-sdk/region-config-resolver":"3.734.0","@aws-sdk/types":"3.734.0","@aws-sdk/util-endpoints":"3.743.0","@aws-sdk/util-user-agent-browser":"3.734.0","@aws-sdk/util-user-agent-node":"3.758.0","@smithy/config-resolver":"^4.0.1","@smithy/core":"^3.1.5","@smithy/fetch-http-handler":"^5.0.1","@smithy/hash-node":"^4.0.1","@smithy/invalid-dependency":"^4.0.1","@smithy/middleware-content-length":"^4.0.1","@smithy/middleware-endpoint":"^4.0.6","@smithy/middleware-retry":"^4.0.7","@smithy/middleware-serde":"^4.0.2","@smithy/middleware-stack":"^4.0.1","@smithy/node-config-provider":"^4.0.1","@smithy/node-http-handler":"^4.0.3","@smithy/protocol-http":"^5.0.1","@smithy/smithy-client":"^4.1.6","@smithy/types":"^4.1.0","@smithy/url-parser":"^4.0.1","@smithy/util-base64":"^4.0.0","@smithy/util-body-length-browser":"^4.0.0","@smithy/util-body-length-node":"^4.0.0","@smithy/util-defaults-mode-browser":"^4.0.7","@smithy/util-defaults-mode-node":"^4.0.7","@smithy/util-endpoints":"^3.0.1","@smithy/util-middleware":"^4.0.1","@smithy/util-retry":"^4.0.1","@smithy/util-utf8":"^4.0.0","tslib":"^2.6.2"},"devDependencies":{"concurrently":"7.0.0","downlevel-dts":"0.10.1","rimraf":"3.0.2","typescript":"~5.2.2"},"typesVersions":{"<4.0":{"dist-types/*":["dist-types/ts3.4/*"]}},"files":["./sso-oidc.d.ts","./sso-oidc.js","./sts.d.ts","./sts.js","dist-*/**"],"browser":{"./dist-es/submodules/sso-oidc/runtimeConfig":"./dist-es/submodules/sso-oidc/runtimeConfig.browser","./dist-es/submodules/sts/runtimeConfig":"./dist-es/submodules/sts/runtimeConfig.browser"},"react-native":{},"homepage":"https://github.com/aws/aws-sdk-js-v3/tree/main/packages/nested-clients","repository":{"type":"git","url":"https://github.com/aws/aws-sdk-js-v3.git","directory":"packages/nested-clients"},"exports":{"./sso-oidc":{"module":"./dist-es/submodules/sso-oidc/index.js","node":"./dist-cjs/submodules/sso-oidc/index.js","import":"./dist-es/submodules/sso-oidc/index.js","require":"./dist-cjs/submodules/sso-oidc/index.js","types":"./dist-types/submodules/sso-oidc/index.d.ts"},"./sts":{"module":"./dist-es/submodules/sts/index.js","node":"./dist-cjs/submodules/sts/index.js","import":"./dist-es/submodules/sts/index.js","require":"./dist-cjs/submodules/sts/index.js","types":"./dist-types/submodules/sts/index.d.ts"}}}');
 
 /***/ })
 
