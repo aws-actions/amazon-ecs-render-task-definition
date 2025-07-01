@@ -32,7 +32,7 @@
   "devDependencies": {
     "@vercel/ncc": "^0.38.3",
     "eslint": "^9.29.0",
-    "jest": "^29.7.0"
+    "jest": "^30.0.3"
   },
   "overrides": {
     "@smithy/smithy-client": "3.3.6"
