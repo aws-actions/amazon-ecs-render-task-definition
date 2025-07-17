@@ -43,6 +43,8 @@ describe('Render task definition', () => {
             .mockReturnValueOnce('nginx:latest')                                        // image
             .mockReturnValueOnce('FOO=bar\nHELLO=world')                                // environment-variables
             .mockReturnValueOnce('arn:aws:s3:::s3_bucket_name/envfile_object_name.env') // env-files
+            .mockReturnValueOnce('')                                                    // cpu
+            .mockReturnValueOnce('')                                                    // memory
             .mockReturnValueOnce('')                                                    // log Configuration Log Driver
             .mockReturnValueOnce('')                                                    // log Configuration Options
             .mockReturnValueOnce('')                                                    // docker labels
@@ -259,6 +261,8 @@ describe('Render task definition', () => {
             .mockReturnValueOnce('nginx:latest')                                         // image
             .mockReturnValueOnce('EXAMPLE=here')                                         // environment-variables
             .mockReturnValueOnce('arn:aws:s3:::s3_bucket_name/envfile_object_name.env')   // env-files
+            .mockReturnValueOnce('')                                                      // cpu
+            .mockReturnValueOnce('')                                                      // memory
             .mockReturnValueOnce('')                                                      // log Configuration Log Driver
             .mockReturnValueOnce('')                                                      // log Configuration Options
             .mockReturnValueOnce('')                                                      // docker labels
@@ -323,6 +327,8 @@ describe('Render task definition', () => {
             .mockReturnValueOnce('nginx:latest')
             .mockReturnValueOnce('FOO=bar\nHELLO=world')
             .mockReturnValueOnce('arn:aws:s3:::s3_bucket_name/envfile_object_name.env')
+            .mockReturnValueOnce('')                                                      // cpu
+            .mockReturnValueOnce('')                                                      // memory
             .mockReturnValueOnce('awslogs')
             .mockReturnValueOnce(`awslogs-create-group=true\nawslogs-group=/ecs/web\nawslogs-region=us-east-1\nawslogs-stream-prefix=ecs`)
 
@@ -470,6 +476,8 @@ describe('Render task definition', () => {
             .mockReturnValueOnce('nginx:latest')
             .mockReturnValueOnce('EXAMPLE=here')
             .mockReturnValueOnce('')
+            .mockReturnValueOnce('')                                                      // cpu
+            .mockReturnValueOnce('')                                                      // memory
             .mockReturnValueOnce('')
             .mockReturnValueOnce('')
             .mockReturnValueOnce('')
@@ -489,7 +497,19 @@ describe('Render task definition', () => {
             .fn()
             .mockReturnValueOnce('does-not-exist-task-definition.json')
             .mockReturnValueOnce('web')
-            .mockReturnValueOnce('nginx:latest');
+            .mockReturnValueOnce('nginx:latest')
+            .mockReturnValueOnce('')                                                      // environment-variables
+            .mockReturnValueOnce('')                                                      // env-files
+            .mockReturnValueOnce('')                                                      // cpu
+            .mockReturnValueOnce('')                                                      // memory
+            .mockReturnValueOnce('')                                                      // log Configuration Log Driver
+            .mockReturnValueOnce('')                                                      // log Configuration Options
+            .mockReturnValueOnce('')                                                      // docker labels
+            .mockReturnValueOnce('')                                                      // command
+            .mockReturnValueOnce('')                                                      // task-definition arn
+            .mockReturnValueOnce('')                                                      // task-definition family
+            .mockReturnValueOnce('')                                                      // task-definition revision
+            .mockReturnValueOnce('');                                                     // secrets
 
         await run();
 
@@ -499,12 +519,20 @@ describe('Render task definition', () => {
     test('error thown for missing task definition, task definition arn and task definition family ', async () => {
         core.getInput = jest
             .fn()
-            .mockReturnValueOnce('')
-            .mockReturnValueOnce('')
-            .mockReturnValueOnce('')
-            .mockReturnValueOnce('')
-            .mockReturnValueOnce('')
-            .mockReturnValueOnce(0);
+            .mockReturnValueOnce('')                                                      // task-definition
+            .mockReturnValueOnce('')                                                      // container-name
+            .mockReturnValueOnce('')                                                      // image
+            .mockReturnValueOnce('')                                                      // environment-variables
+            .mockReturnValueOnce('')                                                      // env-files
+            .mockReturnValueOnce('')                                                      // cpu
+            .mockReturnValueOnce('')                                                      // memory
+            .mockReturnValueOnce('')                                                      // log Configuration Log Driver
+            .mockReturnValueOnce('')                                                      // log Configuration Options
+            .mockReturnValueOnce('')                                                      // docker labels
+            .mockReturnValueOnce('')                                                      // command
+            .mockReturnValueOnce('')                                                      // task-definition arn
+            .mockReturnValueOnce('')                                                      // task-definition family
+            .mockReturnValueOnce(0);                                                      // task-definition revision
 
         await run();
 
@@ -519,6 +547,8 @@ describe('Render task definition', () => {
             .mockReturnValueOnce('nginx:latest')                                        // image
             .mockReturnValueOnce('EXAMPLE=here')                                        // environment-variables
             .mockReturnValueOnce('arn:aws:s3:::s3_bucket_name/envfile_object_name.env') // env-files
+            .mockReturnValueOnce('')                                                    // cpu
+            .mockReturnValueOnce('')                                                    // memory
             .mockReturnValueOnce('')                                                    // log Configuration Log Driver
             .mockReturnValueOnce('')                                                    // log Configuration Options
             .mockReturnValueOnce('')                                                    // Docker Labels
@@ -540,6 +570,8 @@ describe('Render task definition', () => {
             .mockReturnValueOnce('')                           // image
             .mockReturnValueOnce('')                           // environment-variables
             .mockReturnValueOnce('')                           // env-files
+            .mockReturnValueOnce('')                           // cpu
+            .mockReturnValueOnce('')                           // memory
             .mockReturnValueOnce('')                           // log Configuration Log Driver
             .mockReturnValueOnce('')                           // log Configuration Options
             .mockReturnValueOnce('')                           // Docker Labels
@@ -565,6 +597,8 @@ describe('Render task definition', () => {
             .mockReturnValueOnce('')                           // image
             .mockReturnValueOnce('')                           // environment-variables
             .mockReturnValueOnce('')                           // env-files
+            .mockReturnValueOnce('')                           // cpu
+            .mockReturnValueOnce('')                           // memory
             .mockReturnValueOnce('')                           // log Configuration Log Driver
             .mockReturnValueOnce('')                           // log Configuration Options
             .mockReturnValueOnce('')                           // Docker Labels
@@ -591,6 +625,8 @@ describe('Render task definition', () => {
             .mockReturnValueOnce('')                           // image
             .mockReturnValueOnce('')                           // environment-variables
             .mockReturnValueOnce('')                           // env-files
+            .mockReturnValueOnce('')                           // cpu
+            .mockReturnValueOnce('')                           // memory
             .mockReturnValueOnce('')                           // log Configuration Log Driver
             .mockReturnValueOnce('')                           // log Configuration Options
             .mockReturnValueOnce('')                           // Docker Labels
@@ -617,6 +653,8 @@ describe('Render task definition', () => {
             .mockReturnValueOnce('nginx:latest')                                        // image
             .mockReturnValueOnce('EXAMPLE=here')                                        // environment-variables
             .mockReturnValueOnce('arn:aws:s3:::s3_bucket_name/envfile_object_name.env') // env-files
+            .mockReturnValueOnce('')                                                    // cpu
+            .mockReturnValueOnce('')                                                    // memory
             .mockReturnValueOnce('')                                                    // log Configuration Log Driver
             .mockReturnValueOnce('')                                                    // log Configuration Options
             .mockReturnValueOnce('')                                                    // Docker Labels
@@ -640,6 +678,8 @@ describe('Render task definition', () => {
             .mockReturnValueOnce('nginx:latest')                                        // image
             .mockReturnValueOnce('EXAMPLE=here')                                        // environment-variables
             .mockReturnValueOnce('arn:aws:s3:::s3_bucket_name/envfile_object_name.env') // env-files
+            .mockReturnValueOnce('')                                                    // cpu
+            .mockReturnValueOnce('')                                                    // memory
             .mockReturnValueOnce('')                                                    // log Configuration Log Driver
             .mockReturnValueOnce('')                                                    // log Configuration Options
             .mockReturnValueOnce('')                                                    // Docker Labels
@@ -663,6 +703,8 @@ describe('Render task definition', () => {
             .mockReturnValueOnce('')                           // image
             .mockReturnValueOnce('')                           // environment-variables
             .mockReturnValueOnce('')                           // env-files
+            .mockReturnValueOnce('')                           // cpu
+            .mockReturnValueOnce('')                           // memory
             .mockReturnValueOnce('')                           // log Configuration Log Driver
             .mockReturnValueOnce('')                           // log Configuration Options
             .mockReturnValueOnce('')                           // Docker Labels
@@ -688,6 +730,8 @@ describe('Render task definition', () => {
             .mockReturnValueOnce('')                           // image
             .mockReturnValueOnce('')                           // environment-variables
             .mockReturnValueOnce('')                           // env-files
+            .mockReturnValueOnce('')                           // cpu
+            .mockReturnValueOnce('')                           // memory
             .mockReturnValueOnce('')                           // log Configuration Log Driver
             .mockReturnValueOnce('')                           // log Configuration Options
             .mockReturnValueOnce('')                           // Docker Labels
@@ -709,9 +753,16 @@ describe('Render task definition', () => {
             .mockReturnValueOnce('nginx:latest')
             .mockReturnValueOnce('EXAMPLE=here')
             .mockReturnValueOnce('arn:aws:s3:::s3_bucket_name/envfile_object_name.env')
+            .mockReturnValueOnce('')                                                      // cpu
+            .mockReturnValueOnce('')                                                      // memory
             .mockReturnValueOnce('awslogs')
             .mockReturnValueOnce('awslogs-create-group=true\nawslogs-group=/ecs/web\nawslogs-region=us-east-1\nawslogs-stream-prefix=ecs')
-            .mockReturnValueOnce('key1=value1\nkey2=value2');
+            .mockReturnValueOnce('key1=value1\nkey2=value2')
+            .mockReturnValueOnce('')                                                      // command
+            .mockReturnValueOnce('')                                                      // task-definition arn
+            .mockReturnValueOnce('')                                                      // task-definition family
+            .mockReturnValueOnce('')                                                      // task-definition revision
+            .mockReturnValueOnce('');                                                     // secrets
 
         await run();
 
@@ -805,9 +856,16 @@ describe('Render task definition', () => {
             .mockReturnValueOnce('nginx:latest')
             .mockReturnValueOnce('EXAMPLE=here')
             .mockReturnValueOnce('arn:aws:s3:::s3_bucket_name/envfile_object_name.env')
+            .mockReturnValueOnce('')                                                      // cpu
+            .mockReturnValueOnce('')                                                      // memory
             .mockReturnValueOnce('awslogs')
             .mockReturnValueOnce('awslogs-create-group=true\nawslogs-group=/ecs/web\nawslogs-region=us-east-1\nawslogs-stream-prefix=ecs')
-            .mockReturnValueOnce('key1=update_value1\nkey2\nkey3=value3');
+            .mockReturnValueOnce('key1=update_value1\nkey2\nkey3=value3')
+            .mockReturnValueOnce('')                                                      // command
+            .mockReturnValueOnce('')                                                      // task-definition arn
+            .mockReturnValueOnce('')                                                      // task-definition family
+            .mockReturnValueOnce('')                                                      // task-definition revision
+            .mockReturnValueOnce('');                                                     // secrets
 
         jest.mock('/hello/task-definition.json', () => ({
             family: 'task-def-family',
@@ -835,11 +893,433 @@ describe('Render task definition', () => {
             .fn()
             .mockReturnValueOnce('non-json-task-definition.json')
             .mockReturnValueOnce('web')
-            .mockReturnValueOnce('nginx:latest');
+            .mockReturnValueOnce('nginx:latest')
+            .mockReturnValueOnce('')                                                      // environment-variables
+            .mockReturnValueOnce('')                                                      // env-files
+            .mockReturnValueOnce('')                                                      // cpu
+            .mockReturnValueOnce('')                                                      // memory
+            .mockReturnValueOnce('')                                                      // log Configuration Log Driver
+            .mockReturnValueOnce('')                                                      // log Configuration Options
+            .mockReturnValueOnce('EXAMPLE=here')
+            .mockReturnValueOnce('arn:aws:s3:::s3_bucket_name/envfile_object_name.env')
+            .mockReturnValueOnce('awslogs')
+            .mockReturnValueOnce('awslogs-create-group=true\nawslogs-group=/ecs/web\nawslogs-region=us-east-1\nawslogs-stream-prefix=ecs')
+            .mockReturnValueOnce('key1=value1\nkey2=value2')
+            .mockReturnValueOnce('npm start --nice --please');
 
         await run();
 
-        expect(core.setFailed).toBeCalledWith('Invalid task definition format: containerDefinitions section is not present or is not an array');
+        expect(tmp.fileSync).toHaveBeenNthCalledWith(1, {
+            tmpdir: '/home/runner/work/_temp',
+            prefix: 'task-definition-',
+            postfix: '.json',
+            keep: true,
+            discardDescriptor: true
+        });
+
+        expect(fs.writeFileSync).toHaveBeenNthCalledWith(1, 'new-task-def-file-name',
+            JSON.stringify({
+                family: 'task-def-family',
+                containerDefinitions: [
+                    {
+                        name: "web",
+                        image: "nginx:latest",
+                        environment: [
+                            {
+                                name: "FOO",
+                                value: "bar"
+                            },
+                            {
+                                name: "DONT-TOUCH",
+                                value: "me"
+                            },
+                            {
+                                name: "HELLO",
+                                value: "world"
+                            },
+                            {
+                                name: "EXAMPLE",
+                                value: "here"
+                            }
+                        ],
+                        environmentFiles: [
+                            {
+                                value: "arn:aws:s3:::s3_bucket_name/envfile_object_name.env",
+                                type: "s3"
+                            }
+                        ],
+                        secrets: [
+                            {
+                              name: "EXISTING_SECRET",
+                              valueFrom: "arn:aws:ssm:region:0123456789:parameter/existingSecret"
+                            },
+                            {
+                              name: "SSM_SECRET",
+                              valueFrom: "arn:aws:ssm:region:0123456789:parameter/secret"
+                            },
+                            {
+                              name: "SM_SECRET",
+                              valueFrom: "arn:aws:secretsmanager:us-east-1:0123456789:secret:secretName"
+                            }
+                        ],
+                        logConfiguration: {
+                            logDriver: "awslogs",
+                            options: {
+                                "awslogs-create-group": "true",
+                                "awslogs-group": "/ecs/web",
+                                "awslogs-region": "us-east-1",
+                                "awslogs-stream-prefix": "ecs"
+                            }
+                        },
+                        dockerLabels : {
+                            "key1":"value1",
+                            "key2":"value2"
+                        },
+                        command : ["npm", "start", "--nice", "--please"]
+                    },
+                    {
+                        name: "sidecar",
+                        image: "hello"
+                    }
+                ],
+                tags: [
+                    {
+                      key: "project",
+                      value: "mytaskdef"
+                    }
+                ]
+            }, null, 2)
+        );
+    });
+
+    test('renders a task definition with CPU and memory configuration', async () => {
+        core.getInput = jest
+            .fn()
+            .mockReturnValueOnce('task-definition.json')
+            .mockReturnValueOnce('web')
+            .mockReturnValueOnce('nginx:latest')
+            .mockReturnValueOnce('FOO=bar')
+            .mockReturnValueOnce('')
+            .mockReturnValueOnce('256')                                                    // cpu
+            .mockReturnValueOnce('512')                                                    // memory
+            .mockReturnValueOnce('')
+            .mockReturnValueOnce('')
+            .mockReturnValueOnce('')
+            .mockReturnValueOnce('')
+            .mockReturnValueOnce('')
+            .mockReturnValueOnce('')
+            .mockReturnValueOnce('')
+            .mockReturnValueOnce('');
+
+        await run();
+
+        expect(tmp.fileSync).toHaveBeenNthCalledWith(1, {
+            tmpdir: '/home/runner/work/_temp',
+            prefix: 'task-definition-',
+            postfix: '.json',
+            keep: true,
+            discardDescriptor: true
+        });
+
+        expect(fs.writeFileSync).toHaveBeenNthCalledWith(1, 'new-task-def-file-name',
+            JSON.stringify({
+                family: 'task-def-family',
+                cpu: '256',
+                memory: '512',
+                containerDefinitions: [
+                    {
+                        name: "web",
+                        image: "nginx:latest",
+                        environment: [
+                            {
+                                name: "FOO",
+                                value: "bar"
+                            },
+                            {
+                                name: "DONT-TOUCH",
+                                value: "me"
+                            }
+                        ],
+                        environmentFiles: [
+                            {
+                                value: "arn:aws:s3:::s3_bucket_name/envfile_object_name.env",
+                                type: "s3"
+                            }
+                        ],
+                        secrets: [
+                            {
+                                name: "EXISTING_SECRET",
+                                valueFrom: "arn:aws:ssm:region:0123456789:parameter/existingSecret"
+                            },
+                            {
+                                name: "SSM_SECRET",
+                                valueFrom: "arn:aws:ssm:region:0123456789:parameter/oldSsmSecret"
+                            }
+                        ]
+                    },
+                    {
+                        name: "sidecar",
+                        image: "hello"
+                    }
+                ],
+                tags: [
+                    {
+                      key: "project",
+                      value: "mytaskdef"
+                    }
+                ]
+            }, null, 2)
+        );
+        expect(core.setOutput).toHaveBeenNthCalledWith(1, 'task-definition', 'new-task-def-file-name');
+    });
+
+    test('renders a task definition with only CPU configuration', async () => {
+        core.getInput = jest
+            .fn()
+            .mockReturnValueOnce('task-definition.json')
+            .mockReturnValueOnce('web')
+            .mockReturnValueOnce('nginx:latest')
+            .mockReturnValueOnce('FOO=bar')
+            .mockReturnValueOnce('')
+            .mockReturnValueOnce('256')                                                    // cpu
+            .mockReturnValueOnce('')                                                       // memory
+            .mockReturnValueOnce('')
+            .mockReturnValueOnce('')
+            .mockReturnValueOnce('')
+            .mockReturnValueOnce('')
+            .mockReturnValueOnce('')
+            .mockReturnValueOnce('')
+            .mockReturnValueOnce('')
+            .mockReturnValueOnce('');
+
+        await run();
+
+        expect(fs.writeFileSync).toHaveBeenNthCalledWith(1, 'new-task-def-file-name',
+            JSON.stringify({
+                family: 'task-def-family',
+                cpu: '256',
+                containerDefinitions: [
+                    {
+                        name: "web",
+                        image: "nginx:latest",
+                        environment: [
+                            {
+                                name: "FOO",
+                                value: "bar"
+                            },
+                            {
+                                name: "DONT-TOUCH",
+                                value: "me"
+                            }
+                        ],
+                        environmentFiles: [
+                            {
+                                value: "arn:aws:s3:::s3_bucket_name/envfile_object_name.env",
+                                type: "s3"
+                            }
+                        ],
+                        secrets: [
+                            {
+                                name: "EXISTING_SECRET",
+                                valueFrom: "arn:aws:ssm:region:0123456789:parameter/existingSecret"
+                            },
+                            {
+                                name: "SSM_SECRET",
+                                valueFrom: "arn:aws:ssm:region:0123456789:parameter/oldSsmSecret"
+                            }
+                        ]
+                    },
+                    {
+                        name: "sidecar",
+                        image: "hello"
+                    }
+                ],
+                tags: [
+                    {
+                      key: "project",
+                      value: "mytaskdef"
+                    }
+                ]
+            }, null, 2)
+        );
+    });
+
+    test('renders a task definition with only memory configuration', async () => {
+        core.getInput = jest
+            .fn()
+            .mockReturnValueOnce('task-definition.json')
+            .mockReturnValueOnce('web')
+            .mockReturnValueOnce('nginx:latest')
+            .mockReturnValueOnce('FOO=bar')
+            .mockReturnValueOnce('')
+            .mockReturnValueOnce('')                                                       // cpu
+            .mockReturnValueOnce('512')                                                    // memory
+            .mockReturnValueOnce('')
+            .mockReturnValueOnce('')
+            .mockReturnValueOnce('')
+            .mockReturnValueOnce('')
+            .mockReturnValueOnce('')
+            .mockReturnValueOnce('')
+            .mockReturnValueOnce('')
+            .mockReturnValueOnce('');
+
+        await run();
+
+        expect(fs.writeFileSync).toHaveBeenNthCalledWith(1, 'new-task-def-file-name',
+            JSON.stringify({
+                family: 'task-def-family',
+                memory: '512',
+                containerDefinitions: [
+                    {
+                        name: "web",
+                        image: "nginx:latest",
+                        environment: [
+                            {
+                                name: "FOO",
+                                value: "bar"
+                            },
+                            {
+                                name: "DONT-TOUCH",
+                                value: "me"
+                            }
+                        ],
+                        environmentFiles: [
+                            {
+                                value: "arn:aws:s3:::s3_bucket_name/envfile_object_name.env",
+                                type: "s3"
+                            }
+                        ],
+                        secrets: [
+                            {
+                                name: "EXISTING_SECRET",
+                                valueFrom: "arn:aws:ssm:region:0123456789:parameter/existingSecret"
+                            },
+                            {
+                                name: "SSM_SECRET",
+                                valueFrom: "arn:aws:ssm:region:0123456789:parameter/oldSsmSecret"
+                            }
+                        ]
+                    },
+                    {
+                        name: "sidecar",
+                        image: "hello"
+                    }
+                ],
+                tags: [
+                    {
+                      key: "project",
+                      value: "mytaskdef"
+                    }
+                ]
+            }, null, 2)
+        );
+    });
+
+    test('renders a task definition without CPU and memory when empty strings are provided', async () => {
+        core.getInput = jest
+            .fn()
+            .mockReturnValueOnce('task-definition.json')
+            .mockReturnValueOnce('web')
+            .mockReturnValueOnce('nginx:latest')
+            .mockReturnValueOnce('FOO=bar')
+            .mockReturnValueOnce('')
+            .mockReturnValueOnce('')                                                       // cpu (empty)
+            .mockReturnValueOnce('')                                                       // memory (empty)
+            .mockReturnValueOnce('')
+            .mockReturnValueOnce('')
+            .mockReturnValueOnce('')
+            .mockReturnValueOnce('')
+            .mockReturnValueOnce('')
+            .mockReturnValueOnce('')
+            .mockReturnValueOnce('')
+            .mockReturnValueOnce('');
+
+        await run();
+
+        expect(fs.writeFileSync).toHaveBeenNthCalledWith(1, 'new-task-def-file-name',
+            JSON.stringify({
+                family: 'task-def-family',
+                containerDefinitions: [
+                    {
+                        name: "web",
+                        image: "nginx:latest",
+                        environment: [
+                            {
+                                name: "FOO",
+                                value: "bar"
+                            },
+                            {
+                                name: "DONT-TOUCH",
+                                value: "me"
+                            }
+                        ],
+                        environmentFiles: [
+                            {
+                                value: "arn:aws:s3:::s3_bucket_name/envfile_object_name.env",
+                                type: "s3"
+                            }
+                        ],
+                        secrets: [
+                            {
+                                name: "EXISTING_SECRET",
+                                valueFrom: "arn:aws:ssm:region:0123456789:parameter/existingSecret"
+                            },
+                            {
+                                name: "SSM_SECRET",
+                                valueFrom: "arn:aws:ssm:region:0123456789:parameter/oldSsmSecret"
+                            }
+                        ]
+                    },
+                    {
+                        name: "sidecar",
+                        image: "hello"
+                    }
+                ],
+                tags: [
+                    {
+                      key: "project",
+                      value: "mytaskdef"
+                    }
+                ]
+            }, null, 2)
+        );
+    });
+
+    test('renders a task definition with CPU and memory when fetched from ECS', async () => {
+        core.getInput = jest
+            .fn()
+            .mockReturnValueOnce('')                           // task definition
+            .mockReturnValueOnce('')                           // conatiner name
+            .mockReturnValueOnce('')                           // image
+            .mockReturnValueOnce('')                           // environment-variables
+            .mockReturnValueOnce('')                           // env-files
+            .mockReturnValueOnce('256')                        // cpu
+            .mockReturnValueOnce('512')                        // memory
+            .mockReturnValueOnce('')                           // log Configuration Log Driver
+            .mockReturnValueOnce('')                           // log Configuration Options
+            .mockReturnValueOnce('')                           // Docker Labels
+            .mockReturnValueOnce('')                           // Command Options 
+            .mockReturnValueOnce('task-definition-arn')        // task definition arn
+            .mockReturnValueOnce('')                           // task definition family
+            .mockReturnValueOnce(0);                           // task definition revision
+
+        await run();
+
+        expect(mockEcsClient.describeTaskDefinition).toHaveBeenCalledTimes(1);
+        expect(mockEcsDescribeTaskDef).toHaveBeenCalledWith({
+            taskDefinition: "task-definition-arn",
+            include: ["TAGS"],
+        });
+        
+        // Verify that CPU and memory are added to the retrieved task definition
+        expect(fs.writeFileSync).toHaveBeenCalledWith(
+            'new-task-def-file-name',
+            expect.stringContaining('"cpu": "256"')
+        );
+        expect(fs.writeFileSync).toHaveBeenCalledWith(
+            'new-task-def-file-name',
+            expect.stringContaining('"memory": "512"')
+        );
     });
 
     test('error returned for malformed task definition with non-array container definition section', async () => {
@@ -852,7 +1332,19 @@ describe('Render task definition', () => {
             .fn()
             .mockReturnValueOnce('malformed-task-definition.json')
             .mockReturnValueOnce('web')
-            .mockReturnValueOnce('nginx:latest');
+            .mockReturnValueOnce('nginx:latest')
+            .mockReturnValueOnce('')                                                      // environment-variables
+            .mockReturnValueOnce('')                                                      // env-files
+            .mockReturnValueOnce('')                                                      // cpu
+            .mockReturnValueOnce('')                                                      // memory
+            .mockReturnValueOnce('')                                                      // log Configuration Log Driver
+            .mockReturnValueOnce('')                                                      // log Configuration Options
+            .mockReturnValueOnce('')                                                      // docker labels
+            .mockReturnValueOnce('')                                                      // command
+            .mockReturnValueOnce('')                                                      // task-definition arn
+            .mockReturnValueOnce('')                                                      // task-definition family
+            .mockReturnValueOnce('')                                                      // task-definition revision
+            .mockReturnValueOnce('');                                                     // secrets
 
         await run();
 
@@ -874,7 +1366,19 @@ describe('Render task definition', () => {
             .fn()
             .mockReturnValueOnce('missing-container-task-definition.json')
             .mockReturnValueOnce('web')
-            .mockReturnValueOnce('nginx:latest');
+            .mockReturnValueOnce('nginx:latest')
+            .mockReturnValueOnce('')                                                      // environment-variables
+            .mockReturnValueOnce('')                                                      // env-files
+            .mockReturnValueOnce('')                                                      // cpu
+            .mockReturnValueOnce('')                                                      // memory
+            .mockReturnValueOnce('')                                                      // log Configuration Log Driver
+            .mockReturnValueOnce('')                                                      // log Configuration Options
+            .mockReturnValueOnce('')                                                      // docker labels
+            .mockReturnValueOnce('')                                                      // command
+            .mockReturnValueOnce('')                                                      // task-definition arn
+            .mockReturnValueOnce('')                                                      // task-definition family
+            .mockReturnValueOnce('')                                                      // task-definition revision
+            .mockReturnValueOnce('');                                                     // secrets
 
         await run();
 
@@ -889,10 +1393,16 @@ describe('Render task definition', () => {
             .mockReturnValueOnce('nginx:latest')
             .mockReturnValueOnce('EXAMPLE=here')
             .mockReturnValueOnce('arn:aws:s3:::s3_bucket_name/envfile_object_name.env')
+            .mockReturnValueOnce('')                                                      // cpu
+            .mockReturnValueOnce('')                                                      // memory
             .mockReturnValueOnce('awslogs')
             .mockReturnValueOnce('awslogs-create-group=true\nawslogs-group=/ecs/web\nawslogs-region=us-east-1\nawslogs-stream-prefix=ecs')
             .mockReturnValueOnce('key1=value1\nkey2=value2')
-            .mockReturnValueOnce('npm start --nice --please');
+            .mockReturnValueOnce('npm start --nice --please')
+            .mockReturnValueOnce('')                                                      // task-definition arn
+            .mockReturnValueOnce('')                                                      // task-definition family
+            .mockReturnValueOnce('')                                                      // task-definition revision
+            .mockReturnValueOnce('');                                                     // secrets
 
         await run();
 
