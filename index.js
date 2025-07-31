@@ -4,6 +4,30 @@ const tmp = require('tmp');
 const fs = require('fs');
 const {ECS} = require('@aws-sdk/client-ecs');
 
+// Attributes that are returned by DescribeTaskDefinition, but are not valid RegisterTaskDefinition inputs
+const IGNORED_TASK_DEFINITION_ATTRIBUTES = [
+  'compatibilities',
+  'taskDefinitionArn',
+  'requiresAttributes',
+  'revision',
+  'status',
+  'registeredAt',
+  'deregisteredAt',
+  'registeredBy'
+];
+
+function removeIgnoredAttributes(taskDef) {
+  // Creates a completely new object with its own reference
+  const cleanTaskDef = JSON.parse(JSON.stringify(taskDef));
+
+  // Modifications are made to the new object
+  IGNORED_TASK_DEFINITION_ATTRIBUTES.forEach(attr => {
+      delete cleanTaskDef[attr];
+  });
+
+  return cleanTaskDef;  // Returns a completely new object
+}
+
 async function run() {
   try {
     const ecs = new ECS({
@@ -29,6 +53,7 @@ async function run() {
     const taskDefinitionArn = core.getInput('task-definition-arn', { required: false }) || undefined;
     const taskDefinitionFamily = core.getInput('task-definition-family', { required: false }) || undefined;
     const taskDefinitionRevision = Number(core.getInput('task-definition-revision', { required: false })) || null;
+    const secrets = core.getInput('secrets', { required: false });
 
     let taskDefPath;
     let taskDefContents;
@@ -47,13 +72,13 @@ async function run() {
     } else if (taskDefinitionArn || taskDefinitionFamily || taskDefinitionRevision) {
       if (taskDefinitionArn) {
         core.info("The task definition arn will be used to fetch task definition");
-        params = {taskDefinition: taskDefinitionArn};
+        params = {taskDefinition: taskDefinitionArn, include: ['TAGS']};
       } else if (taskDefinitionFamily && taskDefinitionRevision) {
         core.info("The specified revision of the task definition family will be used to fetch task definition");
-        params = {taskDefinition: `${taskDefinitionFamily}:${taskDefinitionRevision}` };
+        params = {taskDefinition: `${taskDefinitionFamily}:${taskDefinitionRevision}`, include: ['TAGS'] };
       } else if (taskDefinitionFamily) {
         core.info("The latest revision of the task definition family will be used to fetch task definition");
-        params = {taskDefinition: taskDefinitionFamily};
+        params = {taskDefinition: taskDefinitionFamily, include: ['TAGS']};
       } else if (taskDefinitionRevision) {
         core.setFailed("You can't fetch task definition with just revision: Either use task definition file, arn or family name");
       } else {
@@ -67,6 +92,8 @@ async function run() {
         throw(error); 
       }
       taskDefContents = describeTaskDefResponse.taskDefinition;
+      // merge tags into taskDefinition
+      taskDefContents.tags = describeTaskDefResponse.tags;
       core.debug("Task definition contents:");
       core.debug(JSON.stringify(taskDefContents, undefined, 4));
     } else {
@@ -139,6 +166,45 @@ async function run() {
           containerDef.environment.push(variable);
         }
       })
+
+      if (secrets) {
+        // If secrets array is missing, create it
+        if (!Array.isArray(containerDef.secrets)) {
+          containerDef.secrets = [];
+        }
+
+        // Get pairs by splitting on newlines
+        secrets.split('\n').forEach(function (line) {
+          // Trim whitespace
+          const trimmedLine = line.trim();
+          // Skip if empty
+          if (trimmedLine.length === 0) { return; }
+          // Split on =
+          const separatorIdx = trimmedLine.indexOf("=");
+          // If there's nowhere to split
+          if (separatorIdx === -1) {
+              throw new Error(
+                `Cannot parse the secret '${trimmedLine}'. Secret pairs must be of the form NAME=valueFrom, 
+                where valueFrom is an arn from parameter store or secrets manager. See AWS documentation for more information: 
+                https://docs.aws.amazon.com/AmazonECS/latest/developerguide/specifying-sensitive-data.html.`);
+          }
+          // Build object
+          const secret = {
+            name: trimmedLine.substring(0, separatorIdx),
+            valueFrom: trimmedLine.substring(separatorIdx + 1),
+          };
+
+          // Search container definition environment for one matching name
+          const secretDef = containerDef.secrets.find((s) => s.name == secret.name);
+          if (secretDef) {
+            // If found, update
+            secretDef.valueFrom = secret.valueFrom;
+          } else {
+            // Else, create
+            containerDef.secrets.push(secret);
+          }
+        })
+      }
     }
 
     if (logConfigurationLogDriver) {
@@ -199,7 +265,11 @@ async function run() {
       keep: true,
       discardDescriptor: true
     });
-    const newTaskDefContents = JSON.stringify(taskDefContents, null, 2);
+    // remove ignored attributes just before writting it
+    const cleanedTaskDef = removeIgnoredAttributes(taskDefContents);
+    const newTaskDefContents = JSON.stringify(cleanedTaskDef, null, 2);
+    core.debug('Content being written to file:');
+    core.debug(newTaskDefContents);
     fs.writeFileSync(updatedTaskDefFile.name, newTaskDefContents);
     core.setOutput('task-definition', updatedTaskDefFile.name);
   }

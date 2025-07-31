@@ -49,7 +49,10 @@ describe('Render task definition', () => {
             .mockReturnValueOnce('')                                                    // command
             .mockReturnValueOnce('')                                                    // task-definition arn
             .mockReturnValueOnce('')                                                    // task-definition family
-            .mockReturnValueOnce('');                                                   // task-definition revision
+            .mockReturnValueOnce('')                                                    // task-definition revision
+            .mockReturnValueOnce(                                                       // secrets
+                'SSM_SECRET=arn:aws:ssm:region:0123456789:parameter/secret\nSM_SECRET=arn:aws:secretsmanager:us-east-1:0123456789:secret:secretName'
+            );                                          
 
         process.env = Object.assign(process.env, { GITHUB_WORKSPACE: __dirname });
         process.env = Object.assign(process.env, { RUNNER_TEMP: '/home/runner/work/_temp' });
@@ -62,6 +65,20 @@ describe('Render task definition', () => {
 
         jest.mock('./task-definition.json', () => ({
             family: 'task-def-family',
+            revision: 10,
+            registeredBy: 'arn:aws:sts::012345678901:assumed-role/Role/myrole',
+            compatibilities: [
+                "EC2",
+                "FARGATE"
+            ],
+            requiresAttributes: [
+                {
+                    "name": "com.amazonaws.ecs.capability.task-iam-role"
+                }
+            ],
+            registeredAt: '1970-01-01T00:00:00.00000+00:00',
+            deregisteredAt: '1970-01-01T00:01:00.00000+00:00',
+
             containerDefinitions: [
                 {
                     name: "web",
@@ -81,11 +98,28 @@ describe('Render task definition', () => {
                             value: "arn:aws:s3:::s3_bucket_name/envfile_object_name.env",
                             type: "s3"
                         }
+                    ],
+                    secrets: [
+                        {
+                            name: "EXISTING_SECRET",
+                            valueFrom: "arn:aws:ssm:region:0123456789:parameter/existingSecret"
+                        },
+                        {
+                            name: "SSM_SECRET",
+                            valueFrom: "arn:aws:ssm:region:0123456789:parameter/oldSsmSecret"
+                        }
+
                     ]
                 },
                 {
                     name: "sidecar",
                     image: "hello"
+                }
+            ],
+            tags: [
+                {
+                  key: "project",
+                  value: "mytaskdef"
                 }
             ]
         }), { virtual: true });
@@ -93,8 +127,20 @@ describe('Render task definition', () => {
         mockEcsDescribeTaskDef.mockImplementation(() => Promise.resolve({
             taskDefinition: {
                 taskDefinitionArn: "task-definition-arn",
-                taskDefinitionFamily: "task-definition-family",
-                taskDefinitionRevision: '',
+                family: "task-definition-family",
+                revision: 10,
+                registeredBy: 'arn:aws:sts::012345678901:assumed-role/Role/myrole',
+                compatibilities: [
+                    "EC2",
+                    "FARGATE"
+                ],
+                requiresAttributes: [
+                    {
+                        "name": "com.amazonaws.ecs.capability.task-iam-role"
+                    }
+                ],
+                registeredAt: '1970-01-01T00:00:00.00000+00:00',
+                deregisteredAt: '1970-01-01T00:01:00.00000+00:00',
 
                 containerDefinitions: [
                     {
@@ -122,8 +168,13 @@ describe('Render task definition', () => {
                         image: "hello"
                     }
                 ]
-            }
-    
+            },
+            tags: [
+                {
+                    key: "project",
+                    value: "mytaskdef"
+                }
+            ]
         })); 
         ECS.mockImplementation(() => mockEcsClient);
     });
@@ -164,11 +215,32 @@ describe('Render task definition', () => {
                                 value: "arn:aws:s3:::s3_bucket_name/envfile_object_name.env",
                                 type: "s3"
                             }
+                        ],
+                        secrets: [
+                            {
+                                name: "EXISTING_SECRET",
+                                valueFrom: "arn:aws:ssm:region:0123456789:parameter/existingSecret"
+                            },    
+                            {
+                                name: "SSM_SECRET",
+                                valueFrom: 'arn:aws:ssm:region:0123456789:parameter/secret'
+                            },
+                            
+                            {
+                                name: "SM_SECRET",
+                                valueFrom: 'arn:aws:secretsmanager:us-east-1:0123456789:secret:secretName'
+                            }
                         ]
                     },
                     {
                         name: "sidecar",
                         image: "hello"
+                    }
+                ],
+                tags: [
+                    {
+                      key: "project",
+                      value: "mytaskdef"
                     }
                 ]
             }, null, 2)
@@ -179,14 +251,22 @@ describe('Render task definition', () => {
         expect(mockEcsDescribeTaskDef).toHaveBeenCalledTimes(0);
     });
 
-    test('renders a task definition at an absolute path, and with initial environment empty', async () => {
+    test('renders a task definition at an absolute path, and with initial environment and secrets empty', async () => {
         core.getInput = jest
             .fn()
             .mockReturnValueOnce('/hello/task-definition.json')                          // task-definition
             .mockReturnValueOnce('web')                                                  // container-name
             .mockReturnValueOnce('nginx:latest')                                         // image
             .mockReturnValueOnce('EXAMPLE=here')                                         // environment-variables
-            .mockReturnValueOnce('arn:aws:s3:::s3_bucket_name/envfile_object_name.env'); // env-files
+            .mockReturnValueOnce('arn:aws:s3:::s3_bucket_name/envfile_object_name.env')   // env-files
+            .mockReturnValueOnce('')                                                      // log Configuration Log Driver
+            .mockReturnValueOnce('')                                                      // log Configuration Options
+            .mockReturnValueOnce('')                                                      // docker labels
+            .mockReturnValueOnce('')                                                      // command
+            .mockReturnValueOnce('')                                                      // task-definition arn
+            .mockReturnValueOnce('')                                                      // task-definition family
+            .mockReturnValueOnce('')                                                      // task-definition revision
+            .mockReturnValueOnce('')                                                      // secrets
 
         jest.mock('/hello/task-definition.json', () => ({
             family: 'task-def-family',
@@ -244,7 +324,7 @@ describe('Render task definition', () => {
             .mockReturnValueOnce('FOO=bar\nHELLO=world')
             .mockReturnValueOnce('arn:aws:s3:::s3_bucket_name/envfile_object_name.env')
             .mockReturnValueOnce('awslogs')
-            .mockReturnValueOnce(`awslogs-create-group=true\nawslogs-group=/ecs/web\nawslogs-region=us-east-1\nawslogs-stream-prefix=ecs`);
+            .mockReturnValueOnce(`awslogs-create-group=true\nawslogs-group=/ecs/web\nawslogs-region=us-east-1\nawslogs-stream-prefix=ecs`)
 
         await run()
 
@@ -284,6 +364,20 @@ describe('Render task definition', () => {
                                 type: "s3"
                             }
                         ],
+                        secrets: [
+                            {
+                                name: "EXISTING_SECRET",
+                                valueFrom: "arn:aws:ssm:region:0123456789:parameter/existingSecret"
+                            },
+                            {
+                                name: "SSM_SECRET",
+                                valueFrom: "arn:aws:ssm:region:0123456789:parameter/secret"
+                            },
+                            {
+                                name: "SM_SECRET",
+                                valueFrom: "arn:aws:secretsmanager:us-east-1:0123456789:secret:secretName"
+                            }
+                        ],
                         logConfiguration: {
                             logDriver: "awslogs",
                             options: {
@@ -298,6 +392,12 @@ describe('Render task definition', () => {
                         name: "sidecar",
                         image: "hello"
                     }
+                ],
+                tags: [
+                    {
+                      key: "project",
+                      value: "mytaskdef"
+                    }
                 ]
             }, null, 2)
         );
@@ -309,8 +409,8 @@ describe('Render task definition', () => {
         mockEcsDescribeTaskDef.mockImplementation(() => Promise.resolve({
             taskDefinition: {
                 taskDefinitionArn: "task-definition-arn",
-                taskDefinitionFamily: "task-definition-family",
-                taskDefinitionRevision: 10,
+                family: "task-definition-family",
+                revision: 10,
 
                 containerDefinitions: [
                     {
@@ -362,7 +462,28 @@ describe('Render task definition', () => {
         expect(fs.writeFileSync).toHaveBeenCalledTimes(1);
     });
 
-    test('error returned for missing task definition file', async () => {
+    test('error returned for malformatted secret string', async () => {
+        core.getInput = jest
+            .fn()
+            .mockReturnValueOnce('task-definition.json')
+            .mockReturnValueOnce('web')
+            .mockReturnValueOnce('nginx:latest')
+            .mockReturnValueOnce('EXAMPLE=here')
+            .mockReturnValueOnce('')
+            .mockReturnValueOnce('')
+            .mockReturnValueOnce('')
+            .mockReturnValueOnce('')
+            .mockReturnValueOnce('')
+            .mockReturnValueOnce('')
+            .mockReturnValueOnce('')
+            .mockReturnValueOnce('')
+            .mockReturnValueOnce('SECRET');
+        await run();
+
+        expect(core.setFailed).toBeCalledWith(expect.stringContaining(`Cannot parse the secret 'SECRET'`));
+    });
+
+    test('error returned for invalid secret format', async () => {
         fs.existsSync.mockReturnValue(false);
         core.getInput = jest
             .fn()
@@ -431,7 +552,8 @@ describe('Render task definition', () => {
 
         expect(mockEcsClient.describeTaskDefinition).toHaveBeenCalledTimes(1);
         expect(mockEcsDescribeTaskDef).toHaveBeenCalledWith({
-            taskDefinition: "task-definition-family:10"
+            taskDefinition: "task-definition-family:10",
+            include: ["TAGS"],
         });  
     });
 
@@ -455,7 +577,8 @@ describe('Render task definition', () => {
 
         expect(mockEcsClient.describeTaskDefinition).toHaveBeenCalledTimes(1);
         expect(mockEcsDescribeTaskDef).toHaveBeenCalledWith({
-            taskDefinition: "task-definition-family"
+            taskDefinition: "task-definition-family",
+            include: ["TAGS"],
         });  
         expect(core.info).toBeCalledWith("The latest revision of the task definition family will be used to fetch task definition");
     });
@@ -480,8 +603,8 @@ describe('Render task definition', () => {
 
         expect(mockEcsClient.describeTaskDefinition).toHaveBeenCalledTimes(1);
         expect(mockEcsDescribeTaskDef).toHaveBeenCalledWith({
-            taskDefinition: "task-definition-arn"
-
+            taskDefinition: "task-definition-arn",
+            include: ["TAGS"],
         });
         expect(core.info).toBeCalledWith("The task definition arn will be used to fetch task definition");
     });
@@ -552,7 +675,8 @@ describe('Render task definition', () => {
 
         expect(mockEcsClient.describeTaskDefinition).toHaveBeenCalledTimes(1);
         expect(mockEcsDescribeTaskDef).toHaveBeenCalledWith({
-            taskDefinition: "task-definition-arn"
+            taskDefinition: "task-definition-arn",
+            include: ["TAGS"],
         });
     });
 
@@ -630,6 +754,20 @@ describe('Render task definition', () => {
                                 type: "s3"
                             }
                         ],
+                        secrets: [
+                            {
+                              name: "EXISTING_SECRET",
+                              valueFrom: "arn:aws:ssm:region:0123456789:parameter/existingSecret"
+                            },
+                            {
+                              name: "SSM_SECRET",
+                              valueFrom: "arn:aws:ssm:region:0123456789:parameter/secret"
+                            },
+                            {
+                              name: "SM_SECRET",
+                              valueFrom: "arn:aws:secretsmanager:us-east-1:0123456789:secret:secretName"
+                            }
+                        ],
                         logConfiguration: {
                             logDriver: "awslogs",
                             options: {
@@ -647,6 +785,12 @@ describe('Render task definition', () => {
                     {
                         name: "sidecar",
                         image: "hello"
+                    }
+                ],
+                tags: [
+                    {
+                      key: "project",
+                      value: "mytaskdef"
                     }
                 ]
             }, null, 2)
@@ -791,6 +935,20 @@ describe('Render task definition', () => {
                                 type: "s3"
                             }
                         ],
+                        secrets: [
+                            {
+                              name: "EXISTING_SECRET",
+                              valueFrom: "arn:aws:ssm:region:0123456789:parameter/existingSecret"
+                            },
+                            {
+                              name: "SSM_SECRET",
+                              valueFrom: "arn:aws:ssm:region:0123456789:parameter/secret"
+                            },
+                            {
+                              name: "SM_SECRET",
+                              valueFrom: "arn:aws:secretsmanager:us-east-1:0123456789:secret:secretName"
+                            }
+                        ],
                         logConfiguration: {
                             logDriver: "awslogs",
                             options: {
@@ -809,6 +967,12 @@ describe('Render task definition', () => {
                     {
                         name: "sidecar",
                         image: "hello"
+                    }
+                ],
+                tags: [
+                    {
+                      key: "project",
+                      value: "mytaskdef"
                     }
                 ]
             }, null, 2)

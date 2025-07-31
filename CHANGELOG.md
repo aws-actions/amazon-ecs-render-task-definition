@@ -2,6 +2,34 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.7.4](https://github.com/aws-actions/amazon-ecs-render-task-definition/compare/v1.7.3...v1.7.4) (2025-06-23)
+
+### [1.7.3](https://github.com/aws-actions/amazon-ecs-render-task-definition/compare/v1.7.2...v1.7.3) (2025-05-28)
+
+### [1.7.2](https://github.com/aws-actions/amazon-ecs-render-task-definition/compare/v1.7.1...v1.7.2) (2025-04-22)
+
+### [1.7.1](https://github.com/aws-actions/amazon-ecs-render-task-definition/compare/v1.7.0...v1.7.1) (2025-03-24)
+
+## [1.7.0](https://github.com/aws-actions/amazon-ecs-render-task-definition/compare/v1.6.2...v1.7.0) (2025-03-03)
+
+
+### Features
+
+* get tags and clean attributes ([#325](https://github.com/aws-actions/amazon-ecs-render-task-definition/issues/325)) ([ac0e284](https://github.com/aws-actions/amazon-ecs-render-task-definition/commit/ac0e284627e78d74f8161229324d67520fc20117))
+
+### [1.6.2](https://github.com/aws-actions/amazon-ecs-render-task-definition/compare/v1.6.1...v1.6.2) (2025-01-14)
+
+### [1.6.1](https://github.com/aws-actions/amazon-ecs-render-task-definition/compare/v1.6.0...v1.6.1) (2024-11-26)
+
+## [1.6.0](https://github.com/aws-actions/amazon-ecs-render-task-definition/compare/v1.5.2...v1.6.0) (2024-10-23)
+
+
+### Features
+
+* support secrets in render task definition ([#334](https://github.com/aws-actions/amazon-ecs-render-task-definition/issues/334)) ([bd39926](https://github.com/aws-actions/amazon-ecs-render-task-definition/commit/bd399266e884fda2f863e083ff67d844c030f2b9))
+
+### [1.5.2](https://github.com/aws-actions/amazon-ecs-render-task-definition/compare/v1.5.1...v1.5.2) (2024-10-01)
+
 ### [1.5.1](https://github.com/aws-actions/amazon-ecs-render-task-definition/compare/v1.5.0...v1.5.1) (2024-08-28)
 
 
