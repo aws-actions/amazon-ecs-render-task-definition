@@ -16,6 +16,12 @@ inputs:
   task-definition-revision:
     description: 'The revision of the task definition being used'
     required: false
+  cpu:
+    description: 'The number of CPU units used by the task'
+    required: false
+  memory:
+    description: 'The amount of memory (in MiB) used by the task'
+    required: false
   container-name:
     description: 'The name of the container defined in the containerDefinitions section of the ECS task definition'
     required: true

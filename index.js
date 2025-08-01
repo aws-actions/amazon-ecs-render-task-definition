@@ -40,7 +40,8 @@ async function run() {
     const imageURI = core.getInput('image', { required: true });
     const environmentVariables = core.getInput('environment-variables', { required: false });
     const envFiles = core.getInput('env-files', { required: false });
-
+    const cpu = core.getInput('cpu', { required: false });
+    const memory = core.getInput('memory', { required: false });
     const logConfigurationLogDriver = core.getInput("log-configuration-log-driver", { required: false });
     const logConfigurationOptions = core.getInput("log-configuration-options", { required: false });
     const dockerLabels = core.getInput('docker-labels', { required: false });
@@ -95,6 +96,14 @@ async function run() {
       core.debug(JSON.stringify(taskDefContents, undefined, 4));
     } else {
       throw new Error("Either task definition, task definition arn or task definition family must be provided");
+    }
+
+    if (cpu) {
+      taskDefContents.cpu = cpu;
+    }
+
+    if (memory) {
+      taskDefContents.memory = memory;
     }
 
     // Insert the image URI
