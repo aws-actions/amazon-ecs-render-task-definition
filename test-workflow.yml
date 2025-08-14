@@ -34,7 +34,7 @@ jobs:
       uses: aws-actions/amazon-ecs-render-task-definition@v1
       with:
         task-definition: task-definition.json
-        container-name: sample-app
+        container-name: sample-app,sample-app-2
         image: amazon/amazon-ecs-sample:latest
 
     - name: Validate Amazon ECS task definition file
