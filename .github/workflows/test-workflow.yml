@@ -20,7 +20,7 @@ jobs:
 
     - name: Print current build ID
       run: |
-        echo Integration test run: githubactionsamazonecsrende-wVtTCLjhID2l:e0dc32e5-e9d6-48ec-98b7-e99123e4d0d1
+        echo Integration test run: githubactionsamazonecsrende-wVtTCLjhID2l:cd070773-a137-4c54-8026-98cb1b62cc88
 
     - name: Configure AWS credentials
       uses: aws-actions/configure-aws-credentials@v4
@@ -31,7 +31,7 @@ jobs:
 
     - name: Render Amazon ECS task definition with task definition file
       id: render-task-definition-file
-      uses: aws-actions/amazon-ecs-render-task-definition@3892c313d632302bffaa31c3a5a03e5ef332d9a5
+      uses: aws-actions/amazon-ecs-render-task-definition@c3170f41714e953898e86d1412074deccce3577b
       with:
         task-definition: task-definition.json
         container-name: sample-app,sample-app-2
@@ -51,7 +51,7 @@ jobs:
 
     - name: Render Amazon ECS task definition with task definition arn (amazon resource name)
       id: render-task-definition-arn
-      uses: aws-actions/amazon-ecs-render-task-definition@3892c313d632302bffaa31c3a5a03e5ef332d9a5
+      uses: aws-actions/amazon-ecs-render-task-definition@c3170f41714e953898e86d1412074deccce3577b
       with:
         task-definition-arn: arn:aws:ecs:us-west-2:${{ secrets.AWS_ACCOUNT_ID }}:task-definition/github-actions-render-task-definition-integ-tests:16
         container-name: sample-app
@@ -59,7 +59,7 @@ jobs:
 
     - name: Render Amazon ECS task definition with task definition family
       id: render-task-definition-family
-      uses: aws-actions/amazon-ecs-render-task-definition@3892c313d632302bffaa31c3a5a03e5ef332d9a5
+      uses: aws-actions/amazon-ecs-render-task-definition@c3170f41714e953898e86d1412074deccce3577b
       with:
         task-definition-family: github-actions-render-task-definition-integ-tests
         container-name: sample-app
@@ -67,7 +67,7 @@ jobs:
 
     - name: Render Amazon ECS task definition with task definition family and revision
       id: render-task-definition-family-revision
-      uses: aws-actions/amazon-ecs-render-task-definition@3892c313d632302bffaa31c3a5a03e5ef332d9a5
+      uses: aws-actions/amazon-ecs-render-task-definition@c3170f41714e953898e86d1412074deccce3577b
       with:
         task-definition-family: github-actions-render-task-definition-integ-tests
         task-definition-revision: 1
