@@ -47,6 +47,8 @@ describe('Render task definition', () => {
             .mockReturnValueOnce('')                                                    // log Configuration Options
             .mockReturnValueOnce('')                                                    // docker labels
             .mockReturnValueOnce('')                                                    // command
+            .mockReturnValueOnce('')                                                    // task role arn
+            .mockReturnValueOnce('')                                                    // execution role arn
             .mockReturnValueOnce('')                                                    // task-definition arn
             .mockReturnValueOnce('')                                                    // task-definition family
             .mockReturnValueOnce('')                                                    // task-definition revision
@@ -263,6 +265,8 @@ describe('Render task definition', () => {
             .mockReturnValueOnce('')                                                      // log Configuration Options
             .mockReturnValueOnce('')                                                      // docker labels
             .mockReturnValueOnce('')                                                      // command
+            .mockReturnValueOnce('')                                                      // task role arn
+            .mockReturnValueOnce('')                                                      // execution role arn
             .mockReturnValueOnce('')                                                      // task-definition arn
             .mockReturnValueOnce('')                                                      // task-definition family
             .mockReturnValueOnce('')                                                      // task-definition revision
@@ -477,6 +481,8 @@ describe('Render task definition', () => {
             .mockReturnValueOnce('')
             .mockReturnValueOnce('')
             .mockReturnValueOnce('')
+            .mockReturnValueOnce('')
+            .mockReturnValueOnce('')
             .mockReturnValueOnce('SECRET');
         await run();
 
@@ -548,6 +554,8 @@ describe('Render task definition', () => {
             .mockReturnValueOnce('')                                                    // log Configuration Options
             .mockReturnValueOnce('')                                                    // Docker Labels
             .mockReturnValueOnce('')                                                    // Command Options 
+            .mockReturnValueOnce('')                                                    // task role arn
+            .mockReturnValueOnce('')                                                    // execution role arn
             .mockReturnValueOnce('task-definition-arn')                                 // task definition arn
             .mockReturnValueOnce('task-definition-family')                              // task definition family
             .mockReturnValueOnce(0);                                                    // task definition revision
@@ -569,6 +577,8 @@ describe('Render task definition', () => {
             .mockReturnValueOnce('')                           // log Configuration Options
             .mockReturnValueOnce('')                           // Docker Labels
             .mockReturnValueOnce('')                           // Command Options 
+            .mockReturnValueOnce('')                           // task role arn
+            .mockReturnValueOnce('')                           // execution role arn
             .mockReturnValueOnce('')                           // task definition arn
             .mockReturnValueOnce("task-definition-family")     // task definition family
             .mockReturnValueOnce(10);                          // task definition revision
@@ -594,6 +604,8 @@ describe('Render task definition', () => {
             .mockReturnValueOnce('')                           // log Configuration Options
             .mockReturnValueOnce('')                           // Docker Labels
             .mockReturnValueOnce('')                           // Command Options 
+            .mockReturnValueOnce('')                           // task role arn
+            .mockReturnValueOnce('')                           // execution role arn
             .mockReturnValueOnce('')                           // task definition arn
             .mockReturnValueOnce("task-definition-family")     // task definition family
             .mockReturnValueOnce(0);                           // task definition revision
@@ -620,6 +632,8 @@ describe('Render task definition', () => {
             .mockReturnValueOnce('')                           // log Configuration Options
             .mockReturnValueOnce('')                           // Docker Labels
             .mockReturnValueOnce('')                           // Command Options 
+            .mockReturnValueOnce('')                           // task role arn
+            .mockReturnValueOnce('')                           // execution role arn
             .mockReturnValueOnce('task-definition-arn')        // task definition arn
             .mockReturnValueOnce('')                           // task definition family
             .mockReturnValueOnce(0);                           // task definition revision
@@ -646,6 +660,8 @@ describe('Render task definition', () => {
             .mockReturnValueOnce('')                                                    // log Configuration Options
             .mockReturnValueOnce('')                                                    // Docker Labels
             .mockReturnValueOnce('')                                                    // Command Options 
+            .mockReturnValueOnce('')                                                    // task role arn
+            .mockReturnValueOnce('')                                                    // execution role arn
             .mockReturnValueOnce('task-definition-arn')                                 // task definition arn
             .mockReturnValueOnce('')                                                    // task definition family
             .mockReturnValueOnce(0);                                                    //task definition revision
@@ -669,6 +685,8 @@ describe('Render task definition', () => {
             .mockReturnValueOnce('')                                                    // log Configuration Options
             .mockReturnValueOnce('')                                                    // Docker Labels
             .mockReturnValueOnce('')                                                    // Command Options 
+            .mockReturnValueOnce('')                                                    // task role arn
+            .mockReturnValueOnce('')                                                    // execution role arn
             .mockReturnValueOnce('task-definition-arn')                                 //task definition arn
             .mockReturnValueOnce('task-definition-family')                              //task definition family
             .mockReturnValueOnce(10);                                                   //task definition revision
@@ -692,6 +710,8 @@ describe('Render task definition', () => {
             .mockReturnValueOnce('')                           // log Configuration Options
             .mockReturnValueOnce('')                           // Docker Labels
             .mockReturnValueOnce('')                           // Command Options 
+            .mockReturnValueOnce('')                           // task role arn
+            .mockReturnValueOnce('')                           // execution role arn
             .mockReturnValueOnce('task-definition-arn')        // task definition arn
             .mockReturnValueOnce('task-definition-family')     // task definition family
             .mockReturnValueOnce(0);                           // task definition revision
@@ -717,6 +737,8 @@ describe('Render task definition', () => {
             .mockReturnValueOnce('')                           // log Configuration Options
             .mockReturnValueOnce('')                           // Docker Labels
             .mockReturnValueOnce('')                           // Command Options 
+            .mockReturnValueOnce('')                           // task role arn
+            .mockReturnValueOnce('')                           // execution role arn
             .mockReturnValueOnce('')                           // task definition arn
             .mockReturnValueOnce('')                           // task definition family
             .mockReturnValueOnce(10);                          // task definition revision
@@ -988,6 +1010,208 @@ describe('Render task definition', () => {
                             "key2":"value2"
                         },
                         command : ["npm", "start", "--nice", "--please"]
+                    },
+                    {
+                        name: "sidecar",
+                        image: "hello"
+                    }
+                ],
+                tags: [
+                    {
+                      key: "project",
+                      value: "mytaskdef"
+                    }
+                ]
+            }, null, 2)
+        );
+    });
+
+    test('renders a task definition task role arn', async () => {
+        core.getInput = jest
+            .fn()
+            .mockReturnValueOnce('task-definition.json')
+            .mockReturnValueOnce('web')
+            .mockReturnValueOnce('nginx:latest')
+            .mockReturnValueOnce('')
+            .mockReturnValueOnce('')
+            .mockReturnValueOnce('')
+            .mockReturnValueOnce('')
+            .mockReturnValueOnce('')
+            .mockReturnValueOnce('')
+            .mockReturnValueOnce('arn:aws:iam::0123456789:role/task-role');
+
+        await run();
+
+        expect(tmp.fileSync).toHaveBeenNthCalledWith(1, {
+            tmpdir: '/home/runner/work/_temp',
+            prefix: 'task-definition-',
+            postfix: '.json',
+            keep: true,
+            discardDescriptor: true
+        });
+
+        expect(fs.writeFileSync).toHaveBeenNthCalledWith(1, 'new-task-def-file-name',
+            JSON.stringify({
+                family: 'task-def-family',
+                containerDefinitions: [
+                    {
+                        name: "web",
+                        image: "nginx:latest",
+                        environment: [
+                            {
+                                name: "FOO",
+                                value: "bar"
+                            },
+                            {
+                                name: "DONT-TOUCH",
+                                value: "me"
+                            },
+                            {
+                                name: "HELLO",
+                                value: "world"
+                            },
+                            {
+                                name: "EXAMPLE",
+                                value: "here"
+                            }
+                        ],
+                        environmentFiles: [
+                            {
+                                value: "arn:aws:s3:::s3_bucket_name/envfile_object_name.env",
+                                type: "s3"
+                            }
+                        ],
+                        secrets: [
+                            {
+                              name: "EXISTING_SECRET",
+                              valueFrom: "arn:aws:ssm:region:0123456789:parameter/existingSecret"
+                            },
+                            {
+                              name: "SSM_SECRET",
+                              valueFrom: "arn:aws:ssm:region:0123456789:parameter/secret"
+                            },
+                            {
+                              name: "SM_SECRET",
+                              valueFrom: "arn:aws:secretsmanager:us-east-1:0123456789:secret:secretName"
+                            }
+                        ],
+                        logConfiguration: {
+                            logDriver: "awslogs",
+                            options: {
+                                "awslogs-create-group": "true",
+                                "awslogs-group": "/ecs/web",
+                                "awslogs-region": "us-east-1",
+                                "awslogs-stream-prefix": "ecs"
+                            }
+                        },
+                        dockerLabels : {
+                            "key1":"value1",
+                            "key2":"value2"
+                        },
+                        command : ["npm", "start", "--nice", "--please"],
+                        taskRoleArn: "arn:aws:iam::0123456789:role/task-role",
+                    },
+                    {
+                        name: "sidecar",
+                        image: "hello"
+                    }
+                ],
+                tags: [
+                    {
+                      key: "project",
+                      value: "mytaskdef"
+                    }
+                ]
+            }, null, 2)
+        );
+    });
+
+    test('renders a task definition execution role arn', async () => {
+        core.getInput = jest
+            .fn()
+            .mockReturnValueOnce('task-definition.json')
+            .mockReturnValueOnce('web')
+            .mockReturnValueOnce('nginx:latest')
+            .mockReturnValueOnce('')
+            .mockReturnValueOnce('')
+            .mockReturnValueOnce('')
+            .mockReturnValueOnce('')
+            .mockReturnValueOnce('')
+            .mockReturnValueOnce('')
+            .mockReturnValueOnce('')
+            .mockReturnValueOnce('arn:aws:iam::0123456789:role/execution-role');
+
+        await run();
+
+        expect(tmp.fileSync).toHaveBeenNthCalledWith(1, {
+            tmpdir: '/home/runner/work/_temp',
+            prefix: 'task-definition-',
+            postfix: '.json',
+            keep: true,
+            discardDescriptor: true
+        });
+
+        expect(fs.writeFileSync).toHaveBeenNthCalledWith(1, 'new-task-def-file-name',
+            JSON.stringify({
+                family: 'task-def-family',
+                containerDefinitions: [
+                    {
+                        name: "web",
+                        image: "nginx:latest",
+                        environment: [
+                            {
+                                name: "FOO",
+                                value: "bar"
+                            },
+                            {
+                                name: "DONT-TOUCH",
+                                value: "me"
+                            },
+                            {
+                                name: "HELLO",
+                                value: "world"
+                            },
+                            {
+                                name: "EXAMPLE",
+                                value: "here"
+                            }
+                        ],
+                        environmentFiles: [
+                            {
+                                value: "arn:aws:s3:::s3_bucket_name/envfile_object_name.env",
+                                type: "s3"
+                            }
+                        ],
+                        secrets: [
+                            {
+                              name: "EXISTING_SECRET",
+                              valueFrom: "arn:aws:ssm:region:0123456789:parameter/existingSecret"
+                            },
+                            {
+                              name: "SSM_SECRET",
+                              valueFrom: "arn:aws:ssm:region:0123456789:parameter/secret"
+                            },
+                            {
+                              name: "SM_SECRET",
+                              valueFrom: "arn:aws:secretsmanager:us-east-1:0123456789:secret:secretName"
+                            }
+                        ],
+                        logConfiguration: {
+                            logDriver: "awslogs",
+                            options: {
+                                "awslogs-create-group": "true",
+                                "awslogs-group": "/ecs/web",
+                                "awslogs-region": "us-east-1",
+                                "awslogs-stream-prefix": "ecs"
+                            }
+                        },
+                        dockerLabels : {
+                            "key1":"value1",
+                            "key2":"value2"
+                        },
+                        command : ["npm", "start", "--nice", "--please"],
+                        taskRoleArn: "arn:aws:iam::0123456789:role/task-role",
+                        executionRoleArn: "arn:aws:iam::0123456789:role/execution-role",
                     },
                     {
                         name: "sidecar",
