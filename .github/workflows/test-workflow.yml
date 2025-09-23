@@ -20,7 +20,7 @@ jobs:
 
     - name: Print current build ID
       run: |
-        echo Integration test run: githubactionsamazonecsrende-wVtTCLjhID2l:348ac3c2-44fe-4f5d-9842-42d9ec5bd1e8
+        echo Integration test run: githubactionsamazonecsrende-wVtTCLjhID2l:9364a068-f228-4b31-8fad-d1934778398f
 
     - name: Configure AWS credentials
       uses: aws-actions/configure-aws-credentials@v4
