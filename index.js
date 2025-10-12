@@ -119,7 +119,18 @@ async function run() {
       containerDef.image = imageURI;      
 
     if (command) {
-      containerDef.command = command.split(' ')
+      const invalidCommandErrorMessage = `Invalid command: '${command}'. command must be a valid JSON array.`
+      try {
+        const parsedCommand = JSON.parse(command);
+        if (!Array.isArray(parsedCommand)) {
+          // The parsed object is not an array.
+          throw new Error(invalidCommandErrorMessage);
+        } 
+        containerDef.command = parsedCommand;
+      } catch (e) {
+        // The string is not a valid array.
+        throw new Error(invalidCommandErrorMessage);
+      }
     }
 
     if (envFiles) {
