@@ -496,6 +496,31 @@ describe('Render task definition', () => {
         expect(core.setFailed).toBeCalledWith('Task definition file does not exist: does-not-exist-task-definition.json');
     });
 
+    test('error returned if container-name input is not well formated', async () => {
+        core.getInput = jest
+            .fn()
+            .mockReturnValueOnce('/hello/task-definition.json')
+            .mockReturnValueOnce('web,')
+            .mockReturnValueOnce('nginx:latest');
+
+        await run();
+
+        expect(core.setFailed).toBeCalledWith('Invalid format for container name. Please use a single value or comma separated values');
+    });
+
+    test('error returned for missing task definition file', async () => {
+        fs.existsSync.mockReturnValue(false);
+        core.getInput = jest
+            .fn()
+            .mockReturnValueOnce('does-not-exist-task-definition.json')
+            .mockReturnValueOnce('web')
+            .mockReturnValueOnce('nginx:latest');
+
+        await run();
+
+        expect(core.setFailed).toBeCalledWith('Task definition file does not exist: does-not-exist-task-definition.json');
+    });
+
     test('error thown for missing task definition, task definition arn and task definition family ', async () => {
         core.getInput = jest
             .fn()

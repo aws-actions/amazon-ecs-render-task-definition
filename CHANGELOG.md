@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.8.0](https://github.com/aws-actions/amazon-ecs-render-task-definition/compare/v1.7.5...v1.8.0) (2025-08-14)
+
+
+### Features
+
+* add possibility to add more than one container in container-name ([#229](https://github.com/aws-actions/amazon-ecs-render-task-definition/issues/229)) ([ce1d739](https://github.com/aws-actions/amazon-ecs-render-task-definition/commit/ce1d7390795649b913f552685fa70aa7f8f90231))
+
 ### [1.7.5](https://github.com/aws-actions/amazon-ecs-render-task-definition/compare/v1.7.4...v1.7.5) (2025-08-04)
 
 ### [1.7.4](https://github.com/aws-actions/amazon-ecs-render-task-definition/compare/v1.7.3...v1.7.4) (2025-06-23)
