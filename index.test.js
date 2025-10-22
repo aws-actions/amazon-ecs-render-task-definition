@@ -52,7 +52,8 @@ describe("Render task definition", () => {
       .mockReturnValueOnce(
         // secrets
         "SSM_SECRET=arn:aws:ssm:region:0123456789:parameter/secret\nSM_SECRET=arn:aws:secretsmanager:us-east-1:0123456789:secret:secretName",
-      );
+      )
+      .mockReturnValueOnce(""); // tags
 
     process.env = Object.assign(process.env, { GITHUB_WORKSPACE: __dirname });
     process.env = Object.assign(process.env, { RUNNER_TEMP: "/home/runner/work/_temp" });
@@ -271,7 +272,8 @@ describe("Render task definition", () => {
       .mockReturnValueOnce("") // task-definition arn
       .mockReturnValueOnce("") // task-definition family
       .mockReturnValueOnce("") // task-definition revision
-      .mockReturnValueOnce(""); // secrets
+      .mockReturnValueOnce("") // secrets
+      .mockReturnValueOnce(""); // tags
 
     jest.mock(
       "/hello/task-definition.json",
@@ -341,7 +343,14 @@ describe("Render task definition", () => {
       .mockReturnValueOnce("awslogs")
       .mockReturnValueOnce(
         `awslogs-create-group=true\nawslogs-group=/ecs/web\nawslogs-region=us-east-1\nawslogs-stream-prefix=ecs`,
-      );
+      )
+      .mockReturnValueOnce("") // docker labels
+      .mockReturnValueOnce("") // command
+      .mockReturnValueOnce("") // task-definition arn
+      .mockReturnValueOnce("") // task-definition family
+      .mockReturnValueOnce("") // task-definition revision
+      .mockReturnValueOnce("") // secrets
+      .mockReturnValueOnce(""); // tags
 
     await run();
 
@@ -501,7 +510,8 @@ describe("Render task definition", () => {
       .mockReturnValueOnce("")
       .mockReturnValueOnce("")
       .mockReturnValueOnce("")
-      .mockReturnValueOnce("SECRET");
+      .mockReturnValueOnce("SECRET")
+      .mockReturnValueOnce(""); // tags
     await run();
 
     expect(core.setFailed).toBeCalledWith(expect.stringContaining(`Cannot parse the secret 'SECRET'`));
@@ -513,7 +523,18 @@ describe("Render task definition", () => {
       .fn()
       .mockReturnValueOnce("does-not-exist-task-definition.json")
       .mockReturnValueOnce("web")
-      .mockReturnValueOnce("nginx:latest");
+      .mockReturnValueOnce("nginx:latest")
+      .mockReturnValueOnce("") // environment-variables
+      .mockReturnValueOnce("") // env-files
+      .mockReturnValueOnce("") // log Configuration Log Driver
+      .mockReturnValueOnce("") // log Configuration Options
+      .mockReturnValueOnce("") // docker labels
+      .mockReturnValueOnce("") // command
+      .mockReturnValueOnce("") // task-definition arn
+      .mockReturnValueOnce("") // task-definition family
+      .mockReturnValueOnce("") // task-definition revision
+      .mockReturnValueOnce("") // secrets
+      .mockReturnValueOnce(""); // tags
 
     await run();
 
@@ -525,7 +546,18 @@ describe("Render task definition", () => {
       .fn()
       .mockReturnValueOnce("/hello/task-definition.json")
       .mockReturnValueOnce("web,")
-      .mockReturnValueOnce("nginx:latest");
+      .mockReturnValueOnce("nginx:latest")
+      .mockReturnValueOnce("") // environment-variables
+      .mockReturnValueOnce("") // env-files
+      .mockReturnValueOnce("") // log Configuration Log Driver
+      .mockReturnValueOnce("") // log Configuration Options
+      .mockReturnValueOnce("") // docker labels
+      .mockReturnValueOnce("") // command
+      .mockReturnValueOnce("") // task-definition arn
+      .mockReturnValueOnce("") // task-definition family
+      .mockReturnValueOnce("") // task-definition revision
+      .mockReturnValueOnce("") // secrets
+      .mockReturnValueOnce(""); // tags
 
     await run();
 
@@ -540,7 +572,18 @@ describe("Render task definition", () => {
       .fn()
       .mockReturnValueOnce("does-not-exist-task-definition.json")
       .mockReturnValueOnce("web")
-      .mockReturnValueOnce("nginx:latest");
+      .mockReturnValueOnce("nginx:latest")
+      .mockReturnValueOnce("") // environment-variables
+      .mockReturnValueOnce("") // env-files
+      .mockReturnValueOnce("") // log Configuration Log Driver
+      .mockReturnValueOnce("") // log Configuration Options
+      .mockReturnValueOnce("") // docker labels
+      .mockReturnValueOnce("") // command
+      .mockReturnValueOnce("") // task-definition arn
+      .mockReturnValueOnce("") // task-definition family
+      .mockReturnValueOnce("") // task-definition revision
+      .mockReturnValueOnce("") // secrets
+      .mockReturnValueOnce(""); // tags
 
     await run();
 
@@ -555,7 +598,9 @@ describe("Render task definition", () => {
       .mockReturnValueOnce("")
       .mockReturnValueOnce("")
       .mockReturnValueOnce("")
-      .mockReturnValueOnce(0);
+      .mockReturnValueOnce(0) // task definition revision
+      .mockReturnValueOnce("") // secrets
+      .mockReturnValueOnce(""); // tags
 
     await run();
 
@@ -578,7 +623,9 @@ describe("Render task definition", () => {
       .mockReturnValueOnce("") // Command Options
       .mockReturnValueOnce("task-definition-arn") // task definition arn
       .mockReturnValueOnce("task-definition-family") // task definition family
-      .mockReturnValueOnce(0); // task definition revision
+      .mockReturnValueOnce(0) // task definition revision
+      .mockReturnValueOnce("") // secrets
+      .mockReturnValueOnce(""); // tags
 
     await run();
 
@@ -599,7 +646,9 @@ describe("Render task definition", () => {
       .mockReturnValueOnce("") // Command Options
       .mockReturnValueOnce("") // task definition arn
       .mockReturnValueOnce("task-definition-family") // task definition family
-      .mockReturnValueOnce(10); // task definition revision
+      .mockReturnValueOnce(10) // task definition revision
+      .mockReturnValueOnce("") // secrets
+      .mockReturnValueOnce(""); // tags
 
     await run();
 
@@ -624,7 +673,9 @@ describe("Render task definition", () => {
       .mockReturnValueOnce("") // Command Options
       .mockReturnValueOnce("") // task definition arn
       .mockReturnValueOnce("task-definition-family") // task definition family
-      .mockReturnValueOnce(0); // task definition revision
+      .mockReturnValueOnce(0) // task definition revision
+      .mockReturnValueOnce("") // secrets
+      .mockReturnValueOnce(""); // tags
 
     await run();
 
@@ -652,7 +703,9 @@ describe("Render task definition", () => {
       .mockReturnValueOnce("") // Command Options
       .mockReturnValueOnce("task-definition-arn") // task definition arn
       .mockReturnValueOnce("") // task definition family
-      .mockReturnValueOnce(0); // task definition revision
+      .mockReturnValueOnce(0) // task definition revision
+      .mockReturnValueOnce("") // secrets
+      .mockReturnValueOnce(""); // tags
 
     await run();
 
@@ -678,7 +731,9 @@ describe("Render task definition", () => {
       .mockReturnValueOnce("") // Command Options
       .mockReturnValueOnce("task-definition-arn") // task definition arn
       .mockReturnValueOnce("") // task definition family
-      .mockReturnValueOnce(0); //task definition revision
+      .mockReturnValueOnce(0) //task definition revision
+      .mockReturnValueOnce("") // secrets
+      .mockReturnValueOnce(""); // tags
 
     await run();
 
@@ -701,7 +756,9 @@ describe("Render task definition", () => {
       .mockReturnValueOnce("") // Command Options
       .mockReturnValueOnce("task-definition-arn") //task definition arn
       .mockReturnValueOnce("task-definition-family") //task definition family
-      .mockReturnValueOnce(10); //task definition revision
+      .mockReturnValueOnce(10) //task definition revision
+      .mockReturnValueOnce("") // secrets
+      .mockReturnValueOnce(""); // tags
 
     await run();
 
@@ -724,7 +781,9 @@ describe("Render task definition", () => {
       .mockReturnValueOnce("") // Command Options
       .mockReturnValueOnce("task-definition-arn") // task definition arn
       .mockReturnValueOnce("task-definition-family") // task definition family
-      .mockReturnValueOnce(0); // task definition revision
+      .mockReturnValueOnce(0) // task definition revision
+      .mockReturnValueOnce("") // secrets
+      .mockReturnValueOnce(""); // tags
 
     await run();
 
@@ -749,7 +808,9 @@ describe("Render task definition", () => {
       .mockReturnValueOnce("") // Command Options
       .mockReturnValueOnce("") // task definition arn
       .mockReturnValueOnce("") // task definition family
-      .mockReturnValueOnce(10); // task definition revision
+      .mockReturnValueOnce(10) // task definition revision
+      .mockReturnValueOnce("") // secrets
+      .mockReturnValueOnce(""); // tags
 
     await run();
 
@@ -770,7 +831,13 @@ describe("Render task definition", () => {
       .mockReturnValueOnce(
         "awslogs-create-group=true\nawslogs-group=/ecs/web\nawslogs-region=us-east-1\nawslogs-stream-prefix=ecs",
       )
-      .mockReturnValueOnce("key1=value1\nkey2=value2");
+      .mockReturnValueOnce("key1=value1\nkey2=value2")
+      .mockReturnValueOnce("") // command
+      .mockReturnValueOnce("") // task-definition arn
+      .mockReturnValueOnce("") // task-definition family
+      .mockReturnValueOnce("") // task-definition revision
+      .mockReturnValueOnce("") // secrets
+      .mockReturnValueOnce(""); // tags
 
     await run();
 
@@ -874,7 +941,13 @@ describe("Render task definition", () => {
       .mockReturnValueOnce(
         "awslogs-create-group=true\nawslogs-group=/ecs/web\nawslogs-region=us-east-1\nawslogs-stream-prefix=ecs",
       )
-      .mockReturnValueOnce("key1=update_value1\nkey2\nkey3=value3");
+      .mockReturnValueOnce("key1=update_value1\nkey2\nkey3=value3")
+      .mockReturnValueOnce("") // command
+      .mockReturnValueOnce("") // task-definition arn
+      .mockReturnValueOnce("") // task-definition family
+      .mockReturnValueOnce("") // task-definition revision
+      .mockReturnValueOnce("") // secrets
+      .mockReturnValueOnce(""); // tags
 
     jest.mock(
       "/hello/task-definition.json",
@@ -908,7 +981,18 @@ describe("Render task definition", () => {
       .fn()
       .mockReturnValueOnce("non-json-task-definition.json")
       .mockReturnValueOnce("web")
-      .mockReturnValueOnce("nginx:latest");
+      .mockReturnValueOnce("nginx:latest")
+      .mockReturnValueOnce("") // environment-variables
+      .mockReturnValueOnce("") // env-files
+      .mockReturnValueOnce("") // log Configuration Log Driver
+      .mockReturnValueOnce("") // log Configuration Options
+      .mockReturnValueOnce("") // docker labels
+      .mockReturnValueOnce("") // command
+      .mockReturnValueOnce("") // task-definition arn
+      .mockReturnValueOnce("") // task-definition family
+      .mockReturnValueOnce("") // task-definition revision
+      .mockReturnValueOnce("") // secrets
+      .mockReturnValueOnce(""); // tags
 
     await run();
 
@@ -931,7 +1015,18 @@ describe("Render task definition", () => {
       .fn()
       .mockReturnValueOnce("malformed-task-definition.json")
       .mockReturnValueOnce("web")
-      .mockReturnValueOnce("nginx:latest");
+      .mockReturnValueOnce("nginx:latest")
+      .mockReturnValueOnce("") // environment-variables
+      .mockReturnValueOnce("") // env-files
+      .mockReturnValueOnce("") // log Configuration Log Driver
+      .mockReturnValueOnce("") // log Configuration Options
+      .mockReturnValueOnce("") // docker labels
+      .mockReturnValueOnce("") // command
+      .mockReturnValueOnce("") // task-definition arn
+      .mockReturnValueOnce("") // task-definition family
+      .mockReturnValueOnce("") // task-definition revision
+      .mockReturnValueOnce("") // secrets
+      .mockReturnValueOnce(""); // tags
 
     await run();
 
@@ -981,7 +1076,12 @@ describe("Render task definition", () => {
         "awslogs-create-group=true\nawslogs-group=/ecs/web\nawslogs-region=us-east-1\nawslogs-stream-prefix=ecs",
       )
       .mockReturnValueOnce("key1=value1\nkey2=value2")
-      .mockReturnValueOnce("npm start --nice --please");
+      .mockReturnValueOnce("npm start --nice --please")
+      .mockReturnValueOnce("") // task-definition arn
+      .mockReturnValueOnce("") // task-definition family
+      .mockReturnValueOnce("") // task-definition revision
+      .mockReturnValueOnce("") // secrets
+      .mockReturnValueOnce(""); // tags
 
     await run();
 
