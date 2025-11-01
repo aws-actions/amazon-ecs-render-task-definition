@@ -32,6 +32,7 @@ To insert the image URI `amazon/amazon-ecs-sample:latest` as the image for the `
         image: amazon/amazon-ecs-sample:latest
         environment-variables: "LOG_LEVEL=info"
         secrets: "SECRET_KEY=arn:aws:ssm:region:0123456789:parameter/secret"
+        tags: "Environment=production"
 
     - name: Deploy to Amazon ECS service
       uses: aws-actions/amazon-ecs-deploy-task-definition@v2
@@ -63,6 +64,9 @@ input of the second:
         secrets: |
             SECRET_KEY=arn:aws:ssm:region:0123456789:parameter/secret
             SECOND_SECRET_KEY=arn:aws:secretsmanager:us-east-1:0123456789:secret:secretName
+        tags: |
+            Environment=production
+            Team=platform
 
     - name: Modify Amazon ECS task definition with second container
       id: render-app-container
