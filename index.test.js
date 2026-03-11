@@ -315,6 +315,56 @@ describe('Render task definition', () => {
         expect(mockEcsDescribeTaskDef).toHaveBeenCalledTimes(0);
     });
 
+    test('renders secrets even if environment-variables is empty', async () => {
+        core.getInput = jest
+            .fn()
+            .mockReturnValueOnce('/secrets/task-definition.json') // task-definition
+            .mockReturnValueOnce('web')                  // container-name
+            .mockReturnValueOnce('nginx:latest')         // image
+            .mockReturnValueOnce('')                     // environment-variables
+            .mockReturnValueOnce('')                     // env-files
+            .mockReturnValueOnce('')                     // log Configuration Log Driver
+            .mockReturnValueOnce('')                     // log Configuration Options
+            .mockReturnValueOnce('')                     // docker labels
+            .mockReturnValueOnce('')                     // command
+            .mockReturnValueOnce('')                     // task-definition arn
+            .mockReturnValueOnce('')                     // task-definition family
+            .mockReturnValueOnce('')                     // task-definition revision
+            .mockReturnValueOnce('NEW_SECRET=arn:aws:ssm:region:0123456789:parameter/secret'); // secrets
+
+        jest.mock('/secrets/task-definition.json', () => ({
+            family: 'task-def-family',
+            containerDefinitions: [
+                {
+                    name: "web",
+                    image: "old-image"
+                }
+            ]
+        }), { virtual: true });
+
+        await run();
+
+        expect(fs.writeFileSync).toHaveBeenNthCalledWith(1, 'new-task-def-file-name',
+            JSON.stringify({
+                family: 'task-def-family',
+                containerDefinitions: [
+                    {
+                        name: "web",
+                        image: "nginx:latest",
+                        secrets: [
+                            {
+                                name: "NEW_SECRET",
+                                valueFrom: "arn:aws:ssm:region:0123456789:parameter/secret"
+                            }
+                        ]
+                    }
+                ]
+            }, null, 2)
+        );
+
+        expect(core.setOutput).toHaveBeenNthCalledWith(1, 'task-definition', 'new-task-def-file-name');
+    });
+
     test('renders logConfiguration on the task definition', async () => {
         core.getInput = jest
             .fn()
