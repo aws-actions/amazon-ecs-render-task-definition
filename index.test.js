@@ -1003,4 +1003,66 @@ describe('Render task definition', () => {
             }, null, 2)
         );
     });
+
+    test('renders secrets without environment-variables', async () => {
+        core.getInput = jest
+            .fn()
+            .mockReturnValueOnce('/hello/secrets-only-task-definition.json')              // task-definition
+            .mockReturnValueOnce('web')                                                  // container-name
+            .mockReturnValueOnce('nginx:latest')                                         // image
+            .mockReturnValueOnce('')                                                     // environment-variables
+            .mockReturnValueOnce('')                                                     // env-files
+            .mockReturnValueOnce('')                                                     // log Configuration Log Driver
+            .mockReturnValueOnce('')                                                     // log Configuration Options
+            .mockReturnValueOnce('')                                                     // docker labels
+            .mockReturnValueOnce('')                                                     // command
+            .mockReturnValueOnce('')                                                     // task-definition arn
+            .mockReturnValueOnce('')                                                     // task-definition family
+            .mockReturnValueOnce('')                                                     // task-definition revision
+            .mockReturnValueOnce(                                                        // secrets
+                'MY_SECRET=arn:aws:secretsmanager:us-east-1:123456789:secret:my-secret\nDB_PASSWORD=arn:aws:ssm:us-east-1:123456789:parameter/db-password'
+            );
+
+        jest.mock('/hello/secrets-only-task-definition.json', () => ({
+            family: 'task-def-family',
+            containerDefinitions: [
+                {
+                    name: "web",
+                    image: "some-other-image"
+                }
+            ]
+        }), { virtual: true });
+
+        await run();
+
+        expect(tmp.fileSync).toHaveBeenNthCalledWith(1, {
+            tmpdir: '/home/runner/work/_temp',
+            prefix: 'task-definition-',
+            postfix: '.json',
+            keep: true,
+            discardDescriptor: true
+        });
+        expect(fs.writeFileSync).toHaveBeenNthCalledWith(1, 'new-task-def-file-name',
+            JSON.stringify({
+                family: 'task-def-family',
+                containerDefinitions: [
+                    {
+                        name: "web",
+                        image: "nginx:latest",
+                        secrets: [
+                            {
+                                name: "MY_SECRET",
+                                valueFrom: "arn:aws:secretsmanager:us-east-1:123456789:secret:my-secret"
+                            },
+                            {
+                                name: "DB_PASSWORD",
+                                valueFrom: "arn:aws:ssm:us-east-1:123456789:parameter/db-password"
+                            }
+                        ]
+                    }
+                ]
+            }, null, 2)
+        );
+        expect(core.setOutput).toHaveBeenNthCalledWith(1, 'task-definition', 'new-task-def-file-name');
+    });
 });
