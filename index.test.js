@@ -52,7 +52,11 @@ describe('Render task definition', () => {
             .mockReturnValueOnce('')                                                    // task-definition revision
             .mockReturnValueOnce(                                                       // secrets
                 'SSM_SECRET=arn:aws:ssm:region:0123456789:parameter/secret\nSM_SECRET=arn:aws:secretsmanager:us-east-1:0123456789:secret:secretName'
-            );                                          
+            )
+            .mockReturnValueOnce('')                                                    // task-role-arn
+            .mockReturnValueOnce('')                                                    // execution-role-arn
+            .mockReturnValueOnce('')                                                    // cpu
+            .mockReturnValueOnce('');                                                   // memory
 
         process.env = Object.assign(process.env, { GITHUB_WORKSPACE: __dirname });
         process.env = Object.assign(process.env, { RUNNER_TEMP: '/home/runner/work/_temp' });
@@ -1063,6 +1067,85 @@ describe('Render task definition', () => {
                 ]
             }, null, 2)
         );
+        expect(core.setOutput).toHaveBeenNthCalledWith(1, 'task-definition', 'new-task-def-file-name');
+    });
+
+    test('overrides top-level task definition fields from a file input', async () => {
+        core.getInput = jest
+            .fn()
+            .mockReturnValueOnce('task-definition.json')
+            .mockReturnValueOnce('web')
+            .mockReturnValueOnce('nginx:latest')
+            .mockReturnValueOnce('FOO=bar\nHELLO=world')
+            .mockReturnValueOnce('arn:aws:s3:::s3_bucket_name/envfile_object_name.env')
+            .mockReturnValueOnce('')
+            .mockReturnValueOnce('')
+            .mockReturnValueOnce('')
+            .mockReturnValueOnce('')
+            .mockReturnValueOnce('')
+            .mockReturnValueOnce('')
+            .mockReturnValueOnce('')
+            .mockReturnValueOnce('')
+            .mockReturnValueOnce('arn:aws:iam::123456789012:role/task-role')
+            .mockReturnValueOnce('arn:aws:iam::123456789012:role/execution-role')
+            .mockReturnValueOnce('1024')
+            .mockReturnValueOnce('2048');
+
+        await run();
+
+        const renderedTaskDefinition = JSON.parse(fs.writeFileSync.mock.calls[0][1]);
+
+        expect(renderedTaskDefinition).toMatchObject({
+            family: 'task-def-family',
+            taskRoleArn: 'arn:aws:iam::123456789012:role/task-role',
+            executionRoleArn: 'arn:aws:iam::123456789012:role/execution-role',
+            cpu: '1024',
+            memory: '2048'
+        });
+        expect(renderedTaskDefinition.containerDefinitions[0]).toMatchObject({
+            name: 'web',
+            image: 'nginx:latest'
+        });
+        expect(core.setOutput).toHaveBeenNthCalledWith(1, 'task-definition', 'new-task-def-file-name');
+    });
+
+    test('overrides top-level task definition fields from an ECS-fetched definition', async () => {
+        core.getInput = jest
+            .fn()
+            .mockReturnValueOnce('')
+            .mockReturnValueOnce('web')
+            .mockReturnValueOnce('nginx:latest')
+            .mockReturnValueOnce('')
+            .mockReturnValueOnce('')
+            .mockReturnValueOnce('')
+            .mockReturnValueOnce('')
+            .mockReturnValueOnce('')
+            .mockReturnValueOnce('')
+            .mockReturnValueOnce('task-definition-arn')
+            .mockReturnValueOnce('')
+            .mockReturnValueOnce('')
+            .mockReturnValueOnce('')
+            .mockReturnValueOnce('arn:aws:iam::123456789012:role/task-role')
+            .mockReturnValueOnce('arn:aws:iam::123456789012:role/execution-role')
+            .mockReturnValueOnce('1024')
+            .mockReturnValueOnce('2048');
+
+        await run();
+
+        const renderedTaskDefinition = JSON.parse(fs.writeFileSync.mock.calls[0][1]);
+
+        expect(mockEcsDescribeTaskDef).toHaveBeenCalledTimes(1);
+        expect(renderedTaskDefinition).toMatchObject({
+            family: 'task-definition-family',
+            taskRoleArn: 'arn:aws:iam::123456789012:role/task-role',
+            executionRoleArn: 'arn:aws:iam::123456789012:role/execution-role',
+            cpu: '1024',
+            memory: '2048'
+        });
+        expect(renderedTaskDefinition.containerDefinitions[0]).toMatchObject({
+            name: 'web',
+            image: 'nginx:latest'
+        });
         expect(core.setOutput).toHaveBeenNthCalledWith(1, 'task-definition', 'new-task-def-file-name');
     });
 });

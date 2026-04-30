@@ -22,7 +22,7 @@ To insert the image URI `amazon/amazon-ecs-sample:latest` as the image for the `
 ```yaml
     - name: Render Amazon ECS task definition
       id: render-web-container
-      uses: aws-actions/amazon-ecs-render-task-definition@v1
+      uses: AiAutomotive/amazon-ecs-render-task-definition@master
       with:
         task-definition: task-definition.json
         task-definition-arn:  task-definition-arn
@@ -32,6 +32,10 @@ To insert the image URI `amazon/amazon-ecs-sample:latest` as the image for the `
         image: amazon/amazon-ecs-sample:latest
         environment-variables: "LOG_LEVEL=info"
         secrets: "SECRET_KEY=arn:aws:ssm:region:0123456789:parameter/secret"
+        task-role-arn: my-task-role
+        execution-role-arn: my-execution-role
+        cpu: 512
+        memory: 1024
 
     - name: Deploy to Amazon ECS service
       uses: aws-actions/amazon-ecs-deploy-task-definition@v2
@@ -49,7 +53,7 @@ input of the second:
 ```yaml
     - name: Render Amazon ECS task definition for first container
       id: render-web-container
-      uses: aws-actions/amazon-ecs-render-task-definition@v1
+      uses: AiAutomotive/amazon-ecs-render-task-definition@master
       with:
         task-definition: task-definition.json
         container-name: web
@@ -66,7 +70,7 @@ input of the second:
 
     - name: Modify Amazon ECS task definition with second container
       id: render-app-container
-      uses: aws-actions/amazon-ecs-render-task-definition@v1
+      uses: AiAutomotive/amazon-ecs-render-task-definition@master
       with:
         task-definition: ${{ steps.render-web-container.outputs.task-definition }}
         container-name: app
@@ -96,8 +100,18 @@ Use the following approach to configure your log driver if needed:
           awslogs-group=/ecs/web
           awslogs-region=us-east-1
           awslogs-stream-prefix=ecs
-
 ```
+
+## Fork Notes
+
+This internal fork keeps the upstream behavior for image, environment, secrets, log configuration, and task-definition fetching. The only additional inputs are the top-level ECS task definition overrides used by the shared deploy workflow:
+
+- `task-role-arn`
+- `execution-role-arn`
+- `cpu`
+- `memory`
+
+Those inputs are optional and only change the task definition when provided.
 
 See [action.yml](action.yml) for the full documentation for this action's inputs and outputs.
 

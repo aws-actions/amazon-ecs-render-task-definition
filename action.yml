@@ -43,6 +43,18 @@ inputs:
   secrets:
     description: 'Secrets to add to the container. Each secret is of the form KEY=valueFrom, where valueFrom is a secret arn. You can specify multiple secrets with multi-line YAML strings.'
     required: false
+  task-role-arn:
+    description: 'Override the taskRoleArn value in the ECS task definition'
+    required: false
+  execution-role-arn:
+    description: 'Override the executionRoleArn value in the ECS task definition'
+    required: false
+  cpu:
+    description: 'Override the cpu value in the ECS task definition'
+    required: false
+  memory:
+    description: 'Override the memory value in the ECS task definition'
+    required: false
 outputs:
   task-definition:
     description: 'The path to the rendered task definition file'

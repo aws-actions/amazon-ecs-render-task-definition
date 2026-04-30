@@ -34,6 +34,24 @@ function removeIgnoredAttributes(taskDef) {
   return cleanTaskDef;  // Returns a completely new object
 }
 
+function applyTaskDefinitionOverrides(taskDef, overrides) {
+  if (overrides.taskRoleArn) {
+    taskDef.taskRoleArn = overrides.taskRoleArn;
+  }
+
+  if (overrides.executionRoleArn) {
+    taskDef.executionRoleArn = overrides.executionRoleArn;
+  }
+
+  if (overrides.cpu) {
+    taskDef.cpu = overrides.cpu;
+  }
+
+  if (overrides.memory) {
+    taskDef.memory = overrides.memory;
+  }
+}
+
 async function run() {
   try {
     const ecs = new ECS({
@@ -57,6 +75,10 @@ async function run() {
     const taskDefinitionFamily = core.getInput('task-definition-family', { required: false }) || undefined;
     const taskDefinitionRevision = Number(core.getInput('task-definition-revision', { required: false })) || null;
     const secrets = core.getInput('secrets', { required: false });
+    const taskRoleArn = core.getInput('task-role-arn', { required: false });
+    const executionRoleArn = core.getInput('execution-role-arn', { required: false });
+    const cpu = core.getInput('cpu', { required: false });
+    const memory = core.getInput('memory', { required: false });
 
     let taskDefPath;
     let taskDefContents;
@@ -102,6 +124,13 @@ async function run() {
     } else {
       throw new Error("Either task definition, task definition arn or task definition family must be provided");
     }
+
+    applyTaskDefinitionOverrides(taskDefContents, {
+      taskRoleArn,
+      executionRoleArn,
+      cpu,
+      memory
+    });
 
     const containersNames = containerName.split(',');
     // Check if containerNames length is major than 1

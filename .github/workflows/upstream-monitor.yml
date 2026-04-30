@@ -1,0 +1,44 @@
+name: Upstream Monitor
+
+on:
+  schedule:
+    - cron: "0 9 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  issues: write
+
+jobs:
+  monitor:
+    name: Check upstream release
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Compare upstream release to internal release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+
+          upstream_tag="$(gh release view --repo aws-actions/amazon-ecs-render-task-definition --json tagName --jq '.tagName')"
+          internal_tag="$(gh release list --limit 1 --json tagName --jq '.[0].tagName // empty')"
+
+          if [ -n "$internal_tag" ] && [ "$upstream_tag" = "$internal_tag" ]; then
+            echo "Internal release already matches upstream release $upstream_tag"
+            exit 0
+          fi
+
+          title="Upstream ECS render action release available: ${upstream_tag}"
+          existing_issue="$(gh issue list --state open --limit 100 --json number,title | jq -r --arg title "$title" 'map(select(.title == $title)) | first | .number // empty')"
+
+          if [ -n "$existing_issue" ]; then
+            echo "Matching issue already exists: #${existing_issue}"
+            exit 0
+          fi
+
+          body=$'Upstream `aws-actions/amazon-ecs-render-task-definition` has a new release available.\n\n- Upstream release: '"$upstream_tag"$'\n- Upstream repository: https://github.com/aws-actions/amazon-ecs-render-task-definition\n- Next step: review the upstream diff, merge the change into the internal fork, rerun tests, and publish a new internal release.'
+
+          gh issue create \
+            --title "$title" \
+            --body "$body"
