@@ -37,6 +37,11 @@ inputs:
   command:
     description: 'The command used by ECS to start the container image'
     required: false
+  task-role-arn:
+    description: 'The ARN of the IAM role that the ECS container will assume'
+    required: false
+  execution-role-arn:
+    description: 'The ARN of the IAM role that the ECS task execution role will assume'
   env-files:
     description: 'S3 object arns to set env variables onto the container. You can specify multiple files with multi-line YAML strings.'
     required: false
