@@ -1,24 +1,40 @@
-on:
-  [pull_request]
-
 name: Check
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
 
 jobs:
   check:
-    name: Run Unit Tests
+    name: Run Unit Tests and Package
     runs-on: ubuntu-22.04
     steps:
-    - name: Checkout
-      uses: actions/checkout@v4
-    - name: Node setup
-      uses: actions/setup-node@v4
-      with:
-        node-version: 24
-    - name: Run tests
-      run: |
-        npm ci
-        npm test
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Node setup
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run tests
+        run: npm test
+
+      - name: Package distribution file
+        run: npm run package
+
+      - name: Verify generated dist is current
+        run: git diff --exit-code dist/index.js
+
   conventional-commits:
+    if: github.event_name == 'pull_request'
     name: Semantic Pull Request
     runs-on: ubuntu-22.04
     steps:
@@ -31,5 +47,5 @@ jobs:
             const pr = context.payload.pull_request;
             const title = pr.title;
             if (title.match(regex) == null) {
-              throw `PR title "${title}"" does not match conventional commits from https://www.conventionalcommits.org/en/v1.0.0/`
+              throw `PR title "${title}" does not match conventional commits from https://www.conventionalcommits.org/en/v1.0.0/`
             }
