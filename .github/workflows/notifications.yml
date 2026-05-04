@@ -20,7 +20,7 @@ jobs:
             const isPR = !!context.payload.pull_request;
             const isIssue = !!context.payload.issue;
             const item = isPR ? context.payload.pull_request : isIssue ? context.payload.issue : context.payload.issue_comment.issue;
-            
+
             // Sanitization functions
             const sanitizeTitle = (title) => {
               return title
@@ -35,7 +35,7 @@ jobs:
                 // Enforce max length of 100
                 .substring(0, 100);
             };
-            
+
             // Escape special characters for Slack
             const escapeForSlack = (text) => {
               return text

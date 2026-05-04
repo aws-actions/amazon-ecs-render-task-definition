@@ -1,29 +1,29 @@
 name: 'Amazon ECS "Render Task Definition" Action for GitHub Actions'
-description: 'Inserts a container image URI into a container definition in an Amazon ECS task definition JSON file, creating a new file.'
+description: "Inserts a container image URI into a container definition in an Amazon ECS task definition JSON file, creating a new file."
 branding:
-  icon: 'cloud'
-  color: 'orange'
+  icon: "cloud"
+  color: "orange"
 inputs:
   task-definition:
-    description: 'The path to the ECS task definition JSON file'
+    description: "The path to the ECS task definition JSON file"
     required: false
   task-definition-arn:
-    description: 'The full Amazon Resource Name (ARN) of the task definition to be used'
+    description: "The full Amazon Resource Name (ARN) of the task definition to be used"
     required: false
   task-definition-family:
-    description: 'The name of a family that the task definition is registered to'
+    description: "The name of a family that the task definition is registered to"
     required: false
   task-definition-revision:
-    description: 'The revision of the task definition being used'
+    description: "The revision of the task definition being used"
     required: false
   container-name:
-    description: 'The name of the container or containers defined in the containerDefinitions section of the ECS task definition. If more than one container, add the names comma separated.'
+    description: "The name of the container or containers defined in the containerDefinitions section of the ECS task definition. If more than one container, add the names comma separated."
     required: true
   image:
-    description: 'The URI of the container image to insert into the ECS task definition'
+    description: "The URI of the container image to insert into the ECS task definition"
     required: true
   environment-variables:
-    description: 'Variables to add to the container. Each variable is of the form KEY=value, you can specify multiple variables with multi-line YAML strings.'
+    description: "Variables to add to the container. Each variable is of the form KEY=value, you can specify multiple variables with multi-line YAML strings."
     required: false
   log-configuration-log-driver:
     description: "Create/Override logDriver inside logConfiguration"
@@ -35,29 +35,29 @@ inputs:
     description: "Create/Override options inside dockerLabels. Each variable is key=value, you can specify multiple variables with multi-line YAML."
     required: false
   command:
-    description: 'The command used by ECS to start the container image'
+    description: "The command used by ECS to start the container image"
     required: false
   env-files:
-    description: 'S3 object arns to set env variables onto the container. You can specify multiple files with multi-line YAML strings.'
+    description: "S3 object arns to set env variables onto the container. You can specify multiple files with multi-line YAML strings."
     required: false
   secrets:
-    description: 'Secrets to add to the container. Each secret is of the form KEY=valueFrom, where valueFrom is a secret arn. You can specify multiple secrets with multi-line YAML strings.'
+    description: "Secrets to add to the container. Each secret is of the form KEY=valueFrom, where valueFrom is a secret arn. You can specify multiple secrets with multi-line YAML strings."
     required: false
   task-role-arn:
-    description: 'Override the taskRoleArn value in the ECS task definition'
+    description: "Override the taskRoleArn value in the ECS task definition"
     required: false
   execution-role-arn:
-    description: 'Override the executionRoleArn value in the ECS task definition'
+    description: "Override the executionRoleArn value in the ECS task definition"
     required: false
   cpu:
-    description: 'Override the cpu value in the ECS task definition'
+    description: "Override the cpu value in the ECS task definition"
     required: false
   memory:
-    description: 'Override the memory value in the ECS task definition'
+    description: "Override the memory value in the ECS task definition"
     required: false
 outputs:
   task-definition:
-    description: 'The path to the rendered task definition file'
+    description: "The path to the rendered task definition file"
 runs:
-  using: 'node24'
-  main: 'dist/index.js'
+  using: "node24"
+  main: "dist/index.js"
