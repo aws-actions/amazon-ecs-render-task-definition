@@ -47,12 +47,14 @@ describe('Render task definition', () => {
             .mockReturnValueOnce('')                                                    // log Configuration Options
             .mockReturnValueOnce('')                                                    // docker labels
             .mockReturnValueOnce('')                                                    // command
+            .mockReturnValueOnce('')                                                    // task-role-arn
+            .mockReturnValueOnce('')                                                    // execution-role-arn
             .mockReturnValueOnce('')                                                    // task-definition arn
             .mockReturnValueOnce('')                                                    // task-definition family
             .mockReturnValueOnce('')                                                    // task-definition revision
             .mockReturnValueOnce(                                                       // secrets
                 'SSM_SECRET=arn:aws:ssm:region:0123456789:parameter/secret\nSM_SECRET=arn:aws:secretsmanager:us-east-1:0123456789:secret:secretName'
-            );                                          
+            );
 
         process.env = Object.assign(process.env, { GITHUB_WORKSPACE: __dirname });
         process.env = Object.assign(process.env, { RUNNER_TEMP: '/home/runner/work/_temp' });
@@ -263,6 +265,8 @@ describe('Render task definition', () => {
             .mockReturnValueOnce('')                                                      // log Configuration Options
             .mockReturnValueOnce('')                                                      // docker labels
             .mockReturnValueOnce('')                                                      // command
+            .mockReturnValueOnce('')                                                      // task-role-arn
+            .mockReturnValueOnce('')                                                      // execution-role-arn
             .mockReturnValueOnce('')                                                      // task-definition arn
             .mockReturnValueOnce('')                                                      // task-definition family
             .mockReturnValueOnce('')                                                      // task-definition revision
@@ -465,19 +469,21 @@ describe('Render task definition', () => {
     test('error returned for malformatted secret string', async () => {
         core.getInput = jest
             .fn()
-            .mockReturnValueOnce('task-definition.json')
-            .mockReturnValueOnce('web')
-            .mockReturnValueOnce('nginx:latest')
-            .mockReturnValueOnce('EXAMPLE=here')
-            .mockReturnValueOnce('')
-            .mockReturnValueOnce('')
-            .mockReturnValueOnce('')
-            .mockReturnValueOnce('')
-            .mockReturnValueOnce('')
-            .mockReturnValueOnce('')
-            .mockReturnValueOnce('')
-            .mockReturnValueOnce('')
-            .mockReturnValueOnce('SECRET');
+            .mockReturnValueOnce('task-definition.json')                                 // task-definition
+            .mockReturnValueOnce('web')                                                  // container-name
+            .mockReturnValueOnce('nginx:latest')                                         // image
+            .mockReturnValueOnce('EXAMPLE=here')                                         // environment-variables
+            .mockReturnValueOnce('')                                                     // env-files
+            .mockReturnValueOnce('')                                                     // log-configuration-log-driver
+            .mockReturnValueOnce('')                                                     // log-configuration-options
+            .mockReturnValueOnce('')                                                     // docker-labels
+            .mockReturnValueOnce('')                                                     // command
+            .mockReturnValueOnce('')                                                     // task-role-arn
+            .mockReturnValueOnce('')                                                     // execution-role-arn
+            .mockReturnValueOnce('')                                                     // task-definition-arn
+            .mockReturnValueOnce('')                                                     // task-definition-family
+            .mockReturnValueOnce('')                                                     // task-definition-revision
+            .mockReturnValueOnce('SECRET');                                              // secrets
         await run();
 
         expect(core.setFailed).toBeCalledWith(expect.stringContaining(`Cannot parse the secret 'SECRET'`));
@@ -548,6 +554,8 @@ describe('Render task definition', () => {
             .mockReturnValueOnce('')                                                    // log Configuration Options
             .mockReturnValueOnce('')                                                    // Docker Labels
             .mockReturnValueOnce('')                                                    // Command Options 
+            .mockReturnValueOnce('')                                                    // task-role-arn
+            .mockReturnValueOnce('')                                                    // execution-role-arn
             .mockReturnValueOnce('task-definition-arn')                                 // task definition arn
             .mockReturnValueOnce('task-definition-family')                              // task definition family
             .mockReturnValueOnce(0);                                                    // task definition revision
@@ -569,6 +577,8 @@ describe('Render task definition', () => {
             .mockReturnValueOnce('')                           // log Configuration Options
             .mockReturnValueOnce('')                           // Docker Labels
             .mockReturnValueOnce('')                           // Command Options 
+            .mockReturnValueOnce('')                                                    // task-role-arn
+            .mockReturnValueOnce('')                                                    // execution-role-arn
             .mockReturnValueOnce('')                           // task definition arn
             .mockReturnValueOnce("task-definition-family")     // task definition family
             .mockReturnValueOnce(10);                          // task definition revision
@@ -594,6 +604,8 @@ describe('Render task definition', () => {
             .mockReturnValueOnce('')                           // log Configuration Options
             .mockReturnValueOnce('')                           // Docker Labels
             .mockReturnValueOnce('')                           // Command Options 
+            .mockReturnValueOnce('')                                                    // task-role-arn
+            .mockReturnValueOnce('')                                                    // execution-role-arn
             .mockReturnValueOnce('')                           // task definition arn
             .mockReturnValueOnce("task-definition-family")     // task definition family
             .mockReturnValueOnce(0);                           // task definition revision
@@ -620,6 +632,8 @@ describe('Render task definition', () => {
             .mockReturnValueOnce('')                           // log Configuration Options
             .mockReturnValueOnce('')                           // Docker Labels
             .mockReturnValueOnce('')                           // Command Options 
+            .mockReturnValueOnce('')                                                    // task-role-arn
+            .mockReturnValueOnce('')                                                    // execution-role-arn
             .mockReturnValueOnce('task-definition-arn')        // task definition arn
             .mockReturnValueOnce('')                           // task definition family
             .mockReturnValueOnce(0);                           // task definition revision
@@ -646,6 +660,8 @@ describe('Render task definition', () => {
             .mockReturnValueOnce('')                                                    // log Configuration Options
             .mockReturnValueOnce('')                                                    // Docker Labels
             .mockReturnValueOnce('')                                                    // Command Options 
+            .mockReturnValueOnce('')                                                    // task-role-arn
+            .mockReturnValueOnce('')                                                    // execution-role-arn
             .mockReturnValueOnce('task-definition-arn')                                 // task definition arn
             .mockReturnValueOnce('')                                                    // task definition family
             .mockReturnValueOnce(0);                                                    //task definition revision
@@ -669,6 +685,8 @@ describe('Render task definition', () => {
             .mockReturnValueOnce('')                                                    // log Configuration Options
             .mockReturnValueOnce('')                                                    // Docker Labels
             .mockReturnValueOnce('')                                                    // Command Options 
+            .mockReturnValueOnce('')                                                    // task-role-arn
+            .mockReturnValueOnce('')                                                    // execution-role-arn
             .mockReturnValueOnce('task-definition-arn')                                 //task definition arn
             .mockReturnValueOnce('task-definition-family')                              //task definition family
             .mockReturnValueOnce(10);                                                   //task definition revision
@@ -692,6 +710,8 @@ describe('Render task definition', () => {
             .mockReturnValueOnce('')                           // log Configuration Options
             .mockReturnValueOnce('')                           // Docker Labels
             .mockReturnValueOnce('')                           // Command Options 
+            .mockReturnValueOnce('')                                                    // task-role-arn
+            .mockReturnValueOnce('')                                                    // execution-role-arn
             .mockReturnValueOnce('task-definition-arn')        // task definition arn
             .mockReturnValueOnce('task-definition-family')     // task definition family
             .mockReturnValueOnce(0);                           // task definition revision
@@ -717,6 +737,8 @@ describe('Render task definition', () => {
             .mockReturnValueOnce('')                           // log Configuration Options
             .mockReturnValueOnce('')                           // Docker Labels
             .mockReturnValueOnce('')                           // Command Options 
+            .mockReturnValueOnce('')                                                    // task-role-arn
+            .mockReturnValueOnce('')                                                    // execution-role-arn
             .mockReturnValueOnce('')                           // task definition arn
             .mockReturnValueOnce('')                           // task definition family
             .mockReturnValueOnce(10);                          // task definition revision
@@ -1016,6 +1038,8 @@ describe('Render task definition', () => {
             .mockReturnValueOnce('')                                                     // log Configuration Options
             .mockReturnValueOnce('')                                                     // docker labels
             .mockReturnValueOnce('')                                                     // command
+            .mockReturnValueOnce('')                                                     // task-role-arn
+            .mockReturnValueOnce('')                                                     // execution-role-arn
             .mockReturnValueOnce('')                                                     // task-definition arn
             .mockReturnValueOnce('')                                                     // task-definition family
             .mockReturnValueOnce('')                                                     // task-definition revision
@@ -1064,5 +1088,306 @@ describe('Render task definition', () => {
             }, null, 2)
         );
         expect(core.setOutput).toHaveBeenNthCalledWith(1, 'task-definition', 'new-task-def-file-name');
+    });
+
+    test('renders a task definition with task role arn', async () => {
+        core.getInput = jest
+            .fn()
+            .mockReturnValueOnce('/hello/task-role-task-definition.json')                 // task-definition
+            .mockReturnValueOnce('web')                                                  // container-name
+            .mockReturnValueOnce('nginx:latest')                                         // image
+            .mockReturnValueOnce('')                                                     // environment-variables
+            .mockReturnValueOnce('')                                                     // env-files
+            .mockReturnValueOnce('')                                                     // log-configuration-log-driver
+            .mockReturnValueOnce('')                                                     // log-configuration-options
+            .mockReturnValueOnce('')                                                     // docker-labels
+            .mockReturnValueOnce('')                                                     // command
+            .mockReturnValueOnce('arn:aws:iam::123456789012:role/my-task-role')           // task-role-arn
+            .mockReturnValueOnce('')                                                     // execution-role-arn
+            .mockReturnValueOnce('')                                                     // task-definition-arn
+            .mockReturnValueOnce('')                                                     // task-definition-family
+            .mockReturnValueOnce('')                                                     // task-definition-revision
+            .mockReturnValueOnce('');                                                    // secrets
+
+        jest.mock('/hello/task-role-task-definition.json', () => ({
+            family: 'task-def-family',
+            containerDefinitions: [
+                {
+                    name: "web",
+                    image: "some-other-image"
+                }
+            ]
+        }), { virtual: true });
+
+        await run();
+
+        expect(fs.writeFileSync).toHaveBeenNthCalledWith(1, 'new-task-def-file-name',
+            JSON.stringify({
+                family: 'task-def-family',
+                containerDefinitions: [
+                    {
+                        name: "web",
+                        image: "nginx:latest"
+                    }
+                ],
+                taskRoleArn: "arn:aws:iam::123456789012:role/my-task-role"
+            }, null, 2)
+        );
+        expect(core.setOutput).toHaveBeenNthCalledWith(1, 'task-definition', 'new-task-def-file-name');
+    });
+
+    test('renders a task definition with execution role arn', async () => {
+        core.getInput = jest
+            .fn()
+            .mockReturnValueOnce('/hello/exec-role-task-definition.json')                 // task-definition
+            .mockReturnValueOnce('web')                                                  // container-name
+            .mockReturnValueOnce('nginx:latest')                                         // image
+            .mockReturnValueOnce('')                                                     // environment-variables
+            .mockReturnValueOnce('')                                                     // env-files
+            .mockReturnValueOnce('')                                                     // log-configuration-log-driver
+            .mockReturnValueOnce('')                                                     // log-configuration-options
+            .mockReturnValueOnce('')                                                     // docker-labels
+            .mockReturnValueOnce('')                                                     // command
+            .mockReturnValueOnce('')                                                     // task-role-arn
+            .mockReturnValueOnce('arn:aws:iam::123456789012:role/my-execution-role')      // execution-role-arn
+            .mockReturnValueOnce('')                                                     // task-definition-arn
+            .mockReturnValueOnce('')                                                     // task-definition-family
+            .mockReturnValueOnce('')                                                     // task-definition-revision
+            .mockReturnValueOnce('');                                                    // secrets
+
+        jest.mock('/hello/exec-role-task-definition.json', () => ({
+            family: 'task-def-family',
+            containerDefinitions: [
+                {
+                    name: "web",
+                    image: "some-other-image"
+                }
+            ]
+        }), { virtual: true });
+
+        await run();
+
+        expect(fs.writeFileSync).toHaveBeenNthCalledWith(1, 'new-task-def-file-name',
+            JSON.stringify({
+                family: 'task-def-family',
+                containerDefinitions: [
+                    {
+                        name: "web",
+                        image: "nginx:latest"
+                    }
+                ],
+                executionRoleArn: "arn:aws:iam::123456789012:role/my-execution-role"
+            }, null, 2)
+        );
+        expect(core.setOutput).toHaveBeenNthCalledWith(1, 'task-definition', 'new-task-def-file-name');
+    });
+
+    test('renders a task definition with both task role and execution role arns', async () => {
+        core.getInput = jest
+            .fn()
+            .mockReturnValueOnce('/hello/both-roles-task-definition.json')                // task-definition
+            .mockReturnValueOnce('web')                                                  // container-name
+            .mockReturnValueOnce('nginx:latest')                                         // image
+            .mockReturnValueOnce('')                                                     // environment-variables
+            .mockReturnValueOnce('')                                                     // env-files
+            .mockReturnValueOnce('')                                                     // log-configuration-log-driver
+            .mockReturnValueOnce('')                                                     // log-configuration-options
+            .mockReturnValueOnce('')                                                     // docker-labels
+            .mockReturnValueOnce('')                                                     // command
+            .mockReturnValueOnce('arn:aws:iam::123456789012:role/my-task-role')           // task-role-arn
+            .mockReturnValueOnce('arn:aws:iam::123456789012:role/my-execution-role')      // execution-role-arn
+            .mockReturnValueOnce('')                                                     // task-definition-arn
+            .mockReturnValueOnce('')                                                     // task-definition-family
+            .mockReturnValueOnce('')                                                     // task-definition-revision
+            .mockReturnValueOnce('');                                                    // secrets
+
+        jest.mock('/hello/both-roles-task-definition.json', () => ({
+            family: 'task-def-family',
+            containerDefinitions: [
+                {
+                    name: "web",
+                    image: "some-other-image"
+                }
+            ]
+        }), { virtual: true });
+
+        await run();
+
+        expect(fs.writeFileSync).toHaveBeenNthCalledWith(1, 'new-task-def-file-name',
+            JSON.stringify({
+                family: 'task-def-family',
+                containerDefinitions: [
+                    {
+                        name: "web",
+                        image: "nginx:latest"
+                    }
+                ],
+                taskRoleArn: "arn:aws:iam::123456789012:role/my-task-role",
+                executionRoleArn: "arn:aws:iam::123456789012:role/my-execution-role"
+            }, null, 2)
+        );
+        expect(core.setOutput).toHaveBeenNthCalledWith(1, 'task-definition', 'new-task-def-file-name');
+    });
+
+    test('renders a task definition with role arn containing a path', async () => {
+        core.getInput = jest
+            .fn()
+            .mockReturnValueOnce('/hello/path-role-task-definition.json')                 // task-definition
+            .mockReturnValueOnce('web')                                                  // container-name
+            .mockReturnValueOnce('nginx:latest')                                         // image
+            .mockReturnValueOnce('')                                                     // environment-variables
+            .mockReturnValueOnce('')                                                     // env-files
+            .mockReturnValueOnce('')                                                     // log-configuration-log-driver
+            .mockReturnValueOnce('')                                                     // log-configuration-options
+            .mockReturnValueOnce('')                                                     // docker-labels
+            .mockReturnValueOnce('')                                                     // command
+            .mockReturnValueOnce('arn:aws:iam::123456789012:role/path/to/my-task-role')   // task-role-arn
+            .mockReturnValueOnce('')                                                     // execution-role-arn
+            .mockReturnValueOnce('')                                                     // task-definition-arn
+            .mockReturnValueOnce('')                                                     // task-definition-family
+            .mockReturnValueOnce('')                                                     // task-definition-revision
+            .mockReturnValueOnce('');                                                    // secrets
+
+        jest.mock('/hello/path-role-task-definition.json', () => ({
+            family: 'task-def-family',
+            containerDefinitions: [
+                {
+                    name: "web",
+                    image: "some-other-image"
+                }
+            ]
+        }), { virtual: true });
+
+        await run();
+
+        expect(fs.writeFileSync).toHaveBeenNthCalledWith(1, 'new-task-def-file-name',
+            JSON.stringify({
+                family: 'task-def-family',
+                containerDefinitions: [
+                    {
+                        name: "web",
+                        image: "nginx:latest"
+                    }
+                ],
+                taskRoleArn: "arn:aws:iam::123456789012:role/path/to/my-task-role"
+            }, null, 2)
+        );
+    });
+
+    test('renders a task definition with role arn for aws-cn partition', async () => {
+        core.getInput = jest
+            .fn()
+            .mockReturnValueOnce('/hello/cn-role-task-definition.json')                   // task-definition
+            .mockReturnValueOnce('web')                                                  // container-name
+            .mockReturnValueOnce('nginx:latest')                                         // image
+            .mockReturnValueOnce('')                                                     // environment-variables
+            .mockReturnValueOnce('')                                                     // env-files
+            .mockReturnValueOnce('')                                                     // log-configuration-log-driver
+            .mockReturnValueOnce('')                                                     // log-configuration-options
+            .mockReturnValueOnce('')                                                     // docker-labels
+            .mockReturnValueOnce('')                                                     // command
+            .mockReturnValueOnce('arn:aws-cn:iam::123456789012:role/my-task-role')        // task-role-arn
+            .mockReturnValueOnce('')                                                     // execution-role-arn
+            .mockReturnValueOnce('')                                                     // task-definition-arn
+            .mockReturnValueOnce('')                                                     // task-definition-family
+            .mockReturnValueOnce('')                                                     // task-definition-revision
+            .mockReturnValueOnce('');                                                    // secrets
+
+        jest.mock('/hello/cn-role-task-definition.json', () => ({
+            family: 'task-def-family',
+            containerDefinitions: [
+                {
+                    name: "web",
+                    image: "some-other-image"
+                }
+            ]
+        }), { virtual: true });
+
+        await run();
+
+        expect(fs.writeFileSync).toHaveBeenNthCalledWith(1, 'new-task-def-file-name',
+            JSON.stringify({
+                family: 'task-def-family',
+                containerDefinitions: [
+                    {
+                        name: "web",
+                        image: "nginx:latest"
+                    }
+                ],
+                taskRoleArn: "arn:aws-cn:iam::123456789012:role/my-task-role"
+            }, null, 2)
+        );
+    });
+
+    test('error returned for invalid task role arn format', async () => {
+        core.getInput = jest
+            .fn()
+            .mockReturnValueOnce('task-definition.json')                                 // task-definition
+            .mockReturnValueOnce('web')                                                  // container-name
+            .mockReturnValueOnce('nginx:latest')                                         // image
+            .mockReturnValueOnce('')                                                     // environment-variables
+            .mockReturnValueOnce('')                                                     // env-files
+            .mockReturnValueOnce('')                                                     // log-configuration-log-driver
+            .mockReturnValueOnce('')                                                     // log-configuration-options
+            .mockReturnValueOnce('')                                                     // docker-labels
+            .mockReturnValueOnce('')                                                     // command
+            .mockReturnValueOnce('not-a-valid-arn')                                      // task-role-arn
+            .mockReturnValueOnce('')                                                     // execution-role-arn
+            .mockReturnValueOnce('')                                                     // task-definition-arn
+            .mockReturnValueOnce('')                                                     // task-definition-family
+            .mockReturnValueOnce('')                                                     // task-definition-revision
+            .mockReturnValueOnce('');                                                    // secrets
+
+        await run();
+
+        expect(core.setFailed).toBeCalledWith('Invalid ARN format for task-role-arn. Expected format: arn:aws:iam::<account-id>:role/<role-name>');
+    });
+
+    test('error returned for invalid execution role arn format', async () => {
+        core.getInput = jest
+            .fn()
+            .mockReturnValueOnce('task-definition.json')                                 // task-definition
+            .mockReturnValueOnce('web')                                                  // container-name
+            .mockReturnValueOnce('nginx:latest')                                         // image
+            .mockReturnValueOnce('')                                                     // environment-variables
+            .mockReturnValueOnce('')                                                     // env-files
+            .mockReturnValueOnce('')                                                     // log-configuration-log-driver
+            .mockReturnValueOnce('')                                                     // log-configuration-options
+            .mockReturnValueOnce('')                                                     // docker-labels
+            .mockReturnValueOnce('')                                                     // command
+            .mockReturnValueOnce('')                                                     // task-role-arn
+            .mockReturnValueOnce('arn:aws:iam::12345:role/too-short-account')             // execution-role-arn
+            .mockReturnValueOnce('')                                                     // task-definition-arn
+            .mockReturnValueOnce('')                                                     // task-definition-family
+            .mockReturnValueOnce('')                                                     // task-definition-revision
+            .mockReturnValueOnce('');                                                    // secrets
+
+        await run();
+
+        expect(core.setFailed).toBeCalledWith('Invalid ARN format for execution-role-arn. Expected format: arn:aws:iam::<account-id>:role/<role-name>');
+    });
+
+    test('error returned for arn with wrong service', async () => {
+        core.getInput = jest
+            .fn()
+            .mockReturnValueOnce('task-definition.json')                                 // task-definition
+            .mockReturnValueOnce('web')                                                  // container-name
+            .mockReturnValueOnce('nginx:latest')                                         // image
+            .mockReturnValueOnce('')                                                     // environment-variables
+            .mockReturnValueOnce('')                                                     // env-files
+            .mockReturnValueOnce('')                                                     // log-configuration-log-driver
+            .mockReturnValueOnce('')                                                     // log-configuration-options
+            .mockReturnValueOnce('')                                                     // docker-labels
+            .mockReturnValueOnce('')                                                     // command
+            .mockReturnValueOnce('arn:aws:s3::123456789012:role/my-role')                 // task-role-arn
+            .mockReturnValueOnce('')                                                     // execution-role-arn
+            .mockReturnValueOnce('')                                                     // task-definition-arn
+            .mockReturnValueOnce('')                                                     // task-definition-family
+            .mockReturnValueOnce('')                                                     // task-definition-revision
+            .mockReturnValueOnce('');                                                    // secrets
+
+        await run();
+
+        expect(core.setFailed).toBeCalledWith('Invalid ARN format for task-role-arn. Expected format: arn:aws:iam::<account-id>:role/<role-name>');
     });
 });

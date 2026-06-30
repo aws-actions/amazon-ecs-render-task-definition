@@ -45,6 +45,8 @@ async function run() {
     const logConfigurationOptions = core.getInput("log-configuration-options", { required: false });
     const dockerLabels = core.getInput('docker-labels', { required: false });
     const command = core.getInput('command', { required: false });
+    const taskRoleArn = core.getInput('task-role-arn', { required: false });
+    const executionRoleArn = core.getInput('execution-role-arn', { required: false });
 
     //New inputs to fetch task definition 
     const taskDefinitionArn = core.getInput('task-definition-arn', { required: false }) || undefined;
@@ -254,6 +256,22 @@ async function run() {
       })
     }
   });
+
+    const arnRegex = /^arn:aws(-cn|-us-gov|-iso|-iso-b|-iso-e|-iso-f)?:iam::[0-9]{12}:role\/.+$/;
+
+    if (taskRoleArn) {
+      if (!arnRegex.test(taskRoleArn)) {
+        throw new Error(`Invalid ARN format for task-role-arn. Expected format: arn:aws:iam::<account-id>:role/<role-name>`);
+      }
+      taskDefContents.taskRoleArn = taskRoleArn;
+    }
+
+    if (executionRoleArn) {
+      if (!arnRegex.test(executionRoleArn)) {
+        throw new Error(`Invalid ARN format for execution-role-arn. Expected format: arn:aws:iam::<account-id>:role/<role-name>`);
+      }
+      taskDefContents.executionRoleArn = executionRoleArn;
+    }
 
     // Write out a new task definition file
     var updatedTaskDefFile = tmp.fileSync({
