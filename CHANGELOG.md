@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.9.0](https://github.com/aws-actions/amazon-ecs-render-task-definition/compare/v1.8.5...v1.9.0) (2026-06-30)
+
+
+### Features
+
+* add task-role-arn and execution-role-arn inputs ([#475](https://github.com/aws-actions/amazon-ecs-render-task-definition/issues/475)) ([20c4259](https://github.com/aws-actions/amazon-ecs-render-task-definition/commit/20c42592a8b8ca3e1e43c495b7b6828fd8edd84d)), closes [#378](https://github.com/aws-actions/amazon-ecs-render-task-definition/issues/378) [#183](https://github.com/aws-actions/amazon-ecs-render-task-definition/issues/183)
+
 ### [1.8.5](https://github.com/aws-actions/amazon-ecs-render-task-definition/compare/v1.8.4...v1.8.5) (2026-04-30)
 
 
