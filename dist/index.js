@@ -3770,9 +3770,10 @@ const { DEFAULT_RETRY_MODE, NODE_RETRY_MODE_CONFIG_OPTIONS, NODE_MAX_ATTEMPT_CON
 const { TypeRegistry, getSchemaSerdePlugin } = __nccwpck_require__(6890);
 const { resolveAwsSdkSigV4Config, AwsSdkSigV4Signer, NODE_AUTH_SCHEME_PREFERENCE_OPTIONS } = __nccwpck_require__(7523);
 const { defaultProvider } = __nccwpck_require__(5861);
-const { toUtf8, fromUtf8, toBase64, fromBase64, Hash, calculateBodyLength } = __nccwpck_require__(2430);
+const { toUtf8, fromUtf8, toBase64, fromBase64, calculateBodyLength } = __nccwpck_require__(2430);
 const { streamCollector, NodeHttpHandler } = __nccwpck_require__(1279);
 const { AwsJson1_1Protocol } = __nccwpck_require__(7288);
+const { Sha256 } = __nccwpck_require__(9542);
 
 const defaultECSHttpAuthSchemeParametersProvider = async (config, context, input) => {
     return {
@@ -3827,7 +3828,7 @@ const commonParams = {
     UseDualStack: { type: "builtInParams", name: "useDualstackEndpoint" },
 };
 
-var version = "3.1075.0";
+var version = "3.1076.0";
 var packageInfo = {
 	version: version};
 
@@ -7878,6 +7879,7 @@ const getRuntimeConfig$1 = (config) => {
             serviceTarget: "AmazonEC2ContainerServiceV20141113",
         },
         serviceId: config?.serviceId ?? "ECS",
+        sha256: config?.sha256 ?? Sha256,
         urlParser: config?.urlParser ?? parseUrl,
         utf8Decoder: config?.utf8Decoder ?? fromUtf8,
         utf8Encoder: config?.utf8Encoder ?? toUtf8,
@@ -7911,7 +7913,6 @@ const getRuntimeConfig = (config) => {
                 ...NODE_RETRY_MODE_CONFIG_OPTIONS,
                 default: async () => (await defaultConfigProvider()).retryMode || DEFAULT_RETRY_MODE,
             }, config),
-        sha256: config?.sha256 ?? Hash.bind(null, "sha256"),
         streamCollector: config?.streamCollector ?? streamCollector,
         useDualstackEndpoint: config?.useDualstackEndpoint ?? loadConfig(NODE_USE_DUALSTACK_ENDPOINT_CONFIG_OPTIONS, loaderConfig),
         useFipsEndpoint: config?.useFipsEndpoint ?? loadConfig(NODE_USE_FIPS_ENDPOINT_CONFIG_OPTIONS, loaderConfig),
@@ -15422,9 +15423,10 @@ const { parseUrl, getHttpHandlerExtensionConfiguration, resolveHttpHandlerRuntim
 const { DEFAULT_RETRY_MODE, NODE_RETRY_MODE_CONFIG_OPTIONS, NODE_MAX_ATTEMPT_CONFIG_OPTIONS, resolveRetryConfig, getRetryPlugin } = __nccwpck_require__(3609);
 const { TypeRegistry, getSchemaSerdePlugin } = __nccwpck_require__(6890);
 const { resolveAwsSdkSigV4Config, AwsSdkSigV4Signer, NODE_AUTH_SCHEME_PREFERENCE_OPTIONS } = __nccwpck_require__(7523);
-const { toUtf8, fromUtf8, toBase64, fromBase64, Hash, calculateBodyLength } = __nccwpck_require__(2430);
+const { toUtf8, fromUtf8, toBase64, fromBase64, calculateBodyLength } = __nccwpck_require__(2430);
 const { streamCollector, NodeHttpHandler } = __nccwpck_require__(1279);
 const { AwsRestJsonProtocol } = __nccwpck_require__(7288);
+const { Sha256 } = __nccwpck_require__(9542);
 
 const defaultSigninHttpAuthSchemeParametersProvider = async (config, context, input) => {
     return {
@@ -15488,7 +15490,7 @@ const commonParams = {
     UseDualStack: { type: "builtInParams", name: "useDualstackEndpoint" },
 };
 
-var version = "3.997.23";
+var version = "3.997.24";
 var packageInfo = {
 	version: version};
 
@@ -15785,6 +15787,7 @@ const getRuntimeConfig$1 = (config) => {
             serviceTarget: "Signin",
         },
         serviceId: config?.serviceId ?? "Signin",
+        sha256: config?.sha256 ?? Sha256,
         urlParser: config?.urlParser ?? parseUrl,
         utf8Decoder: config?.utf8Decoder ?? fromUtf8,
         utf8Encoder: config?.utf8Encoder ?? toUtf8,
@@ -15817,7 +15820,6 @@ const getRuntimeConfig = (config) => {
                 ...NODE_RETRY_MODE_CONFIG_OPTIONS,
                 default: async () => (await defaultConfigProvider()).retryMode || DEFAULT_RETRY_MODE,
             }, config),
-        sha256: config?.sha256 ?? Hash.bind(null, "sha256"),
         streamCollector: config?.streamCollector ?? streamCollector,
         useDualstackEndpoint: config?.useDualstackEndpoint ?? loadConfig(NODE_USE_DUALSTACK_ENDPOINT_CONFIG_OPTIONS, loaderConfig),
         useFipsEndpoint: config?.useFipsEndpoint ?? loadConfig(NODE_USE_FIPS_ENDPOINT_CONFIG_OPTIONS, loaderConfig),
@@ -15978,9 +15980,10 @@ const { parseUrl, getHttpHandlerExtensionConfiguration, resolveHttpHandlerRuntim
 const { DEFAULT_RETRY_MODE, NODE_RETRY_MODE_CONFIG_OPTIONS, NODE_MAX_ATTEMPT_CONFIG_OPTIONS, resolveRetryConfig, getRetryPlugin } = __nccwpck_require__(3609);
 const { TypeRegistry, getSchemaSerdePlugin } = __nccwpck_require__(6890);
 const { resolveAwsSdkSigV4Config, AwsSdkSigV4Signer, NODE_AUTH_SCHEME_PREFERENCE_OPTIONS } = __nccwpck_require__(7523);
-const { toUtf8, fromUtf8, toBase64, fromBase64, Hash, calculateBodyLength } = __nccwpck_require__(2430);
+const { toUtf8, fromUtf8, toBase64, fromBase64, calculateBodyLength } = __nccwpck_require__(2430);
 const { streamCollector, NodeHttpHandler } = __nccwpck_require__(1279);
 const { AwsRestJsonProtocol } = __nccwpck_require__(7288);
+const { Sha256 } = __nccwpck_require__(9542);
 
 const defaultSSOOIDCHttpAuthSchemeParametersProvider = async (config, context, input) => {
     return {
@@ -16044,7 +16047,7 @@ const commonParams = {
     UseDualStack: { type: "builtInParams", name: "useDualstackEndpoint" },
 };
 
-var version = "3.997.23";
+var version = "3.997.24";
 var packageInfo = {
 	version: version};
 
@@ -16461,6 +16464,7 @@ const getRuntimeConfig$1 = (config) => {
             serviceTarget: "AWSSSOOIDCService",
         },
         serviceId: config?.serviceId ?? "SSO OIDC",
+        sha256: config?.sha256 ?? Sha256,
         urlParser: config?.urlParser ?? parseUrl,
         utf8Decoder: config?.utf8Decoder ?? fromUtf8,
         utf8Encoder: config?.utf8Encoder ?? toUtf8,
@@ -16493,7 +16497,6 @@ const getRuntimeConfig = (config) => {
                 ...NODE_RETRY_MODE_CONFIG_OPTIONS,
                 default: async () => (await defaultConfigProvider()).retryMode || DEFAULT_RETRY_MODE,
             }, config),
-        sha256: config?.sha256 ?? Hash.bind(null, "sha256"),
         streamCollector: config?.streamCollector ?? streamCollector,
         useDualstackEndpoint: config?.useDualstackEndpoint ?? loadConfig(NODE_USE_DUALSTACK_ENDPOINT_CONFIG_OPTIONS, loaderConfig),
         useFipsEndpoint: config?.useFipsEndpoint ?? loadConfig(NODE_USE_FIPS_ENDPOINT_CONFIG_OPTIONS, loaderConfig),
@@ -16661,9 +16664,10 @@ const { parseUrl, getHttpHandlerExtensionConfiguration, resolveHttpHandlerRuntim
 const { DEFAULT_RETRY_MODE, NODE_RETRY_MODE_CONFIG_OPTIONS, NODE_MAX_ATTEMPT_CONFIG_OPTIONS, resolveRetryConfig, getRetryPlugin } = __nccwpck_require__(3609);
 const { TypeRegistry, getSchemaSerdePlugin } = __nccwpck_require__(6890);
 const { resolveAwsSdkSigV4Config, AwsSdkSigV4Signer, NODE_AUTH_SCHEME_PREFERENCE_OPTIONS } = __nccwpck_require__(7523);
-const { toUtf8, fromUtf8, toBase64, fromBase64, Hash, calculateBodyLength } = __nccwpck_require__(2430);
+const { toUtf8, fromUtf8, toBase64, fromBase64, calculateBodyLength } = __nccwpck_require__(2430);
 const { streamCollector, NodeHttpHandler } = __nccwpck_require__(1279);
 const { AwsRestJsonProtocol } = __nccwpck_require__(7288);
+const { Sha256 } = __nccwpck_require__(9542);
 
 const defaultSSOHttpAuthSchemeParametersProvider = async (config, context, input) => {
     return {
@@ -16727,7 +16731,7 @@ const commonParams = {
     UseDualStack: { type: "builtInParams", name: "useDualstackEndpoint" },
 };
 
-var version = "3.997.23";
+var version = "3.997.24";
 var packageInfo = {
 	version: version};
 
@@ -16963,6 +16967,7 @@ const getRuntimeConfig$1 = (config) => {
             serviceTarget: "SWBPortalService",
         },
         serviceId: config?.serviceId ?? "SSO",
+        sha256: config?.sha256 ?? Sha256,
         urlParser: config?.urlParser ?? parseUrl,
         utf8Decoder: config?.utf8Decoder ?? fromUtf8,
         utf8Encoder: config?.utf8Encoder ?? toUtf8,
@@ -16995,7 +17000,6 @@ const getRuntimeConfig = (config) => {
                 ...NODE_RETRY_MODE_CONFIG_OPTIONS,
                 default: async () => (await defaultConfigProvider()).retryMode || DEFAULT_RETRY_MODE,
             }, config),
-        sha256: config?.sha256 ?? Hash.bind(null, "sha256"),
         streamCollector: config?.streamCollector ?? streamCollector,
         useDualstackEndpoint: config?.useDualstackEndpoint ?? loadConfig(NODE_USE_DUALSTACK_ENDPOINT_CONFIG_OPTIONS, loaderConfig),
         useFipsEndpoint: config?.useFipsEndpoint ?? loadConfig(NODE_USE_FIPS_ENDPOINT_CONFIG_OPTIONS, loaderConfig),
@@ -17139,9 +17143,10 @@ const { DEFAULT_RETRY_MODE, NODE_RETRY_MODE_CONFIG_OPTIONS, NODE_MAX_ATTEMPT_CON
 const { TypeRegistry, getSchemaSerdePlugin } = __nccwpck_require__(6890);
 const { resolveAwsSdkSigV4Config, resolveAwsSdkSigV4AConfig, AwsSdkSigV4Signer, AwsSdkSigV4ASigner, NODE_SIGV4A_CONFIG_OPTIONS, NODE_AUTH_SCHEME_PREFERENCE_OPTIONS } = __nccwpck_require__(7523);
 const { SignatureV4MultiRegion } = __nccwpck_require__(5785);
-const { toUtf8, fromUtf8, toBase64, fromBase64, Hash, calculateBodyLength } = __nccwpck_require__(2430);
+const { toUtf8, fromUtf8, toBase64, fromBase64, calculateBodyLength } = __nccwpck_require__(2430);
 const { streamCollector, NodeHttpHandler } = __nccwpck_require__(1279);
 const { AwsQueryProtocol } = __nccwpck_require__(7288);
+const { Sha256 } = __nccwpck_require__(9542);
 
 const q = "ref";
 const a = -1, b = true, c = "isSet", d = "PartitionResult", e = "booleanEquals", f = "stringEquals", g = "getAttr", h = "us-east-1", i = "sigv4", j = "sts", k = "https://sts.{Region}.{PartitionResult#dnsSuffix}", l = { [q]: "Endpoint" }, m = { [q]: "Region" }, n = { [q]: d }, o = {}, p = [m];
@@ -17385,7 +17390,7 @@ const commonParams = {
     UseDualStack: { type: "builtInParams", name: "useDualstackEndpoint" },
 };
 
-var version = "3.997.23";
+var version = "3.997.24";
 var packageInfo = {
 	version: version};
 
@@ -17690,6 +17695,7 @@ const getRuntimeConfig$1 = (config) => {
             serviceTarget: "AWSSecurityTokenServiceV20110615",
         },
         serviceId: config?.serviceId ?? "STS",
+        sha256: config?.sha256 ?? Sha256,
         signerConstructor: config?.signerConstructor ?? SignatureV4MultiRegion,
         urlParser: config?.urlParser ?? parseUrl,
         utf8Decoder: config?.utf8Decoder ?? fromUtf8,
@@ -17740,7 +17746,6 @@ const getRuntimeConfig = (config) => {
                 ...NODE_RETRY_MODE_CONFIG_OPTIONS,
                 default: async () => (await defaultConfigProvider()).retryMode || DEFAULT_RETRY_MODE,
             }, config),
-        sha256: config?.sha256 ?? Hash.bind(null, "sha256"),
         sigv4aSigningRegionSet: config?.sigv4aSigningRegionSet ?? loadConfig(NODE_SIGV4A_CONFIG_OPTIONS, loaderConfig),
         streamCollector: config?.streamCollector ?? streamCollector,
         useDualstackEndpoint: config?.useDualstackEndpoint ?? loadConfig(NODE_USE_DUALSTACK_ENDPOINT_CONFIG_OPTIONS, loaderConfig),
