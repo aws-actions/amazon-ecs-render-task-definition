@@ -3760,8 +3760,9 @@ function copyFile(srcFile, destFile, force) {
 
 const { awsEndpointFunctions, emitWarningIfUnsupportedVersion: emitWarningIfUnsupportedVersion$1, createDefaultUserAgentProvider, NODE_APP_ID_CONFIG_OPTIONS, getAwsRegionExtensionConfiguration, resolveAwsRegionExtensionConfiguration, resolveUserAgentConfig, resolveHostHeaderConfig, getUserAgentPlugin, getHostHeaderPlugin, getLoggerPlugin, getRecursionDetectionPlugin } = __nccwpck_require__(5152);
 const { getHttpAuthSchemeEndpointRuleSetPlugin, DefaultIdentityProviderConfig, getHttpSigningPlugin, createPaginator } = __nccwpck_require__(402);
-const { normalizeProvider, getSmithyContext, ServiceException, NoOpLogger, emitWarningIfUnsupportedVersion, loadConfigsForDefaultMode, getDefaultExtensionConfiguration, resolveDefaultRuntimeConfig, Client, Command, createWaiter, checkExceptions, WaiterState, createAggregatedClient } = __nccwpck_require__(2658);
-exports.$Command = Command;
+const { normalizeProvider, getSmithyContext, ServiceException, NoOpLogger, emitWarningIfUnsupportedVersion, loadConfigsForDefaultMode, getDefaultExtensionConfiguration, resolveDefaultRuntimeConfig, Client, makeBuilder, createWaiter, checkExceptions, WaiterState, createAggregatedClient } = __nccwpck_require__(2658);
+const { Command: $Command } = __nccwpck_require__(2658);
+exports.$Command = $Command;
 exports.__Client = Client;
 const { resolveDefaultsModeConfig, loadConfig, NODE_USE_FIPS_ENDPOINT_CONFIG_OPTIONS, NODE_USE_DUALSTACK_ENDPOINT_CONFIG_OPTIONS, NODE_REGION_CONFIG_OPTIONS, NODE_REGION_CONFIG_FILE_OPTIONS, resolveRegionConfig } = __nccwpck_require__(7291);
 const { BinaryDecisionDiagram, EndpointCache, decideEndpoint, customEndpointFunctions, resolveEndpointConfig, getEndpointPlugin } = __nccwpck_require__(2085);
@@ -3828,7 +3829,7 @@ const commonParams = {
     UseDualStack: { type: "builtInParams", name: "useDualstackEndpoint" },
 };
 
-var version = "3.1076.0";
+var version = "3.1105.0";
 var packageInfo = {
 	version: version};
 
@@ -4665,6 +4666,7 @@ const _RDTDRe = "RegisterDaemonTaskDefinitionResponse";
 const _RIUE = "ResourceInUseException";
 const _RNFE = "ResourceNotFoundException";
 const _RP = "RuntimePlatform";
+const _RPO = "RuntimePlatformOverride";
 const _RR = "ResourceRequirement";
 const _RRe = "ResourceRequirements";
 const _RT = "RunTask";
@@ -4717,6 +4719,7 @@ const _SNFE = "ServiceNotFoundException";
 const _SR = "ServiceRegistry";
 const _SRLB = "ServiceRevisionLoadBalancer";
 const _SRLBe = "ServiceRevisionLoadBalancers";
+const _SRO = "ServiceRevisionOverrides";
 const _SRS = "ServiceRevisionSummary";
 const _SRSL = "ServiceRevisionsSummaryList";
 const _SRe = "ServiceRevision";
@@ -6864,6 +6867,11 @@ var RuntimePlatform$ = [3, n0, _RP,
     [_cAp, _oSF],
     [0, 0]
 ];
+var RuntimePlatformOverride$ = [3, n0, _RPO,
+    0,
+    [_cAp],
+    [0]
+];
 var S3FilesVolumeConfiguration$ = [3, n0, _SFVC,
     0,
     [_fSA, _rD, _tEP, _aPA],
@@ -6976,13 +6984,18 @@ var ServiceRegistry$ = [3, n0, _SR,
 ];
 var ServiceRevision$ = [3, n0, _SRe,
     0,
-    [_sRAe, _sAe, _cA, _tD, _cPS, _lT, _pV, _pF, _lB, _sRe, _nC, _cI, _gDE, _sCC, _vCo, _fES, _cAr, _vLC, _rCes, _eMR, _mo],
-    [0, 0, 0, 0, () => CapacityProviderStrategy, 0, 0, 0, () => LoadBalancers, () => ServiceRegistries, () => NetworkConfiguration$, () => ContainerImages, 2, () => ServiceConnectConfiguration$, () => ServiceVolumeConfigurations, () => DeploymentEphemeralStorage$, 4, () => VpcLatticeConfigurations, () => ResolvedConfiguration$, () => ECSManagedResources$, () => MonitoringConfiguration$]
+    [_sRAe, _sAe, _cA, _tD, _cPS, _lT, _pV, _pF, _lB, _sRe, _nC, _cI, _gDE, _sCC, _vCo, _fES, _cAr, _vLC, _rCes, _eMR, _ov, _mo],
+    [0, 0, 0, 0, () => CapacityProviderStrategy, 0, 0, 0, () => LoadBalancers, () => ServiceRegistries, () => NetworkConfiguration$, () => ContainerImages, 2, () => ServiceConnectConfiguration$, () => ServiceVolumeConfigurations, () => DeploymentEphemeralStorage$, 4, () => VpcLatticeConfigurations, () => ResolvedConfiguration$, () => ECSManagedResources$, () => ServiceRevisionOverrides$, () => MonitoringConfiguration$]
 ];
 var ServiceRevisionLoadBalancer$ = [3, n0, _SRLB,
     0,
     [_tGA, _pLR],
     [0, 0]
+];
+var ServiceRevisionOverrides$ = [3, n0, _SRO,
+    0,
+    [_rPu],
+    [() => RuntimePlatformOverride$]
 ];
 var ServiceRevisionSummary$ = [3, n0, _SRS,
     0,
@@ -8000,928 +8013,239 @@ class ECSClient extends Client {
     }
 }
 
-class ContinueServiceDeploymentCommand extends Command
-    .classBuilder()
-    .ep(commonParams)
-    .m(function (Command, cs, config, o) {
-    return [getEndpointPlugin(config, Command.getEndpointParameterInstructions())];
-})
-    .s("AmazonEC2ContainerServiceV20141113", "ContinueServiceDeployment", {})
-    .n("ECSClient", "ContinueServiceDeploymentCommand")
-    .sc(ContinueServiceDeployment$)
-    .build() {
-}
-
-class CreateCapacityProviderCommand extends Command
-    .classBuilder()
-    .ep(commonParams)
-    .m(function (Command, cs, config, o) {
-    return [getEndpointPlugin(config, Command.getEndpointParameterInstructions())];
-})
-    .s("AmazonEC2ContainerServiceV20141113", "CreateCapacityProvider", {})
-    .n("ECSClient", "CreateCapacityProviderCommand")
-    .sc(CreateCapacityProvider$)
-    .build() {
-}
-
-class CreateClusterCommand extends Command
-    .classBuilder()
-    .ep(commonParams)
-    .m(function (Command, cs, config, o) {
-    return [getEndpointPlugin(config, Command.getEndpointParameterInstructions())];
-})
-    .s("AmazonEC2ContainerServiceV20141113", "CreateCluster", {})
-    .n("ECSClient", "CreateClusterCommand")
-    .sc(CreateCluster$)
-    .build() {
-}
-
-class CreateDaemonCommand extends Command
-    .classBuilder()
-    .ep(commonParams)
-    .m(function (Command, cs, config, o) {
-    return [getEndpointPlugin(config, Command.getEndpointParameterInstructions())];
-})
-    .s("AmazonEC2ContainerServiceV20141113", "CreateDaemon", {})
-    .n("ECSClient", "CreateDaemonCommand")
-    .sc(CreateDaemon$)
-    .build() {
-}
-
-class CreateExpressGatewayServiceCommand extends Command
-    .classBuilder()
-    .ep(commonParams)
-    .m(function (Command, cs, config, o) {
-    return [getEndpointPlugin(config, Command.getEndpointParameterInstructions())];
-})
-    .s("AmazonEC2ContainerServiceV20141113", "CreateExpressGatewayService", {})
-    .n("ECSClient", "CreateExpressGatewayServiceCommand")
-    .sc(CreateExpressGatewayService$)
-    .build() {
-}
-
-class CreateServiceCommand extends Command
-    .classBuilder()
-    .ep(commonParams)
-    .m(function (Command, cs, config, o) {
-    return [getEndpointPlugin(config, Command.getEndpointParameterInstructions())];
-})
-    .s("AmazonEC2ContainerServiceV20141113", "CreateService", {})
-    .n("ECSClient", "CreateServiceCommand")
-    .sc(CreateService$)
-    .build() {
-}
-
-class CreateTaskSetCommand extends Command
-    .classBuilder()
-    .ep(commonParams)
-    .m(function (Command, cs, config, o) {
-    return [getEndpointPlugin(config, Command.getEndpointParameterInstructions())];
-})
-    .s("AmazonEC2ContainerServiceV20141113", "CreateTaskSet", {})
-    .n("ECSClient", "CreateTaskSetCommand")
-    .sc(CreateTaskSet$)
-    .build() {
-}
-
-class DeleteAccountSettingCommand extends Command
-    .classBuilder()
-    .ep(commonParams)
-    .m(function (Command, cs, config, o) {
-    return [getEndpointPlugin(config, Command.getEndpointParameterInstructions())];
-})
-    .s("AmazonEC2ContainerServiceV20141113", "DeleteAccountSetting", {})
-    .n("ECSClient", "DeleteAccountSettingCommand")
-    .sc(DeleteAccountSetting$)
-    .build() {
-}
-
-class DeleteAttributesCommand extends Command
-    .classBuilder()
-    .ep(commonParams)
-    .m(function (Command, cs, config, o) {
-    return [getEndpointPlugin(config, Command.getEndpointParameterInstructions())];
-})
-    .s("AmazonEC2ContainerServiceV20141113", "DeleteAttributes", {})
-    .n("ECSClient", "DeleteAttributesCommand")
-    .sc(DeleteAttributes$)
-    .build() {
-}
-
-class DeleteCapacityProviderCommand extends Command
-    .classBuilder()
-    .ep(commonParams)
-    .m(function (Command, cs, config, o) {
-    return [getEndpointPlugin(config, Command.getEndpointParameterInstructions())];
-})
-    .s("AmazonEC2ContainerServiceV20141113", "DeleteCapacityProvider", {})
-    .n("ECSClient", "DeleteCapacityProviderCommand")
-    .sc(DeleteCapacityProvider$)
-    .build() {
-}
-
-class DeleteClusterCommand extends Command
-    .classBuilder()
-    .ep(commonParams)
-    .m(function (Command, cs, config, o) {
-    return [getEndpointPlugin(config, Command.getEndpointParameterInstructions())];
-})
-    .s("AmazonEC2ContainerServiceV20141113", "DeleteCluster", {})
-    .n("ECSClient", "DeleteClusterCommand")
-    .sc(DeleteCluster$)
-    .build() {
-}
-
-class DeleteDaemonCommand extends Command
-    .classBuilder()
-    .ep(commonParams)
-    .m(function (Command, cs, config, o) {
-    return [getEndpointPlugin(config, Command.getEndpointParameterInstructions())];
-})
-    .s("AmazonEC2ContainerServiceV20141113", "DeleteDaemon", {})
-    .n("ECSClient", "DeleteDaemonCommand")
-    .sc(DeleteDaemon$)
-    .build() {
-}
-
-class DeleteDaemonTaskDefinitionCommand extends Command
-    .classBuilder()
-    .ep(commonParams)
-    .m(function (Command, cs, config, o) {
-    return [getEndpointPlugin(config, Command.getEndpointParameterInstructions())];
-})
-    .s("AmazonEC2ContainerServiceV20141113", "DeleteDaemonTaskDefinition", {})
-    .n("ECSClient", "DeleteDaemonTaskDefinitionCommand")
-    .sc(DeleteDaemonTaskDefinition$)
-    .build() {
-}
-
-class DeleteExpressGatewayServiceCommand extends Command
-    .classBuilder()
-    .ep(commonParams)
-    .m(function (Command, cs, config, o) {
-    return [getEndpointPlugin(config, Command.getEndpointParameterInstructions())];
-})
-    .s("AmazonEC2ContainerServiceV20141113", "DeleteExpressGatewayService", {})
-    .n("ECSClient", "DeleteExpressGatewayServiceCommand")
-    .sc(DeleteExpressGatewayService$)
-    .build() {
-}
-
-class DeleteServiceCommand extends Command
-    .classBuilder()
-    .ep(commonParams)
-    .m(function (Command, cs, config, o) {
-    return [getEndpointPlugin(config, Command.getEndpointParameterInstructions())];
-})
-    .s("AmazonEC2ContainerServiceV20141113", "DeleteService", {})
-    .n("ECSClient", "DeleteServiceCommand")
-    .sc(DeleteService$)
-    .build() {
-}
-
-class DeleteTaskDefinitionsCommand extends Command
-    .classBuilder()
-    .ep(commonParams)
-    .m(function (Command, cs, config, o) {
-    return [getEndpointPlugin(config, Command.getEndpointParameterInstructions())];
-})
-    .s("AmazonEC2ContainerServiceV20141113", "DeleteTaskDefinitions", {})
-    .n("ECSClient", "DeleteTaskDefinitionsCommand")
-    .sc(DeleteTaskDefinitions$)
-    .build() {
-}
-
-class DeleteTaskSetCommand extends Command
-    .classBuilder()
-    .ep(commonParams)
-    .m(function (Command, cs, config, o) {
-    return [getEndpointPlugin(config, Command.getEndpointParameterInstructions())];
-})
-    .s("AmazonEC2ContainerServiceV20141113", "DeleteTaskSet", {})
-    .n("ECSClient", "DeleteTaskSetCommand")
-    .sc(DeleteTaskSet$)
-    .build() {
-}
-
-class DeregisterContainerInstanceCommand extends Command
-    .classBuilder()
-    .ep(commonParams)
-    .m(function (Command, cs, config, o) {
-    return [getEndpointPlugin(config, Command.getEndpointParameterInstructions())];
-})
-    .s("AmazonEC2ContainerServiceV20141113", "DeregisterContainerInstance", {})
-    .n("ECSClient", "DeregisterContainerInstanceCommand")
-    .sc(DeregisterContainerInstance$)
-    .build() {
-}
-
-class DeregisterTaskDefinitionCommand extends Command
-    .classBuilder()
-    .ep(commonParams)
-    .m(function (Command, cs, config, o) {
-    return [getEndpointPlugin(config, Command.getEndpointParameterInstructions())];
-})
-    .s("AmazonEC2ContainerServiceV20141113", "DeregisterTaskDefinition", {})
-    .n("ECSClient", "DeregisterTaskDefinitionCommand")
-    .sc(DeregisterTaskDefinition$)
-    .build() {
-}
-
-class DescribeCapacityProvidersCommand extends Command
-    .classBuilder()
-    .ep(commonParams)
-    .m(function (Command, cs, config, o) {
-    return [getEndpointPlugin(config, Command.getEndpointParameterInstructions())];
-})
-    .s("AmazonEC2ContainerServiceV20141113", "DescribeCapacityProviders", {})
-    .n("ECSClient", "DescribeCapacityProvidersCommand")
-    .sc(DescribeCapacityProviders$)
-    .build() {
-}
-
-class DescribeClustersCommand extends Command
-    .classBuilder()
-    .ep(commonParams)
-    .m(function (Command, cs, config, o) {
-    return [getEndpointPlugin(config, Command.getEndpointParameterInstructions())];
-})
-    .s("AmazonEC2ContainerServiceV20141113", "DescribeClusters", {})
-    .n("ECSClient", "DescribeClustersCommand")
-    .sc(DescribeClusters$)
-    .build() {
-}
-
-class DescribeContainerInstancesCommand extends Command
-    .classBuilder()
-    .ep(commonParams)
-    .m(function (Command, cs, config, o) {
-    return [getEndpointPlugin(config, Command.getEndpointParameterInstructions())];
-})
-    .s("AmazonEC2ContainerServiceV20141113", "DescribeContainerInstances", {})
-    .n("ECSClient", "DescribeContainerInstancesCommand")
-    .sc(DescribeContainerInstances$)
-    .build() {
-}
-
-class DescribeDaemonCommand extends Command
-    .classBuilder()
-    .ep(commonParams)
-    .m(function (Command, cs, config, o) {
-    return [getEndpointPlugin(config, Command.getEndpointParameterInstructions())];
-})
-    .s("AmazonEC2ContainerServiceV20141113", "DescribeDaemon", {})
-    .n("ECSClient", "DescribeDaemonCommand")
-    .sc(DescribeDaemon$)
-    .build() {
-}
-
-class DescribeDaemonDeploymentsCommand extends Command
-    .classBuilder()
-    .ep(commonParams)
-    .m(function (Command, cs, config, o) {
-    return [getEndpointPlugin(config, Command.getEndpointParameterInstructions())];
-})
-    .s("AmazonEC2ContainerServiceV20141113", "DescribeDaemonDeployments", {})
-    .n("ECSClient", "DescribeDaemonDeploymentsCommand")
-    .sc(DescribeDaemonDeployments$)
-    .build() {
-}
-
-class DescribeDaemonRevisionsCommand extends Command
-    .classBuilder()
-    .ep(commonParams)
-    .m(function (Command, cs, config, o) {
-    return [getEndpointPlugin(config, Command.getEndpointParameterInstructions())];
-})
-    .s("AmazonEC2ContainerServiceV20141113", "DescribeDaemonRevisions", {})
-    .n("ECSClient", "DescribeDaemonRevisionsCommand")
-    .sc(DescribeDaemonRevisions$)
-    .build() {
-}
-
-class DescribeDaemonTaskDefinitionCommand extends Command
-    .classBuilder()
-    .ep(commonParams)
-    .m(function (Command, cs, config, o) {
-    return [getEndpointPlugin(config, Command.getEndpointParameterInstructions())];
-})
-    .s("AmazonEC2ContainerServiceV20141113", "DescribeDaemonTaskDefinition", {})
-    .n("ECSClient", "DescribeDaemonTaskDefinitionCommand")
-    .sc(DescribeDaemonTaskDefinition$)
-    .build() {
-}
-
-class DescribeExpressGatewayServiceCommand extends Command
-    .classBuilder()
-    .ep(commonParams)
-    .m(function (Command, cs, config, o) {
-    return [getEndpointPlugin(config, Command.getEndpointParameterInstructions())];
-})
-    .s("AmazonEC2ContainerServiceV20141113", "DescribeExpressGatewayService", {})
-    .n("ECSClient", "DescribeExpressGatewayServiceCommand")
-    .sc(DescribeExpressGatewayService$)
-    .build() {
-}
-
-class DescribeServiceDeploymentsCommand extends Command
-    .classBuilder()
-    .ep(commonParams)
-    .m(function (Command, cs, config, o) {
-    return [getEndpointPlugin(config, Command.getEndpointParameterInstructions())];
-})
-    .s("AmazonEC2ContainerServiceV20141113", "DescribeServiceDeployments", {})
-    .n("ECSClient", "DescribeServiceDeploymentsCommand")
-    .sc(DescribeServiceDeployments$)
-    .build() {
-}
-
-class DescribeServiceRevisionsCommand extends Command
-    .classBuilder()
-    .ep(commonParams)
-    .m(function (Command, cs, config, o) {
-    return [getEndpointPlugin(config, Command.getEndpointParameterInstructions())];
-})
-    .s("AmazonEC2ContainerServiceV20141113", "DescribeServiceRevisions", {})
-    .n("ECSClient", "DescribeServiceRevisionsCommand")
-    .sc(DescribeServiceRevisions$)
-    .build() {
-}
-
-class DescribeServicesCommand extends Command
-    .classBuilder()
-    .ep(commonParams)
-    .m(function (Command, cs, config, o) {
-    return [getEndpointPlugin(config, Command.getEndpointParameterInstructions())];
-})
-    .s("AmazonEC2ContainerServiceV20141113", "DescribeServices", {})
-    .n("ECSClient", "DescribeServicesCommand")
-    .sc(DescribeServices$)
-    .build() {
-}
-
-class DescribeTaskDefinitionCommand extends Command
-    .classBuilder()
-    .ep(commonParams)
-    .m(function (Command, cs, config, o) {
-    return [getEndpointPlugin(config, Command.getEndpointParameterInstructions())];
-})
-    .s("AmazonEC2ContainerServiceV20141113", "DescribeTaskDefinition", {})
-    .n("ECSClient", "DescribeTaskDefinitionCommand")
-    .sc(DescribeTaskDefinition$)
-    .build() {
-}
-
-class DescribeTasksCommand extends Command
-    .classBuilder()
-    .ep(commonParams)
-    .m(function (Command, cs, config, o) {
-    return [getEndpointPlugin(config, Command.getEndpointParameterInstructions())];
-})
-    .s("AmazonEC2ContainerServiceV20141113", "DescribeTasks", {})
-    .n("ECSClient", "DescribeTasksCommand")
-    .sc(DescribeTasks$)
-    .build() {
-}
-
-class DescribeTaskSetsCommand extends Command
-    .classBuilder()
-    .ep(commonParams)
-    .m(function (Command, cs, config, o) {
-    return [getEndpointPlugin(config, Command.getEndpointParameterInstructions())];
-})
-    .s("AmazonEC2ContainerServiceV20141113", "DescribeTaskSets", {})
-    .n("ECSClient", "DescribeTaskSetsCommand")
-    .sc(DescribeTaskSets$)
-    .build() {
-}
-
-class DiscoverPollEndpointCommand extends Command
-    .classBuilder()
-    .ep(commonParams)
-    .m(function (Command, cs, config, o) {
-    return [getEndpointPlugin(config, Command.getEndpointParameterInstructions())];
-})
-    .s("AmazonEC2ContainerServiceV20141113", "DiscoverPollEndpoint", {})
-    .n("ECSClient", "DiscoverPollEndpointCommand")
-    .sc(DiscoverPollEndpoint$)
-    .build() {
-}
-
-class ExecuteCommandCommand extends Command
-    .classBuilder()
-    .ep(commonParams)
-    .m(function (Command, cs, config, o) {
-    return [getEndpointPlugin(config, Command.getEndpointParameterInstructions())];
-})
-    .s("AmazonEC2ContainerServiceV20141113", "ExecuteCommand", {})
-    .n("ECSClient", "ExecuteCommandCommand")
-    .sc(ExecuteCommand$)
-    .build() {
-}
-
-class GetTaskProtectionCommand extends Command
-    .classBuilder()
-    .ep(commonParams)
-    .m(function (Command, cs, config, o) {
-    return [getEndpointPlugin(config, Command.getEndpointParameterInstructions())];
-})
-    .s("AmazonEC2ContainerServiceV20141113", "GetTaskProtection", {})
-    .n("ECSClient", "GetTaskProtectionCommand")
-    .sc(GetTaskProtection$)
-    .build() {
-}
-
-class ListAccountSettingsCommand extends Command
-    .classBuilder()
-    .ep(commonParams)
-    .m(function (Command, cs, config, o) {
-    return [getEndpointPlugin(config, Command.getEndpointParameterInstructions())];
-})
-    .s("AmazonEC2ContainerServiceV20141113", "ListAccountSettings", {})
-    .n("ECSClient", "ListAccountSettingsCommand")
-    .sc(ListAccountSettings$)
-    .build() {
-}
-
-class ListAttributesCommand extends Command
-    .classBuilder()
-    .ep(commonParams)
-    .m(function (Command, cs, config, o) {
-    return [getEndpointPlugin(config, Command.getEndpointParameterInstructions())];
-})
-    .s("AmazonEC2ContainerServiceV20141113", "ListAttributes", {})
-    .n("ECSClient", "ListAttributesCommand")
-    .sc(ListAttributes$)
-    .build() {
-}
-
-class ListClustersCommand extends Command
-    .classBuilder()
-    .ep(commonParams)
-    .m(function (Command, cs, config, o) {
-    return [getEndpointPlugin(config, Command.getEndpointParameterInstructions())];
-})
-    .s("AmazonEC2ContainerServiceV20141113", "ListClusters", {})
-    .n("ECSClient", "ListClustersCommand")
-    .sc(ListClusters$)
-    .build() {
-}
-
-class ListContainerInstancesCommand extends Command
-    .classBuilder()
-    .ep(commonParams)
-    .m(function (Command, cs, config, o) {
-    return [getEndpointPlugin(config, Command.getEndpointParameterInstructions())];
-})
-    .s("AmazonEC2ContainerServiceV20141113", "ListContainerInstances", {})
-    .n("ECSClient", "ListContainerInstancesCommand")
-    .sc(ListContainerInstances$)
-    .build() {
-}
-
-class ListDaemonDeploymentsCommand extends Command
-    .classBuilder()
-    .ep(commonParams)
-    .m(function (Command, cs, config, o) {
-    return [getEndpointPlugin(config, Command.getEndpointParameterInstructions())];
-})
-    .s("AmazonEC2ContainerServiceV20141113", "ListDaemonDeployments", {})
-    .n("ECSClient", "ListDaemonDeploymentsCommand")
-    .sc(ListDaemonDeployments$)
-    .build() {
-}
-
-class ListDaemonsCommand extends Command
-    .classBuilder()
-    .ep(commonParams)
-    .m(function (Command, cs, config, o) {
-    return [getEndpointPlugin(config, Command.getEndpointParameterInstructions())];
-})
-    .s("AmazonEC2ContainerServiceV20141113", "ListDaemons", {})
-    .n("ECSClient", "ListDaemonsCommand")
-    .sc(ListDaemons$)
-    .build() {
-}
-
-class ListDaemonTaskDefinitionsCommand extends Command
-    .classBuilder()
-    .ep(commonParams)
-    .m(function (Command, cs, config, o) {
-    return [getEndpointPlugin(config, Command.getEndpointParameterInstructions())];
-})
-    .s("AmazonEC2ContainerServiceV20141113", "ListDaemonTaskDefinitions", {})
-    .n("ECSClient", "ListDaemonTaskDefinitionsCommand")
-    .sc(ListDaemonTaskDefinitions$)
-    .build() {
-}
-
-class ListServiceDeploymentsCommand extends Command
-    .classBuilder()
-    .ep(commonParams)
-    .m(function (Command, cs, config, o) {
-    return [getEndpointPlugin(config, Command.getEndpointParameterInstructions())];
-})
-    .s("AmazonEC2ContainerServiceV20141113", "ListServiceDeployments", {})
-    .n("ECSClient", "ListServiceDeploymentsCommand")
-    .sc(ListServiceDeployments$)
-    .build() {
-}
-
-class ListServicesByNamespaceCommand extends Command
-    .classBuilder()
-    .ep(commonParams)
-    .m(function (Command, cs, config, o) {
-    return [getEndpointPlugin(config, Command.getEndpointParameterInstructions())];
-})
-    .s("AmazonEC2ContainerServiceV20141113", "ListServicesByNamespace", {})
-    .n("ECSClient", "ListServicesByNamespaceCommand")
-    .sc(ListServicesByNamespace$)
-    .build() {
-}
-
-class ListServicesCommand extends Command
-    .classBuilder()
-    .ep(commonParams)
-    .m(function (Command, cs, config, o) {
-    return [getEndpointPlugin(config, Command.getEndpointParameterInstructions())];
-})
-    .s("AmazonEC2ContainerServiceV20141113", "ListServices", {})
-    .n("ECSClient", "ListServicesCommand")
-    .sc(ListServices$)
-    .build() {
-}
-
-class ListTagsForResourceCommand extends Command
-    .classBuilder()
-    .ep(commonParams)
-    .m(function (Command, cs, config, o) {
-    return [getEndpointPlugin(config, Command.getEndpointParameterInstructions())];
-})
-    .s("AmazonEC2ContainerServiceV20141113", "ListTagsForResource", {})
-    .n("ECSClient", "ListTagsForResourceCommand")
-    .sc(ListTagsForResource$)
-    .build() {
-}
-
-class ListTaskDefinitionFamiliesCommand extends Command
-    .classBuilder()
-    .ep(commonParams)
-    .m(function (Command, cs, config, o) {
-    return [getEndpointPlugin(config, Command.getEndpointParameterInstructions())];
-})
-    .s("AmazonEC2ContainerServiceV20141113", "ListTaskDefinitionFamilies", {})
-    .n("ECSClient", "ListTaskDefinitionFamiliesCommand")
-    .sc(ListTaskDefinitionFamilies$)
-    .build() {
-}
-
-class ListTaskDefinitionsCommand extends Command
-    .classBuilder()
-    .ep(commonParams)
-    .m(function (Command, cs, config, o) {
-    return [getEndpointPlugin(config, Command.getEndpointParameterInstructions())];
-})
-    .s("AmazonEC2ContainerServiceV20141113", "ListTaskDefinitions", {})
-    .n("ECSClient", "ListTaskDefinitionsCommand")
-    .sc(ListTaskDefinitions$)
-    .build() {
-}
-
-class ListTasksCommand extends Command
-    .classBuilder()
-    .ep(commonParams)
-    .m(function (Command, cs, config, o) {
-    return [getEndpointPlugin(config, Command.getEndpointParameterInstructions())];
-})
-    .s("AmazonEC2ContainerServiceV20141113", "ListTasks", {})
-    .n("ECSClient", "ListTasksCommand")
-    .sc(ListTasks$)
-    .build() {
-}
-
-class PutAccountSettingCommand extends Command
-    .classBuilder()
-    .ep(commonParams)
-    .m(function (Command, cs, config, o) {
-    return [getEndpointPlugin(config, Command.getEndpointParameterInstructions())];
-})
-    .s("AmazonEC2ContainerServiceV20141113", "PutAccountSetting", {})
-    .n("ECSClient", "PutAccountSettingCommand")
-    .sc(PutAccountSetting$)
-    .build() {
-}
-
-class PutAccountSettingDefaultCommand extends Command
-    .classBuilder()
-    .ep(commonParams)
-    .m(function (Command, cs, config, o) {
-    return [getEndpointPlugin(config, Command.getEndpointParameterInstructions())];
-})
-    .s("AmazonEC2ContainerServiceV20141113", "PutAccountSettingDefault", {})
-    .n("ECSClient", "PutAccountSettingDefaultCommand")
-    .sc(PutAccountSettingDefault$)
-    .build() {
-}
-
-class PutAttributesCommand extends Command
-    .classBuilder()
-    .ep(commonParams)
-    .m(function (Command, cs, config, o) {
-    return [getEndpointPlugin(config, Command.getEndpointParameterInstructions())];
-})
-    .s("AmazonEC2ContainerServiceV20141113", "PutAttributes", {})
-    .n("ECSClient", "PutAttributesCommand")
-    .sc(PutAttributes$)
-    .build() {
-}
-
-class PutClusterCapacityProvidersCommand extends Command
-    .classBuilder()
-    .ep(commonParams)
-    .m(function (Command, cs, config, o) {
-    return [getEndpointPlugin(config, Command.getEndpointParameterInstructions())];
-})
-    .s("AmazonEC2ContainerServiceV20141113", "PutClusterCapacityProviders", {})
-    .n("ECSClient", "PutClusterCapacityProvidersCommand")
-    .sc(PutClusterCapacityProviders$)
-    .build() {
-}
-
-class RegisterContainerInstanceCommand extends Command
-    .classBuilder()
-    .ep(commonParams)
-    .m(function (Command, cs, config, o) {
-    return [getEndpointPlugin(config, Command.getEndpointParameterInstructions())];
-})
-    .s("AmazonEC2ContainerServiceV20141113", "RegisterContainerInstance", {})
-    .n("ECSClient", "RegisterContainerInstanceCommand")
-    .sc(RegisterContainerInstance$)
-    .build() {
-}
-
-class RegisterDaemonTaskDefinitionCommand extends Command
-    .classBuilder()
-    .ep(commonParams)
-    .m(function (Command, cs, config, o) {
-    return [getEndpointPlugin(config, Command.getEndpointParameterInstructions())];
-})
-    .s("AmazonEC2ContainerServiceV20141113", "RegisterDaemonTaskDefinition", {})
-    .n("ECSClient", "RegisterDaemonTaskDefinitionCommand")
-    .sc(RegisterDaemonTaskDefinition$)
-    .build() {
-}
-
-class RegisterTaskDefinitionCommand extends Command
-    .classBuilder()
-    .ep(commonParams)
-    .m(function (Command, cs, config, o) {
-    return [getEndpointPlugin(config, Command.getEndpointParameterInstructions())];
-})
-    .s("AmazonEC2ContainerServiceV20141113", "RegisterTaskDefinition", {})
-    .n("ECSClient", "RegisterTaskDefinitionCommand")
-    .sc(RegisterTaskDefinition$)
-    .build() {
-}
-
-class RunTaskCommand extends Command
-    .classBuilder()
-    .ep(commonParams)
-    .m(function (Command, cs, config, o) {
-    return [getEndpointPlugin(config, Command.getEndpointParameterInstructions())];
-})
-    .s("AmazonEC2ContainerServiceV20141113", "RunTask", {})
-    .n("ECSClient", "RunTaskCommand")
-    .sc(RunTask$)
-    .build() {
-}
-
-class StartTaskCommand extends Command
-    .classBuilder()
-    .ep(commonParams)
-    .m(function (Command, cs, config, o) {
-    return [getEndpointPlugin(config, Command.getEndpointParameterInstructions())];
-})
-    .s("AmazonEC2ContainerServiceV20141113", "StartTask", {})
-    .n("ECSClient", "StartTaskCommand")
-    .sc(StartTask$)
-    .build() {
-}
-
-class StopServiceDeploymentCommand extends Command
-    .classBuilder()
-    .ep(commonParams)
-    .m(function (Command, cs, config, o) {
-    return [getEndpointPlugin(config, Command.getEndpointParameterInstructions())];
-})
-    .s("AmazonEC2ContainerServiceV20141113", "StopServiceDeployment", {})
-    .n("ECSClient", "StopServiceDeploymentCommand")
-    .sc(StopServiceDeployment$)
-    .build() {
-}
-
-class StopTaskCommand extends Command
-    .classBuilder()
-    .ep(commonParams)
-    .m(function (Command, cs, config, o) {
-    return [getEndpointPlugin(config, Command.getEndpointParameterInstructions())];
-})
-    .s("AmazonEC2ContainerServiceV20141113", "StopTask", {})
-    .n("ECSClient", "StopTaskCommand")
-    .sc(StopTask$)
-    .build() {
-}
-
-class SubmitAttachmentStateChangesCommand extends Command
-    .classBuilder()
-    .ep(commonParams)
-    .m(function (Command, cs, config, o) {
-    return [getEndpointPlugin(config, Command.getEndpointParameterInstructions())];
-})
-    .s("AmazonEC2ContainerServiceV20141113", "SubmitAttachmentStateChanges", {})
-    .n("ECSClient", "SubmitAttachmentStateChangesCommand")
-    .sc(SubmitAttachmentStateChanges$)
-    .build() {
-}
-
-class SubmitContainerStateChangeCommand extends Command
-    .classBuilder()
-    .ep(commonParams)
-    .m(function (Command, cs, config, o) {
-    return [getEndpointPlugin(config, Command.getEndpointParameterInstructions())];
-})
-    .s("AmazonEC2ContainerServiceV20141113", "SubmitContainerStateChange", {})
-    .n("ECSClient", "SubmitContainerStateChangeCommand")
-    .sc(SubmitContainerStateChange$)
-    .build() {
-}
-
-class SubmitTaskStateChangeCommand extends Command
-    .classBuilder()
-    .ep(commonParams)
-    .m(function (Command, cs, config, o) {
-    return [getEndpointPlugin(config, Command.getEndpointParameterInstructions())];
-})
-    .s("AmazonEC2ContainerServiceV20141113", "SubmitTaskStateChange", {})
-    .n("ECSClient", "SubmitTaskStateChangeCommand")
-    .sc(SubmitTaskStateChange$)
-    .build() {
-}
-
-class TagResourceCommand extends Command
-    .classBuilder()
-    .ep(commonParams)
-    .m(function (Command, cs, config, o) {
-    return [getEndpointPlugin(config, Command.getEndpointParameterInstructions())];
-})
-    .s("AmazonEC2ContainerServiceV20141113", "TagResource", {})
-    .n("ECSClient", "TagResourceCommand")
-    .sc(TagResource$)
-    .build() {
-}
-
-class UntagResourceCommand extends Command
-    .classBuilder()
-    .ep(commonParams)
-    .m(function (Command, cs, config, o) {
-    return [getEndpointPlugin(config, Command.getEndpointParameterInstructions())];
-})
-    .s("AmazonEC2ContainerServiceV20141113", "UntagResource", {})
-    .n("ECSClient", "UntagResourceCommand")
-    .sc(UntagResource$)
-    .build() {
-}
-
-class UpdateCapacityProviderCommand extends Command
-    .classBuilder()
-    .ep(commonParams)
-    .m(function (Command, cs, config, o) {
-    return [getEndpointPlugin(config, Command.getEndpointParameterInstructions())];
-})
-    .s("AmazonEC2ContainerServiceV20141113", "UpdateCapacityProvider", {})
-    .n("ECSClient", "UpdateCapacityProviderCommand")
-    .sc(UpdateCapacityProvider$)
-    .build() {
-}
-
-class UpdateClusterCommand extends Command
-    .classBuilder()
-    .ep(commonParams)
-    .m(function (Command, cs, config, o) {
-    return [getEndpointPlugin(config, Command.getEndpointParameterInstructions())];
-})
-    .s("AmazonEC2ContainerServiceV20141113", "UpdateCluster", {})
-    .n("ECSClient", "UpdateClusterCommand")
-    .sc(UpdateCluster$)
-    .build() {
-}
-
-class UpdateClusterSettingsCommand extends Command
-    .classBuilder()
-    .ep(commonParams)
-    .m(function (Command, cs, config, o) {
-    return [getEndpointPlugin(config, Command.getEndpointParameterInstructions())];
-})
-    .s("AmazonEC2ContainerServiceV20141113", "UpdateClusterSettings", {})
-    .n("ECSClient", "UpdateClusterSettingsCommand")
-    .sc(UpdateClusterSettings$)
-    .build() {
-}
-
-class UpdateContainerAgentCommand extends Command
-    .classBuilder()
-    .ep(commonParams)
-    .m(function (Command, cs, config, o) {
-    return [getEndpointPlugin(config, Command.getEndpointParameterInstructions())];
-})
-    .s("AmazonEC2ContainerServiceV20141113", "UpdateContainerAgent", {})
-    .n("ECSClient", "UpdateContainerAgentCommand")
-    .sc(UpdateContainerAgent$)
-    .build() {
-}
-
-class UpdateContainerInstancesStateCommand extends Command
-    .classBuilder()
-    .ep(commonParams)
-    .m(function (Command, cs, config, o) {
-    return [getEndpointPlugin(config, Command.getEndpointParameterInstructions())];
-})
-    .s("AmazonEC2ContainerServiceV20141113", "UpdateContainerInstancesState", {})
-    .n("ECSClient", "UpdateContainerInstancesStateCommand")
-    .sc(UpdateContainerInstancesState$)
-    .build() {
-}
-
-class UpdateDaemonCommand extends Command
-    .classBuilder()
-    .ep(commonParams)
-    .m(function (Command, cs, config, o) {
-    return [getEndpointPlugin(config, Command.getEndpointParameterInstructions())];
-})
-    .s("AmazonEC2ContainerServiceV20141113", "UpdateDaemon", {})
-    .n("ECSClient", "UpdateDaemonCommand")
-    .sc(UpdateDaemon$)
-    .build() {
-}
-
-class UpdateExpressGatewayServiceCommand extends Command
-    .classBuilder()
-    .ep(commonParams)
-    .m(function (Command, cs, config, o) {
-    return [getEndpointPlugin(config, Command.getEndpointParameterInstructions())];
-})
-    .s("AmazonEC2ContainerServiceV20141113", "UpdateExpressGatewayService", {})
-    .n("ECSClient", "UpdateExpressGatewayServiceCommand")
-    .sc(UpdateExpressGatewayService$)
-    .build() {
-}
-
-class UpdateServiceCommand extends Command
-    .classBuilder()
-    .ep(commonParams)
-    .m(function (Command, cs, config, o) {
-    return [getEndpointPlugin(config, Command.getEndpointParameterInstructions())];
-})
-    .s("AmazonEC2ContainerServiceV20141113", "UpdateService", {})
-    .n("ECSClient", "UpdateServiceCommand")
-    .sc(UpdateService$)
-    .build() {
-}
-
-class UpdateServicePrimaryTaskSetCommand extends Command
-    .classBuilder()
-    .ep(commonParams)
-    .m(function (Command, cs, config, o) {
-    return [getEndpointPlugin(config, Command.getEndpointParameterInstructions())];
-})
-    .s("AmazonEC2ContainerServiceV20141113", "UpdateServicePrimaryTaskSet", {})
-    .n("ECSClient", "UpdateServicePrimaryTaskSetCommand")
-    .sc(UpdateServicePrimaryTaskSet$)
-    .build() {
-}
-
-class UpdateTaskProtectionCommand extends Command
-    .classBuilder()
-    .ep(commonParams)
-    .m(function (Command, cs, config, o) {
-    return [getEndpointPlugin(config, Command.getEndpointParameterInstructions())];
-})
-    .s("AmazonEC2ContainerServiceV20141113", "UpdateTaskProtection", {})
-    .n("ECSClient", "UpdateTaskProtectionCommand")
-    .sc(UpdateTaskProtection$)
-    .build() {
-}
-
-class UpdateTaskSetCommand extends Command
-    .classBuilder()
-    .ep(commonParams)
-    .m(function (Command, cs, config, o) {
-    return [getEndpointPlugin(config, Command.getEndpointParameterInstructions())];
-})
-    .s("AmazonEC2ContainerServiceV20141113", "UpdateTaskSet", {})
-    .n("ECSClient", "UpdateTaskSetCommand")
-    .sc(UpdateTaskSet$)
-    .build() {
+const command = makeBuilder(commonParams, "AmazonEC2ContainerServiceV20141113", "ECSClient", getEndpointPlugin);
+const _ep0 = {};
+const _mw0 = (Command, cs, config, o) => [];
+
+class ContinueServiceDeploymentCommand extends command(_ep0, _mw0, "ContinueServiceDeployment", ContinueServiceDeployment$) {
+}
+
+class CreateCapacityProviderCommand extends command(_ep0, _mw0, "CreateCapacityProvider", CreateCapacityProvider$) {
+}
+
+class CreateClusterCommand extends command(_ep0, _mw0, "CreateCluster", CreateCluster$) {
+}
+
+class CreateDaemonCommand extends command(_ep0, _mw0, "CreateDaemon", CreateDaemon$) {
+}
+
+class CreateExpressGatewayServiceCommand extends command(_ep0, _mw0, "CreateExpressGatewayService", CreateExpressGatewayService$) {
+}
+
+class CreateServiceCommand extends command(_ep0, _mw0, "CreateService", CreateService$) {
+}
+
+class CreateTaskSetCommand extends command(_ep0, _mw0, "CreateTaskSet", CreateTaskSet$) {
+}
+
+class DeleteAccountSettingCommand extends command(_ep0, _mw0, "DeleteAccountSetting", DeleteAccountSetting$) {
+}
+
+class DeleteAttributesCommand extends command(_ep0, _mw0, "DeleteAttributes", DeleteAttributes$) {
+}
+
+class DeleteCapacityProviderCommand extends command(_ep0, _mw0, "DeleteCapacityProvider", DeleteCapacityProvider$) {
+}
+
+class DeleteClusterCommand extends command(_ep0, _mw0, "DeleteCluster", DeleteCluster$) {
+}
+
+class DeleteDaemonCommand extends command(_ep0, _mw0, "DeleteDaemon", DeleteDaemon$) {
+}
+
+class DeleteDaemonTaskDefinitionCommand extends command(_ep0, _mw0, "DeleteDaemonTaskDefinition", DeleteDaemonTaskDefinition$) {
+}
+
+class DeleteExpressGatewayServiceCommand extends command(_ep0, _mw0, "DeleteExpressGatewayService", DeleteExpressGatewayService$) {
+}
+
+class DeleteServiceCommand extends command(_ep0, _mw0, "DeleteService", DeleteService$) {
+}
+
+class DeleteTaskDefinitionsCommand extends command(_ep0, _mw0, "DeleteTaskDefinitions", DeleteTaskDefinitions$) {
+}
+
+class DeleteTaskSetCommand extends command(_ep0, _mw0, "DeleteTaskSet", DeleteTaskSet$) {
+}
+
+class DeregisterContainerInstanceCommand extends command(_ep0, _mw0, "DeregisterContainerInstance", DeregisterContainerInstance$) {
+}
+
+class DeregisterTaskDefinitionCommand extends command(_ep0, _mw0, "DeregisterTaskDefinition", DeregisterTaskDefinition$) {
+}
+
+class DescribeCapacityProvidersCommand extends command(_ep0, _mw0, "DescribeCapacityProviders", DescribeCapacityProviders$) {
+}
+
+class DescribeClustersCommand extends command(_ep0, _mw0, "DescribeClusters", DescribeClusters$) {
+}
+
+class DescribeContainerInstancesCommand extends command(_ep0, _mw0, "DescribeContainerInstances", DescribeContainerInstances$) {
+}
+
+class DescribeDaemonCommand extends command(_ep0, _mw0, "DescribeDaemon", DescribeDaemon$) {
+}
+
+class DescribeDaemonDeploymentsCommand extends command(_ep0, _mw0, "DescribeDaemonDeployments", DescribeDaemonDeployments$) {
+}
+
+class DescribeDaemonRevisionsCommand extends command(_ep0, _mw0, "DescribeDaemonRevisions", DescribeDaemonRevisions$) {
+}
+
+class DescribeDaemonTaskDefinitionCommand extends command(_ep0, _mw0, "DescribeDaemonTaskDefinition", DescribeDaemonTaskDefinition$) {
+}
+
+class DescribeExpressGatewayServiceCommand extends command(_ep0, _mw0, "DescribeExpressGatewayService", DescribeExpressGatewayService$) {
+}
+
+class DescribeServiceDeploymentsCommand extends command(_ep0, _mw0, "DescribeServiceDeployments", DescribeServiceDeployments$) {
+}
+
+class DescribeServiceRevisionsCommand extends command(_ep0, _mw0, "DescribeServiceRevisions", DescribeServiceRevisions$) {
+}
+
+class DescribeServicesCommand extends command(_ep0, _mw0, "DescribeServices", DescribeServices$) {
+}
+
+class DescribeTaskDefinitionCommand extends command(_ep0, _mw0, "DescribeTaskDefinition", DescribeTaskDefinition$) {
+}
+
+class DescribeTasksCommand extends command(_ep0, _mw0, "DescribeTasks", DescribeTasks$) {
+}
+
+class DescribeTaskSetsCommand extends command(_ep0, _mw0, "DescribeTaskSets", DescribeTaskSets$) {
+}
+
+class DiscoverPollEndpointCommand extends command(_ep0, _mw0, "DiscoverPollEndpoint", DiscoverPollEndpoint$) {
+}
+
+class ExecuteCommandCommand extends command(_ep0, _mw0, "ExecuteCommand", ExecuteCommand$) {
+}
+
+class GetTaskProtectionCommand extends command(_ep0, _mw0, "GetTaskProtection", GetTaskProtection$) {
+}
+
+class ListAccountSettingsCommand extends command(_ep0, _mw0, "ListAccountSettings", ListAccountSettings$) {
+}
+
+class ListAttributesCommand extends command(_ep0, _mw0, "ListAttributes", ListAttributes$) {
+}
+
+class ListClustersCommand extends command(_ep0, _mw0, "ListClusters", ListClusters$) {
+}
+
+class ListContainerInstancesCommand extends command(_ep0, _mw0, "ListContainerInstances", ListContainerInstances$) {
+}
+
+class ListDaemonDeploymentsCommand extends command(_ep0, _mw0, "ListDaemonDeployments", ListDaemonDeployments$) {
+}
+
+class ListDaemonsCommand extends command(_ep0, _mw0, "ListDaemons", ListDaemons$) {
+}
+
+class ListDaemonTaskDefinitionsCommand extends command(_ep0, _mw0, "ListDaemonTaskDefinitions", ListDaemonTaskDefinitions$) {
+}
+
+class ListServiceDeploymentsCommand extends command(_ep0, _mw0, "ListServiceDeployments", ListServiceDeployments$) {
+}
+
+class ListServicesByNamespaceCommand extends command(_ep0, _mw0, "ListServicesByNamespace", ListServicesByNamespace$) {
+}
+
+class ListServicesCommand extends command(_ep0, _mw0, "ListServices", ListServices$) {
+}
+
+class ListTagsForResourceCommand extends command(_ep0, _mw0, "ListTagsForResource", ListTagsForResource$) {
+}
+
+class ListTaskDefinitionFamiliesCommand extends command(_ep0, _mw0, "ListTaskDefinitionFamilies", ListTaskDefinitionFamilies$) {
+}
+
+class ListTaskDefinitionsCommand extends command(_ep0, _mw0, "ListTaskDefinitions", ListTaskDefinitions$) {
+}
+
+class ListTasksCommand extends command(_ep0, _mw0, "ListTasks", ListTasks$) {
+}
+
+class PutAccountSettingCommand extends command(_ep0, _mw0, "PutAccountSetting", PutAccountSetting$) {
+}
+
+class PutAccountSettingDefaultCommand extends command(_ep0, _mw0, "PutAccountSettingDefault", PutAccountSettingDefault$) {
+}
+
+class PutAttributesCommand extends command(_ep0, _mw0, "PutAttributes", PutAttributes$) {
+}
+
+class PutClusterCapacityProvidersCommand extends command(_ep0, _mw0, "PutClusterCapacityProviders", PutClusterCapacityProviders$) {
+}
+
+class RegisterContainerInstanceCommand extends command(_ep0, _mw0, "RegisterContainerInstance", RegisterContainerInstance$) {
+}
+
+class RegisterDaemonTaskDefinitionCommand extends command(_ep0, _mw0, "RegisterDaemonTaskDefinition", RegisterDaemonTaskDefinition$) {
+}
+
+class RegisterTaskDefinitionCommand extends command(_ep0, _mw0, "RegisterTaskDefinition", RegisterTaskDefinition$) {
+}
+
+class RunTaskCommand extends command(_ep0, _mw0, "RunTask", RunTask$) {
+}
+
+class StartTaskCommand extends command(_ep0, _mw0, "StartTask", StartTask$) {
+}
+
+class StopServiceDeploymentCommand extends command(_ep0, _mw0, "StopServiceDeployment", StopServiceDeployment$) {
+}
+
+class StopTaskCommand extends command(_ep0, _mw0, "StopTask", StopTask$) {
+}
+
+class SubmitAttachmentStateChangesCommand extends command(_ep0, _mw0, "SubmitAttachmentStateChanges", SubmitAttachmentStateChanges$) {
+}
+
+class SubmitContainerStateChangeCommand extends command(_ep0, _mw0, "SubmitContainerStateChange", SubmitContainerStateChange$) {
+}
+
+class SubmitTaskStateChangeCommand extends command(_ep0, _mw0, "SubmitTaskStateChange", SubmitTaskStateChange$) {
+}
+
+class TagResourceCommand extends command(_ep0, _mw0, "TagResource", TagResource$) {
+}
+
+class UntagResourceCommand extends command(_ep0, _mw0, "UntagResource", UntagResource$) {
+}
+
+class UpdateCapacityProviderCommand extends command(_ep0, _mw0, "UpdateCapacityProvider", UpdateCapacityProvider$) {
+}
+
+class UpdateClusterCommand extends command(_ep0, _mw0, "UpdateCluster", UpdateCluster$) {
+}
+
+class UpdateClusterSettingsCommand extends command(_ep0, _mw0, "UpdateClusterSettings", UpdateClusterSettings$) {
+}
+
+class UpdateContainerAgentCommand extends command(_ep0, _mw0, "UpdateContainerAgent", UpdateContainerAgent$) {
+}
+
+class UpdateContainerInstancesStateCommand extends command(_ep0, _mw0, "UpdateContainerInstancesState", UpdateContainerInstancesState$) {
+}
+
+class UpdateDaemonCommand extends command(_ep0, _mw0, "UpdateDaemon", UpdateDaemon$) {
+}
+
+class UpdateExpressGatewayServiceCommand extends command(_ep0, _mw0, "UpdateExpressGatewayService", UpdateExpressGatewayService$) {
+}
+
+class UpdateServiceCommand extends command(_ep0, _mw0, "UpdateService", UpdateService$) {
+}
+
+class UpdateServicePrimaryTaskSetCommand extends command(_ep0, _mw0, "UpdateServicePrimaryTaskSet", UpdateServicePrimaryTaskSet$) {
+}
+
+class UpdateTaskProtectionCommand extends command(_ep0, _mw0, "UpdateTaskProtection", UpdateTaskProtection$) {
+}
+
+class UpdateTaskSetCommand extends command(_ep0, _mw0, "UpdateTaskSet", UpdateTaskSet$) {
 }
 
 const paginateListAccountSettings = createPaginator(ECSClient, ListAccountSettingsCommand, "nextToken", "nextToken", "maxResults");
@@ -9695,6 +9019,7 @@ const InstanceHealthCheckState = {
 };
 const InstanceHealthCheckType = {
     ACCELERATED_COMPUTE: "ACCELERATED_COMPUTE",
+    AGENT_CONNECTIVITY: "AGENT_CONNECTIVITY",
     CONTAINER_RUNTIME: "CONTAINER_RUNTIME",
     DAEMON: "DAEMON",
 };
@@ -10101,6 +9426,7 @@ const HealthStatus = {
 };
 const TaskStopCode = {
     ESSENTIAL_CONTAINER_EXITED: "EssentialContainerExited",
+    INFRASTRUCTURE_HEALTH: "InfrastructureHealth",
     SERVICE_SCHEDULER_INITIATED: "ServiceSchedulerInitiated",
     SPOT_INTERRUPTION: "SpotInterruption",
     TASK_FAILED_TO_START: "TaskFailedToStart",
@@ -10609,6 +9935,7 @@ exports.RunTaskCommand = RunTaskCommand;
 exports.RunTaskRequest$ = RunTaskRequest$;
 exports.RunTaskResponse$ = RunTaskResponse$;
 exports.RuntimePlatform$ = RuntimePlatform$;
+exports.RuntimePlatformOverride$ = RuntimePlatformOverride$;
 exports.S3FilesVolumeConfiguration$ = S3FilesVolumeConfiguration$;
 exports.Scale$ = Scale$;
 exports.ScaleUnit = ScaleUnit;
@@ -10650,6 +9977,7 @@ exports.ServiceNotFoundException$ = ServiceNotFoundException$;
 exports.ServiceRegistry$ = ServiceRegistry$;
 exports.ServiceRevision$ = ServiceRevision$;
 exports.ServiceRevisionLoadBalancer$ = ServiceRevisionLoadBalancer$;
+exports.ServiceRevisionOverrides$ = ServiceRevisionOverrides$;
 exports.ServiceRevisionSummary$ = ServiceRevisionSummary$;
 exports.ServiceVolumeConfiguration$ = ServiceVolumeConfiguration$;
 exports.Session$ = Session$;
@@ -10822,20 +10150,18 @@ const { InvokeStore } = __nccwpck_require__(9320);
 const { normalizeProvider } = __nccwpck_require__(402);
 const { platform, release } = __nccwpck_require__(8161);
 const { versions, env } = __nccwpck_require__(1708);
-const { booleanSelector, SelectorType, loadConfig, NODE_REGION_CONFIG_OPTIONS, NODE_REGION_CONFIG_FILE_OPTIONS } = __nccwpck_require__(7291);
+const { isValidHostLabel, isIpAddress, customEndpointFunctions } = __nccwpck_require__(2085);
+const { EndpointError, resolveEndpoint } = __nccwpck_require__(2085);
+exports.EndpointError = EndpointError;
+exports.isIpAddress = isIpAddress;
+exports.resolveEndpoint = resolveEndpoint;
+const { loadConfig, NODE_REGION_CONFIG_OPTIONS, NODE_REGION_CONFIG_FILE_OPTIONS } = __nccwpck_require__(7291);
 const { REGION_ENV_NAME, REGION_INI_NAME, resolveRegionConfig } = __nccwpck_require__(7291);
 exports.NODE_REGION_CONFIG_FILE_OPTIONS = NODE_REGION_CONFIG_FILE_OPTIONS;
 exports.NODE_REGION_CONFIG_OPTIONS = NODE_REGION_CONFIG_OPTIONS;
 exports.REGION_ENV_NAME = REGION_ENV_NAME;
 exports.REGION_INI_NAME = REGION_INI_NAME;
 exports.resolveRegionConfig = resolveRegionConfig;
-const { readFile } = __nccwpck_require__(1455);
-const { normalize, sep, join } = __nccwpck_require__(6760);
-const { isValidHostLabel, isIpAddress, customEndpointFunctions } = __nccwpck_require__(2085);
-const { EndpointError, resolveEndpoint } = __nccwpck_require__(2085);
-exports.EndpointError = EndpointError;
-exports.isIpAddress = isIpAddress;
-exports.resolveEndpoint = resolveEndpoint;
 
 const state = {
     warningEmitted: false,
@@ -10985,39 +10311,68 @@ const getLoggerPlugin = (options) => ({
 
 const recursionDetectionMiddlewareOptions = {
     step: "build",
-    tags: ["RECURSION_DETECTION"],
+    tags: ["RECURSION_DETECTION", "TRACE_CONTEXT_PROPAGATION"],
     name: "recursionDetectionMiddleware",
     override: true,
     priority: "low",
 };
 
-const TRACE_ID_HEADER_NAME = "X-Amzn-Trace-Id";
-const ENV_LAMBDA_FUNCTION_NAME = "AWS_LAMBDA_FUNCTION_NAME";
-const ENV_TRACE_ID = "_X_AMZN_TRACE_ID";
+const AWS_LAMBDA_FUNCTION_NAME = "AWS_LAMBDA_FUNCTION_NAME";
+const _X_AMZN_TRACE_ID = "_X_AMZN_TRACE_ID";
+const X_AMZN_TRACE_ID = "X-Amzn-Trace-Id";
+const TRACEPARENT = "traceparent";
+const TRACESTATE = "tracestate";
+const BAGGAGE = "baggage";
 const recursionDetectionMiddleware = () => (next) => async (args) => {
     const { request } = args;
     if (!HttpRequest.isInstance(request)) {
         return next(args);
     }
-    const traceIdHeader = Object.keys(request.headers ?? {}).find((h) => h.toLowerCase() === TRACE_ID_HEADER_NAME.toLowerCase()) ??
-        TRACE_ID_HEADER_NAME;
-    if (request.headers.hasOwnProperty(traceIdHeader)) {
-        return next(args);
+    let invokeStore;
+    {
+        const traceIdHeader = Object.keys(request.headers ?? {}).find((h) => h.toLowerCase() === X_AMZN_TRACE_ID.toLowerCase()) ??
+            X_AMZN_TRACE_ID;
+        if (!request.headers.hasOwnProperty(traceIdHeader)) {
+            const functionName = process.env[AWS_LAMBDA_FUNCTION_NAME];
+            const traceIdFromEnv = process.env[_X_AMZN_TRACE_ID];
+            invokeStore ??= await InvokeStore.getInstanceAsync();
+            const traceIdFromInvokeStore = invokeStore?.getXRayTraceId();
+            const traceId = traceIdFromInvokeStore ?? traceIdFromEnv;
+            const nonEmptyString = (str) => typeof str === "string" && str.length > 0;
+            if (nonEmptyString(functionName) && nonEmptyString(traceId)) {
+                request.headers[X_AMZN_TRACE_ID] = traceId;
+            }
+        }
     }
-    const functionName = process.env[ENV_LAMBDA_FUNCTION_NAME];
-    const traceIdFromEnv = process.env[ENV_TRACE_ID];
-    const invokeStore = await InvokeStore.getInstanceAsync();
-    const traceIdFromInvokeStore = invokeStore?.getXRayTraceId();
-    const traceId = traceIdFromInvokeStore ?? traceIdFromEnv;
-    const nonEmptyString = (str) => typeof str === "string" && str.length > 0;
-    if (nonEmptyString(functionName) && nonEmptyString(traceId)) {
-        request.headers[TRACE_ID_HEADER_NAME] = traceId;
+    {
+        sanitizeTraceHeaders(request.headers);
+        const existingTraceparent = request.headers[TRACEPARENT];
+        if (!existingTraceparent) {
+            const traceparent = (invokeStore ??= await InvokeStore.getInstanceAsync())?.getTraceparent?.();
+            if (traceparent) {
+                request.headers[TRACEPARENT] = traceparent;
+                const tracestate = invokeStore?.getTracestate?.();
+                if (tracestate) {
+                    request.headers[TRACESTATE] = tracestate;
+                }
+                const baggage = invokeStore?.getBaggage?.();
+                if (baggage) {
+                    request.headers[BAGGAGE] = baggage;
+                }
+            }
+        }
     }
-    return next({
-        ...args,
-        request,
-    });
+    return next(args);
 };
+function sanitizeTraceHeaders(headers) {
+    for (const header of Object.keys(headers)) {
+        const lower = header.toLowerCase();
+        if (header !== lower && (lower === TRACEPARENT || lower === TRACESTATE || lower === BAGGAGE)) {
+            headers[lower] = headers[header];
+            delete headers[header];
+        }
+    }
+}
 
 const getRecursionDetectionPlugin = (options) => ({
     applyToStack: (clientStack) => {
@@ -11534,115 +10889,6 @@ const getRuntimeUserAgentPair = () => {
     return ["md/nodejs", versions.node];
 };
 
-const getNodeModulesParentDirs = (dirname) => {
-    const cwd = process.cwd();
-    if (!dirname) {
-        return [cwd];
-    }
-    const normalizedPath = normalize(dirname);
-    const parts = normalizedPath.split(sep);
-    const nodeModulesIndex = parts.indexOf("node_modules");
-    const parentDir = nodeModulesIndex !== -1 ? parts.slice(0, nodeModulesIndex).join(sep) : normalizedPath;
-    if (cwd === parentDir) {
-        return [cwd];
-    }
-    return [parentDir, cwd];
-};
-
-const SEMVER_REGEX = /^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-((?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+[0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*)?$/;
-const getSanitizedTypeScriptVersion = (version = "") => {
-    const match = version.match(SEMVER_REGEX);
-    if (!match) {
-        return undefined;
-    }
-    const [major, minor, patch, prerelease] = [match[1], match[2], match[3], match[4]];
-    return prerelease ? `${major}.${minor}.${patch}-${prerelease}` : `${major}.${minor}.${patch}`;
-};
-
-const ALLOWED_PREFIXES = ["^", "~", ">=", "<=", ">", "<"];
-const ALLOWED_DIST_TAGS = ["latest", "beta", "dev", "rc", "insiders", "next"];
-const getSanitizedDevTypeScriptVersion = (version = "") => {
-    if (ALLOWED_DIST_TAGS.includes(version)) {
-        return version;
-    }
-    const prefix = ALLOWED_PREFIXES.find((p) => version.startsWith(p)) ?? "";
-    const sanitizedTypeScriptVersion = getSanitizedTypeScriptVersion(version.slice(prefix.length));
-    if (!sanitizedTypeScriptVersion) {
-        return undefined;
-    }
-    return `${prefix}${sanitizedTypeScriptVersion}`;
-};
-
-let tscVersion;
-const TS_PACKAGE_JSON = join("node_modules", "typescript", "package.json");
-const getTypeScriptUserAgentPair = async () => {
-    if (tscVersion === null) {
-        return undefined;
-    }
-    else if (typeof tscVersion === "string") {
-        return ["md/tsc", tscVersion];
-    }
-    let isTypeScriptDetectionDisabled = false;
-    try {
-        isTypeScriptDetectionDisabled =
-            booleanSelector(process.env, "AWS_SDK_JS_TYPESCRIPT_DETECTION_DISABLED", SelectorType.ENV) || false;
-    }
-    catch { }
-    if (isTypeScriptDetectionDisabled) {
-        tscVersion = null;
-        return undefined;
-    }
-    const dirname = typeof __dirname !== "undefined" ? __dirname : undefined;
-    const nodeModulesParentDirs = getNodeModulesParentDirs(dirname);
-    let versionFromApp;
-    for (const nodeModulesParentDir of nodeModulesParentDirs) {
-        try {
-            const appPackageJsonPath = join(nodeModulesParentDir, "package.json");
-            const packageJson = await readFile(appPackageJsonPath, "utf-8");
-            const { dependencies, devDependencies } = JSON.parse(packageJson);
-            const version = devDependencies?.typescript ?? dependencies?.typescript;
-            if (typeof version !== "string") {
-                continue;
-            }
-            versionFromApp = version;
-            break;
-        }
-        catch {
-        }
-    }
-    if (!versionFromApp) {
-        tscVersion = null;
-        return undefined;
-    }
-    let versionFromNodeModules;
-    for (const nodeModulesParentDir of nodeModulesParentDirs) {
-        try {
-            const tsPackageJsonPath = join(nodeModulesParentDir, TS_PACKAGE_JSON);
-            const packageJson = await readFile(tsPackageJsonPath, "utf-8");
-            const { version } = JSON.parse(packageJson);
-            const sanitizedVersion = getSanitizedTypeScriptVersion(version);
-            if (typeof sanitizedVersion !== "string") {
-                continue;
-            }
-            versionFromNodeModules = sanitizedVersion;
-            break;
-        }
-        catch {
-        }
-    }
-    if (versionFromNodeModules) {
-        tscVersion = versionFromNodeModules;
-        return ["md/tsc", tscVersion];
-    }
-    const sanitizedVersion = getSanitizedDevTypeScriptVersion(versionFromApp);
-    if (typeof sanitizedVersion !== "string") {
-        tscVersion = null;
-        return undefined;
-    }
-    tscVersion = `dev_${sanitizedVersion}`;
-    return ["md/tsc", tscVersion];
-};
-
 const crtAvailability = {
     isCrtAvailable: false,
 };
@@ -11664,10 +10910,6 @@ const createDefaultUserAgentProvider = ({ serviceId, clientVersion }) => {
             ["lang/js"],
             runtimeUserAgentPair,
         ];
-        const typescriptUserAgentPair = await getTypeScriptUserAgentPair();
-        if (typescriptUserAgentPair) {
-            sections.push(typescriptUserAgentPair);
-        }
         const crtAvailable = isCrtAvailable();
         if (crtAvailable) {
             sections.push(crtAvailable);
@@ -11893,24 +11135,30 @@ exports.userAgentMiddleware = userAgentMiddleware;
 /***/ 7523:
 /***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
-const { HttpResponse, HttpRequest } = __nccwpck_require__(3422);
-const { normalizeProvider, memoizeIdentityProvider, isIdentityExpired, doesIdentityRequireRefresh } = __nccwpck_require__(402);
-const { ProviderError } = __nccwpck_require__(7291);
+const { ProviderError, booleanSelector, SelectorType, loadConfig } = __nccwpck_require__(7291);
 const { setCredentialFeature } = __nccwpck_require__(5152);
+const { normalizeProvider, memoizeIdentityProvider, isIdentityExpired, doesIdentityRequireRefresh } = __nccwpck_require__(402);
 const { SignatureV4 } = __nccwpck_require__(5118);
+const { HttpResponse, HttpRequest } = __nccwpck_require__(3422);
 
-const getDateHeader = (response) => HttpResponse.isInstance(response) ? response.headers?.date ?? response.headers?.Date : undefined;
+const getDateHeader = (response) => HttpResponse.isInstance(response) ? (response.headers?.date ?? response.headers?.Date) : undefined;
+const getAgeHeader = (response) => HttpResponse.isInstance(response) ? (response.headers?.age ?? response.headers?.Age) : undefined;
 
 const getSkewCorrectedDate = (systemClockOffset) => new Date(Date.now() + systemClockOffset);
 
-const isClockSkewed = (clockTime, systemClockOffset) => Math.abs(getSkewCorrectedDate(systemClockOffset).getTime() - clockTime) >= 300000;
-
-const getUpdatedSystemClockOffset = (clockTime, currentSystemClockOffset) => {
-    const clockTimeInMs = Date.parse(clockTime);
-    if (isClockSkewed(clockTimeInMs, currentSystemClockOffset)) {
-        return clockTimeInMs - Date.now();
+const getUpdatedSystemClockOffset = (clockTime, currentSystemClockOffset, timeRequestSent, ageHeader) => {
+    if (ageHeader !== undefined) {
+        return currentSystemClockOffset;
     }
-    return currentSystemClockOffset;
+    const serverTime = Date.parse(clockTime);
+    const timeResponseReceived = Date.now();
+    if (timeRequestSent !== undefined && timeResponseReceived - timeRequestSent > 900_000) {
+        return currentSystemClockOffset;
+    }
+    const candidateSkew = timeRequestSent !== undefined
+        ? serverTime - (timeRequestSent + timeResponseReceived) / 2
+        : serverTime - timeResponseReceived;
+    return candidateSkew;
 };
 
 const throwSigningPropertyError = (name, property) => {
@@ -11952,9 +11200,14 @@ class AwsSdkSigV4Signer {
                 signingName = second?.signingName ?? signingName;
             }
         }
-        signingProperties._preRequestSystemClockOffset = config.systemClockOffset;
+        const noSkewCorrection = (await config.disableClockSkewCorrection?.()) === true;
+        signingProperties._disableClockSkewCorrection = noSkewCorrection;
+        if (!noSkewCorrection) {
+            signingProperties._preRequestSystemClockOffset = config.systemClockOffset;
+            signingProperties._requestSentAt = Date.now();
+        }
         const signedRequest = await signer.sign(httpRequest, {
-            signingDate: getSkewCorrectedDate(config.systemClockOffset),
+            signingDate: noSkewCorrection ? new Date() : getSkewCorrectedDate(config.systemClockOffset),
             signingRegion: signingRegion,
             signingService: signingName,
         });
@@ -11963,27 +11216,36 @@ class AwsSdkSigV4Signer {
     errorHandler(signingProperties) {
         return (error) => {
             const errorException = error;
-            const serverTime = errorException.ServerTime ?? getDateHeader(errorException.$response);
-            if (serverTime) {
-                const config = throwSigningPropertyError("config", signingProperties.config);
-                const preRequestOffset = signingProperties._preRequestSystemClockOffset;
-                const newOffset = getUpdatedSystemClockOffset(serverTime, config.systemClockOffset);
-                const isLocalCorrection = newOffset !== config.systemClockOffset;
-                const isConcurrentCorrection = preRequestOffset !== undefined && preRequestOffset !== newOffset;
-                const clockSkewCorrected = isLocalCorrection || isConcurrentCorrection;
-                if (clockSkewCorrected && errorException.$metadata) {
+            if (!signingProperties._disableClockSkewCorrection) {
+                const serverTime = errorException.ServerTime ?? getDateHeader(errorException.$response);
+                if (serverTime) {
+                    const config = throwSigningPropertyError("config", signingProperties.config);
+                    const preRequestOffset = signingProperties._preRequestSystemClockOffset;
+                    const timeRequestSent = signingProperties._requestSentAt;
+                    const ageHeader = getAgeHeader(errorException.$response);
+                    const newOffset = getUpdatedSystemClockOffset(serverTime, config.systemClockOffset, timeRequestSent, ageHeader);
                     config.systemClockOffset = newOffset;
-                    errorException.$metadata.clockSkewCorrected = true;
+                    const skewExceedsThreshold = Math.abs(newOffset) >= 240_000;
+                    const isLocalCorrection = newOffset !== preRequestOffset;
+                    const isConcurrentCorrection = preRequestOffset !== undefined && preRequestOffset !== newOffset;
+                    if (skewExceedsThreshold && (isLocalCorrection || isConcurrentCorrection) && errorException.$metadata) {
+                        errorException.$metadata.clockSkewCorrected = true;
+                    }
                 }
             }
             throw error;
         };
     }
     successHandler(httpResponse, signingProperties) {
+        if (signingProperties._disableClockSkewCorrection) {
+            return;
+        }
         const dateHeader = getDateHeader(httpResponse);
         if (dateHeader) {
             const config = throwSigningPropertyError("config", signingProperties.config);
-            config.systemClockOffset = getUpdatedSystemClockOffset(dateHeader, config.systemClockOffset);
+            const timeRequestSent = signingProperties._requestSentAt;
+            const ageHeader = getAgeHeader(httpResponse);
+            config.systemClockOffset = getUpdatedSystemClockOffset(dateHeader, config.systemClockOffset, timeRequestSent, ageHeader);
         }
     }
 }
@@ -11998,9 +11260,14 @@ class AwsSdkSigV4ASigner extends AwsSdkSigV4Signer {
         const configResolvedSigningRegionSet = await config.sigv4aSigningRegionSet?.();
         const multiRegionOverride = (configResolvedSigningRegionSet ??
             signingRegionSet ?? [signingRegion]).join(",");
-        signingProperties._preRequestSystemClockOffset = config.systemClockOffset;
+        const noSkewCorrection = (await config.disableClockSkewCorrection?.()) === true;
+        signingProperties._disableClockSkewCorrection = noSkewCorrection;
+        if (!noSkewCorrection) {
+            signingProperties._preRequestSystemClockOffset = config.systemClockOffset;
+            signingProperties._requestSentAt = Date.now();
+        }
         const signedRequest = await signer.sign(httpRequest, {
-            signingDate: getSkewCorrectedDate(config.systemClockOffset),
+            signingDate: noSkewCorrection ? new Date() : getSkewCorrectedDate(config.systemClockOffset),
             signingRegion: multiRegionOverride,
             signingService: signingName,
         });
@@ -12057,7 +11324,7 @@ const NODE_SIGV4A_CONFIG_OPTIONS = {
     default: undefined,
 };
 
-const resolveAwsSdkSigV4Config = (config) => {
+const bindResolveAwsSdkSigV4Config = (defaultDisableClockSkewCorrection) => (config) => {
     let inputCredentials = config.credentials;
     let isUserSupplied = !!config.credentials;
     let resolvedCredentials = undefined;
@@ -12155,11 +11422,11 @@ const resolveAwsSdkSigV4Config = (config) => {
         systemClockOffset,
         signingEscapePath,
         signer,
+        disableClockSkewCorrection: normalizeProvider(config.disableClockSkewCorrection ?? defaultDisableClockSkewCorrection),
     });
     return resolvedConfig;
 };
-const resolveAWSSDKSigV4Config = resolveAwsSdkSigV4Config;
-function normalizeCredentialProvider(config, { credentials, credentialDefaultProvider, }) {
+function normalizeCredentialProvider(config, { credentials, credentialDefaultProvider }) {
     let credentialsProvider;
     if (credentials) {
         if (!credentials?.memoized) {
@@ -12194,6 +11461,19 @@ function bindCallerConfig(config, credentialsProvider) {
     return fn;
 }
 
+const ENV_DISABLE_CLOCK_SKEW_CORRECTION = "AWS_DISABLE_CLOCK_SKEW_CORRECTION";
+const CONFIG_DISABLE_CLOCK_SKEW_CORRECTION = "disable_clock_skew_correction";
+const NODE_DISABLE_CLOCK_SKEW_CORRECTION_CONFIG_OPTIONS = {
+    environmentVariableSelector: (env) => booleanSelector(env, ENV_DISABLE_CLOCK_SKEW_CORRECTION, SelectorType.ENV),
+    configFileSelector: (profile) => booleanSelector(profile, CONFIG_DISABLE_CLOCK_SKEW_CORRECTION, SelectorType.CONFIG),
+    default: false,
+};
+
+const DEFAULT_DISABLE_CLOCK_SKEW_CORRECTION = loadConfig(NODE_DISABLE_CLOCK_SKEW_CORRECTION_CONFIG_OPTIONS);
+
+const resolveAwsSdkSigV4Config = bindResolveAwsSdkSigV4Config(DEFAULT_DISABLE_CLOCK_SKEW_CORRECTION);
+const resolveAWSSDKSigV4Config = resolveAwsSdkSigV4Config;
+
 exports.AWSSDKSigV4Signer = AWSSDKSigV4Signer;
 exports.AwsSdkSigV4ASigner = AwsSdkSigV4ASigner;
 exports.AwsSdkSigV4Signer = AwsSdkSigV4Signer;
@@ -12215,7 +11495,7 @@ const { SmithyRpcV2CborProtocol, loadSmithyRpcV2CborErrorCode } = __nccwpck_requ
 const { TypeRegistry, NormalizedSchema, deref } = __nccwpck_require__(6890);
 const { decorateServiceException, getValueFromTextNode } = __nccwpck_require__(2658);
 const { collectBody, determineTimestampFormat, RpcProtocol, HttpBindingProtocol, HttpInterceptingShapeSerializer, HttpInterceptingShapeDeserializer, FromStringShapeDeserializer, extendedEncodeURIComponent } = __nccwpck_require__(3422);
-const { NumericValue, toUtf8, fromBase64, LazyJsonString, parseEpochTimestamp, parseRfc7231DateTime, parseRfc3339DateTimeWithOffset, toBase64, dateToUtcString, generateIdempotencyToken, expectUnion } = __nccwpck_require__(2430);
+const { NumericValue, toUtf8, fromBase64, LazyJsonString, parseEpochTimestamp, parseRfc7231DateTime, parseRfc3339DateTimeWithOffset, generateIdempotencyToken, toBase64, dateToUtcString, expectUnion } = __nccwpck_require__(2430);
 const { parseXML, XmlNode, XmlText } = __nccwpck_require__(4274);
 
 class ProtocolLib {
@@ -12406,56 +11686,6 @@ class AwsSmithyRpcV2CborProtocol extends SmithyRpcV2CborProtocol {
     }
 }
 
-const _toStr = (val) => {
-    if (val == null) {
-        return val;
-    }
-    if (typeof val === "number" || typeof val === "bigint") {
-        const warning = new Error(`Received number ${val} where a string was expected.`);
-        warning.name = "Warning";
-        console.warn(warning);
-        return String(val);
-    }
-    if (typeof val === "boolean") {
-        const warning = new Error(`Received boolean ${val} where a string was expected.`);
-        warning.name = "Warning";
-        console.warn(warning);
-        return String(val);
-    }
-    return val;
-};
-const _toBool = (val) => {
-    if (val == null) {
-        return val;
-    }
-    if (typeof val === "string") {
-        const lowercase = val.toLowerCase();
-        if (val !== "" && lowercase !== "false" && lowercase !== "true") {
-            const warning = new Error(`Received string "${val}" where a boolean was expected.`);
-            warning.name = "Warning";
-            console.warn(warning);
-        }
-        return val !== "" && lowercase !== "false";
-    }
-    return val;
-};
-const _toNum = (val) => {
-    if (val == null) {
-        return val;
-    }
-    if (typeof val === "string") {
-        const num = Number(val);
-        if (num.toString() !== val) {
-            const warning = new Error(`Received string "${val}" where a number was expected.`);
-            warning.name = "Warning";
-            console.warn(warning);
-            return val;
-        }
-        return num;
-    }
-    return val;
-};
-
 class SerdeContextConfig {
     serdeContext;
     setSerdeContext(serdeContext) {
@@ -12490,42 +11720,221 @@ class UnionSerde {
     }
 }
 
+let canParseBuffer;
+function detectBufferParsing() {
+    if (canParseBuffer === undefined) {
+        try {
+            if (typeof Buffer !== "function") {
+                canParseBuffer = false;
+            }
+            else {
+                const result = JSON.parse(Buffer.from([0x7b, 0x7d]));
+                canParseBuffer = result !== null && typeof result === "object";
+            }
+        }
+        catch {
+            canParseBuffer = false;
+        }
+    }
+    return canParseBuffer;
+}
+
 function jsonReviver(key, value, context) {
     if (context?.source) {
         const numericString = context.source;
         if (typeof value === "number") {
-            if (value > Number.MAX_SAFE_INTEGER || value < Number.MIN_SAFE_INTEGER || numericString !== String(value)) {
-                const isFractional = numericString.includes(".");
-                if (isFractional) {
+            const inSafeRange = value <= Number.MAX_SAFE_INTEGER && value >= Number.MIN_SAFE_INTEGER;
+            if (inSafeRange) {
+                if (isRepresentable(numericString, value)) {
+                    return value;
+                }
+                return new NumericValue(numericString, "bigDecimal");
+            }
+            else {
+                if (isFractionalBigNumeric(numericString)) {
                     return new NumericValue(numericString, "bigDecimal");
                 }
-                else {
-                    return BigInt(numericString);
+                if (/[eE]/.test(numericString)) {
+                    return expandExponentToBigInt(numericString);
                 }
+                return BigInt(numericString);
             }
         }
     }
     return value;
 }
+function isFractionalBigNumeric(s) {
+    const dotIndex = s.indexOf(".");
+    if (dotIndex === -1) {
+        return false;
+    }
+    const eIndex = s.search(/[eE]/);
+    if (eIndex === -1) {
+        return true;
+    }
+    const fracDigits = eIndex - dotIndex - 1;
+    const exp = parseInt(s.slice(eIndex + 1), 10);
+    return exp < fracDigits;
+}
+function isRepresentable(numericString, value) {
+    if (numericString === String(value)) {
+        return true;
+    }
+    if (Object.is(value, -0)) {
+        return true;
+    }
+    if (/[eE]/.test(numericString)) {
+        return expandToDecimal(numericString) === expandToDecimal(String(value));
+    }
+    const normalized = numericString.replace(/(\.\d*?)0+$/, "$1").replace(/\.$/, "");
+    const canonical = String(value);
+    if (normalized === canonical) {
+        return true;
+    }
+    if (/[eE]/.test(canonical)) {
+        return normalized === expandToDecimal(canonical);
+    }
+    return false;
+}
+function expandToDecimal(s) {
+    const negative = s.startsWith("-");
+    const abs = negative ? s.slice(1) : s;
+    const eIndex = abs.search(/[eE]/);
+    let result;
+    if (eIndex === -1) {
+        result = abs;
+    }
+    else {
+        const exp = parseInt(abs.slice(eIndex + 1), 10);
+        const mantissa = abs.slice(0, eIndex);
+        const dotIndex = mantissa.indexOf(".");
+        let digits;
+        let intLen;
+        if (dotIndex === -1) {
+            digits = mantissa;
+            intLen = mantissa.length;
+        }
+        else {
+            digits = mantissa.slice(0, dotIndex) + mantissa.slice(dotIndex + 1);
+            intLen = dotIndex;
+        }
+        digits = digits.replace(/0+$/, "") || "0";
+        const newDotPos = intLen + exp;
+        if (digits === "0") {
+            result = "0";
+        }
+        else if (newDotPos <= 0) {
+            result = "0." + "0".repeat(-newDotPos) + digits;
+        }
+        else if (newDotPos >= digits.length) {
+            result = digits + "0".repeat(newDotPos - digits.length);
+        }
+        else {
+            result = digits.slice(0, newDotPos) + "." + digits.slice(newDotPos);
+        }
+    }
+    if (result.includes(".")) {
+        result = result.replace(/(\.\d*?)0+$/, "$1").replace(/\.$/, "");
+    }
+    return (negative ? "-" : "") + result;
+}
+function expandExponentToBigInt(s) {
+    const eIndex = s.search(/[eE]/);
+    const exp = parseInt(s.slice(eIndex + 1), 10);
+    const negative = s.startsWith("-");
+    const mantissa = s.slice(negative ? 1 : 0, eIndex);
+    const dotIndex = mantissa.indexOf(".");
+    let digits;
+    let shift;
+    if (dotIndex === -1) {
+        digits = mantissa;
+        shift = exp;
+    }
+    else {
+        digits = mantissa.slice(0, dotIndex) + mantissa.slice(dotIndex + 1);
+        const fracDigits = mantissa.length - dotIndex - 1;
+        shift = exp - fracDigits;
+    }
+    digits = digits.replace(/0+$/, "") || "0";
+    const result = BigInt(digits) * 10n ** BigInt(shift + (mantissa.replace(".", "").length - digits.length));
+    return negative ? -result : result;
+}
+
+const REVIVER_SYMBOL = Symbol.for("@aws-sdk/reviver");
+function needsReviver(schema) {
+    const ns = NormalizedSchema.of(schema);
+    const raw = ns.getSchema();
+    if (Array.isArray(raw) && ns.isStructSchema()) {
+        if (REVIVER_SYMBOL in raw) {
+            return raw[REVIVER_SYMBOL];
+        }
+        const result = _check(ns, new Set());
+        raw[REVIVER_SYMBOL] = result;
+        return result;
+    }
+    return _check(ns, new Set());
+}
+function _check(ns, seen) {
+    const raw = ns.getSchema();
+    if (seen.has(raw)) {
+        return false;
+    }
+    seen.add(raw);
+    if (ns.isBigIntegerSchema() || ns.isBigDecimalSchema()) {
+        return true;
+    }
+    if (ns.isStructSchema()) {
+        for (const [, memberSchema] of ns.structIterator()) {
+            if (_check(memberSchema, seen)) {
+                return true;
+            }
+        }
+    }
+    else if (ns.isListSchema() || ns.isMapSchema()) {
+        if (_check(ns.getValueSchema(), seen)) {
+            return true;
+        }
+    }
+    else if (ns.isDocumentSchema()) {
+        return true;
+    }
+    return false;
+}
 
 const collectBodyString = (streamBody, context) => collectBody(streamBody, context).then((body) => (context?.utf8Encoder ?? toUtf8)(body));
 
-const parseJsonBody = (streamBody, context) => collectBodyString(streamBody, context).then((encoded) => {
-    if (encoded.length) {
-        try {
-            return JSON.parse(encoded);
-        }
-        catch (e) {
-            if (e?.name === "SyntaxError") {
-                Object.defineProperty(e, "$responseBodyText", {
-                    value: encoded,
-                });
+async function parseJsonBody(streamBody, context, schema) {
+    let parsingInput;
+    if (detectBufferParsing() && typeof streamBody?.[Symbol.asyncIterator] === "function") {
+        const buffer = await collectBody(streamBody, context);
+        if (typeof Buffer === "function") {
+            if (Buffer.isBuffer(buffer)) {
+                parsingInput = buffer;
             }
-            throw e;
+            else {
+                parsingInput = Buffer.from(buffer.buffer, buffer.byteOffset, buffer.byteLength);
+            }
         }
     }
-    return {};
-});
+    if (!parsingInput) {
+        parsingInput = await collectBodyString(streamBody, context);
+    }
+    if (parsingInput.length === 0) {
+        return {};
+    }
+    const reviver = schema && needsReviver(schema) ? jsonReviver : undefined;
+    try {
+        return JSON.parse(parsingInput, reviver);
+    }
+    catch (e) {
+        if (e?.name === "SyntaxError") {
+            Object.defineProperty(e, "$responseBodyText", {
+                value: typeof parsingInput === "string" ? parsingInput : parsingInput.toString("utf8"),
+            });
+        }
+        throw e;
+    }
+}
 const parseJsonErrorBody = async (errorBody, context) => {
     const value = await parseJsonBody(errorBody, context);
     value.message = value.message ?? value.Message;
@@ -12579,6 +11988,1034 @@ const loadErrorCode = ({ headers }, data, order) => {
     }
 };
 
+function writeKey(obj) {
+    Object.defineProperty(obj, "__proto__", { value: undefined, writable: true, enumerable: true, configurable: true });
+}
+
+class JsonShapeDeserializer2 extends SerdeContextConfig {
+    settings;
+    constructor(settings) {
+        super();
+        this.settings = settings;
+    }
+    async read(schema, data) {
+        const reviver = needsReviver(schema) ? jsonReviver : undefined;
+        let parsed;
+        if (typeof data === "string") {
+            if (data.length === 0) {
+                return {};
+            }
+            parsed = JSON.parse(data, reviver);
+        }
+        else if (data instanceof Uint8Array && detectBufferParsing()) {
+            if (data.byteLength === 0) {
+                return {};
+            }
+            const buf = Buffer.isBuffer(data) ? data : Buffer.from(data.buffer, data.byteOffset, data.byteLength);
+            parsed = JSON.parse(buf, reviver);
+        }
+        else {
+            parsed = await parseJsonBody(data, this.serdeContext, schema);
+        }
+        return this._read(schema, parsed);
+    }
+    readObject(schema, data) {
+        return this._read(schema, data);
+    }
+    _read(schema, value) {
+        const isObject = value !== null && typeof value === "object";
+        const ns = NormalizedSchema.of(schema);
+        if (isObject) {
+            if (ns.isStructSchema()) {
+                return this._readStruct(ns, value);
+            }
+            if (Array.isArray(value) && ns.isListSchema()) {
+                const listMember = ns.getValueSchema();
+                if (this.needsTransform(listMember)) {
+                    for (let i = 0; i < value.length; ++i) {
+                        value[i] = this._read(listMember, value[i]);
+                    }
+                }
+                return value;
+            }
+            if (ns.isMapSchema()) {
+                const mapMember = ns.getValueSchema();
+                const map = value;
+                if (this.needsTransform(mapMember)) {
+                    for (const k in map) {
+                        if (k === "__proto__") {
+                            writeKey(map);
+                        }
+                        map[k] = this._read(mapMember, map[k]);
+                    }
+                }
+                return map;
+            }
+        }
+        if (ns.isBlobSchema() && typeof value === "string") {
+            return fromBase64(value);
+        }
+        const mediaType = ns.getMergedTraits().mediaType;
+        if (ns.isStringSchema() && typeof value === "string" && mediaType) {
+            const isJson = mediaType === "application/json" || mediaType.endsWith("+json");
+            if (isJson) {
+                return LazyJsonString.from(value);
+            }
+            return value;
+        }
+        if (ns.isTimestampSchema() && value != null) {
+            const format = determineTimestampFormat(ns, this.settings);
+            switch (format) {
+                case 5:
+                    return parseRfc3339DateTimeWithOffset(value);
+                case 6:
+                    return parseRfc7231DateTime(value);
+                case 7:
+                    return parseEpochTimestamp(value);
+                default:
+                    console.warn("Missing timestamp format, parsing value with Date constructor:", value);
+                    return new Date(value);
+            }
+        }
+        if (ns.isBigIntegerSchema() && (typeof value === "number" || typeof value === "string")) {
+            return BigInt(value);
+        }
+        if (ns.isBigDecimalSchema() && value != undefined) {
+            if (value instanceof NumericValue) {
+                return value;
+            }
+            const untyped = value;
+            if (untyped.type === "bigDecimal" && "string" in untyped) {
+                return new NumericValue(untyped.string, untyped.type);
+            }
+            return new NumericValue(String(value), "bigDecimal");
+        }
+        if (ns.isNumericSchema() && typeof value === "string") {
+            switch (value) {
+                case "Infinity":
+                    return Infinity;
+                case "-Infinity":
+                    return -Infinity;
+                case "NaN":
+                    return NaN;
+            }
+            return value;
+        }
+        if (ns.isDocumentSchema()) {
+            if (isObject) {
+                if (Array.isArray(value)) {
+                    for (let i = 0; i < value.length; ++i) {
+                        const v = value[i];
+                        if (!(v instanceof NumericValue)) {
+                            value[i] = this._read(ns, v);
+                        }
+                    }
+                }
+                else {
+                    const doc = value;
+                    for (const k in doc) {
+                        if (k === "__proto__") {
+                            writeKey(doc);
+                        }
+                        const v = doc[k];
+                        if (!(v instanceof NumericValue)) {
+                            doc[k] = this._read(ns, v);
+                        }
+                    }
+                }
+            }
+        }
+        return value;
+    }
+    _readStruct(ns, record) {
+        const union = ns.isUnionSchema();
+        const out = {};
+        let nameMap;
+        const hasType = typeof record.__type === "string";
+        const { jsonName } = this.settings;
+        if (jsonName && hasType) {
+            nameMap = {};
+        }
+        let unionSerde;
+        if (union) {
+            unionSerde = new UnionSerde(record, out);
+        }
+        for (const [memberName, memberSchema] of ns.structIterator()) {
+            let fromKey = memberName;
+            if (jsonName) {
+                fromKey = memberSchema.getMergedTraits().jsonName ?? fromKey;
+                if (hasType) {
+                    nameMap[fromKey] = memberName;
+                }
+            }
+            if (union) {
+                unionSerde.mark(fromKey);
+            }
+            if (record[fromKey] != null) {
+                out[memberName] = this._read(memberSchema, record[fromKey]);
+            }
+        }
+        if (union) {
+            unionSerde.writeUnknown();
+        }
+        else if (hasType) {
+            for (const k in record) {
+                const v = record[k];
+                const t = jsonName ? (nameMap[k] ?? k) : k;
+                if (!(t in out)) {
+                    out[t] = v;
+                }
+            }
+        }
+        return out;
+    }
+    needsTransform(ns) {
+        if (ns.isBlobSchema() || ns.isTimestampSchema() || ns.isBigIntegerSchema() || ns.isBigDecimalSchema()) {
+            return true;
+        }
+        if (ns.isDocumentSchema() || ns.isStructSchema() || ns.isListSchema() || ns.isMapSchema()) {
+            return true;
+        }
+        if (ns.isStringSchema() && ns.getMergedTraits().mediaType) {
+            return true;
+        }
+        return false;
+    }
+}
+
+class JsonBytesStringAdapter extends Uint8Array {
+    string = null;
+    static allocUnsafe(bytes) {
+        if (typeof Buffer === "function") {
+            const buffer = Buffer.allocUnsafe(bytes);
+            return new JsonBytesStringAdapter(buffer.buffer, buffer.byteOffset, buffer.byteLength);
+        }
+        return new JsonBytesStringAdapter(bytes);
+    }
+    toString() {
+        return this.s();
+    }
+    valueOf() {
+        return this.s();
+    }
+    includes(searchString, position) {
+        if (typeof searchString === "string") {
+            return this.s().includes(searchString, position);
+        }
+        return Uint8Array.prototype.includes.call(this, searchString, position);
+    }
+    indexOf(searchString, position) {
+        if (typeof searchString === "string") {
+            return this.s().indexOf(searchString, position);
+        }
+        return Uint8Array.prototype.indexOf.call(this, searchString, position);
+    }
+    lastIndexOf(searchString, position) {
+        if (typeof searchString === "string") {
+            return this.s().lastIndexOf(searchString, position);
+        }
+        const fn = Uint8Array.prototype.lastIndexOf;
+        if (position !== undefined) {
+            return fn.call(this, searchString, position);
+        }
+        return fn.call(this, searchString);
+    }
+    startsWith(searchString, position) {
+        return this.s().startsWith(searchString, position);
+    }
+    endsWith(searchString, endPosition) {
+        return this.s().endsWith(searchString, endPosition);
+    }
+    match(regexp) {
+        return this.s().match(regexp);
+    }
+    replace(searchValue, replaceValue) {
+        return this.s().replace(searchValue, replaceValue);
+    }
+    search(regexp) {
+        return this.s().search(regexp);
+    }
+    split(separator, limit) {
+        return this.s().split(separator, limit);
+    }
+    substring(start, end) {
+        return this.s().substring(start, end);
+    }
+    trim() {
+        return this.s().trim();
+    }
+    trimStart() {
+        return this.s().trimStart();
+    }
+    trimEnd() {
+        return this.s().trimEnd();
+    }
+    charAt(pos) {
+        return this.s().charAt(pos);
+    }
+    charCodeAt(index) {
+        return this.s().charCodeAt(index);
+    }
+    padStart(maxLength, fillString) {
+        return this.s().padStart(maxLength, fillString);
+    }
+    padEnd(maxLength, fillString) {
+        return this.s().padEnd(maxLength, fillString);
+    }
+    repeat(count) {
+        return this.s().repeat(count);
+    }
+    toUpperCase() {
+        return this.s().toUpperCase();
+    }
+    toLowerCase() {
+        return this.s().toLowerCase();
+    }
+    s() {
+        if (this.string == null) {
+            const n = Date.now();
+            if (n > warned + 60_000) {
+                console.warn("@aws-sdk/core/protocols - WARN - JsonCodec2: you have called a string method on a Uint8Array request body. " +
+                    "It has been automatically converted to string. In a future version this will throw an error.");
+                warned = n;
+            }
+            this.string = toUtf8(this);
+        }
+        return this.string;
+    }
+}
+var warned = 0;
+
+const encoder = new TextEncoder();
+const OPEN_BRACE = 0x7b;
+const CLOSE_BRACE = 0x7d;
+const OPEN_BRACKET = 0x5b;
+const CLOSE_BRACKET = 0x5d;
+const QUOTE = 0x22;
+const COLON = 0x3a;
+const COMMA = 0x2c;
+const BACKSLASH = 0x5c;
+const TRUE = new Uint8Array([0x74, 0x72, 0x75, 0x65]);
+const FALSE = new Uint8Array([0x66, 0x61, 0x6c, 0x73, 0x65]);
+const NULL = new Uint8Array([0x6e, 0x75, 0x6c, 0x6c]);
+const ESCAPE_TABLE = new Array(128).fill(null);
+ESCAPE_TABLE[0x08] = "b";
+ESCAPE_TABLE[0x09] = "t";
+ESCAPE_TABLE[0x0a] = "n";
+ESCAPE_TABLE[0x0c] = "f";
+ESCAPE_TABLE[0x0d] = "r";
+ESCAPE_TABLE[0x22] = '"';
+ESCAPE_TABLE[0x5c] = "\\";
+for (let i = 0; i < 0x20; i++) {
+    if (ESCAPE_TABLE[i] === null) {
+        ESCAPE_TABLE[i] = "u00" + i.toString(16).padStart(2, "0");
+    }
+}
+const INITIAL_BUFFER_SIZE = 2048;
+function alloc(size) {
+    return JsonBytesStringAdapter.allocUnsafe(size);
+}
+class JsonShapeSerializer2 extends SerdeContextConfig {
+    settings;
+    json;
+    i = 0;
+    rootSchema;
+    rawValue;
+    passthrough = false;
+    constructor(settings) {
+        super();
+        this.settings = settings;
+        this.json = alloc(INITIAL_BUFFER_SIZE);
+    }
+    write(schema, value) {
+        this.i = 0;
+        this.rawValue = value;
+        this.rootSchema = NormalizedSchema.of(schema);
+        this.passthrough = this.rootSchema.isBlobSchema() || this.rootSchema.isStringSchema();
+        if (!this.passthrough) {
+            this.writeValue(this.rootSchema, value, undefined);
+        }
+    }
+    writeDiscriminatedDocument(schema, value) {
+        this.i = 0;
+        this.rootSchema = NormalizedSchema.of(schema);
+        const ns = this.rootSchema;
+        if (ns.isStructSchema() && value != null && typeof value === "object") {
+            this.writeValue(ns, value, undefined);
+            const prefix = `"__type":"${ns.getName(true) ?? "Unknown"}",`;
+            const z = prefix.length;
+            this.ensure(z);
+            this.json.copyWithin(1 + z, 1, this.i);
+            encoder.encodeInto(prefix, this.json.subarray(1));
+            this.i += z;
+        }
+        else {
+            this.writeValue(ns, value, undefined);
+        }
+    }
+    flush() {
+        this.rootSchema = undefined;
+        const finalPosition = this.i;
+        this.i = 0;
+        const raw = this.rawValue;
+        this.rawValue = undefined;
+        if (finalPosition === 0) {
+            return raw;
+        }
+        const result = this.json.subarray(0, finalPosition);
+        this.json = alloc(INITIAL_BUFFER_SIZE);
+        return result;
+    }
+    ensure(byteCount) {
+        const { i, json } = this;
+        if (i + byteCount > json.length) {
+            let newSize = json.length * 2;
+            while (newSize < i + byteCount) {
+                newSize *= 2;
+            }
+            const next = alloc(newSize);
+            next.set(this.json);
+            this.json = next;
+        }
+    }
+    writeAscii(s) {
+        const z = s.length;
+        this.ensure(z);
+        let { i, json } = this;
+        for (let j = 0; j < z; ++j) {
+            json[i] = s.charCodeAt(j);
+            i += 1;
+        }
+        this.i = i;
+    }
+    writeAsciiQuoted(s) {
+        const z = s.length;
+        this.ensure(z + 4);
+        let { json, i } = this;
+        json[i++] = QUOTE;
+        for (let j = 0; j < z; ++j) {
+            json[i++] = s.charCodeAt(j);
+        }
+        json[i++] = QUOTE;
+        this.i = i;
+    }
+    writeJsonString(s) {
+        this.ensure(s.length * 3 + 2);
+        this.json[this.i++] = QUOTE;
+        const z = s.length;
+        for (let j = 0; j < z; ++j) {
+            const c = s.charCodeAt(j);
+            if (c > 0x22 && c < 0x5c) {
+                this.json[this.i++] = c;
+            }
+            else if (c < 0x80) {
+                const esc = ESCAPE_TABLE[c];
+                if (esc !== null) {
+                    this.ensure(esc.length + 1);
+                    this.json[this.i++] = BACKSLASH;
+                    for (let k = 0; k < esc.length; k++) {
+                        this.json[this.i++] = esc.charCodeAt(k);
+                    }
+                }
+                else {
+                    this.json[this.i++] = c;
+                }
+            }
+            else if (c >= 0xd800 && c <= 0xdbff) {
+                const next = j + 1 < z ? s.charCodeAt(j + 1) : 0;
+                if (next >= 0xdc00 && next <= 0xdfff) {
+                    this.ensure(4);
+                    const { written } = encoder.encodeInto(s.substring(j, j + 2), this.json.subarray(this.i));
+                    this.i += written;
+                    ++j;
+                }
+                else {
+                    this.ensure(6);
+                    this.writeUnicodeEscape(c);
+                }
+            }
+            else if (c >= 0xdc00 && c <= 0xdfff) {
+                this.ensure(6);
+                this.writeUnicodeEscape(c);
+            }
+            else {
+                let { i, json } = this;
+                if (c < 0x800) {
+                    json[i++] = 0xc0 | (c >> 6);
+                    json[i++] = 0x80 | (c & 0x3f);
+                }
+                else {
+                    json[i++] = 0xe0 | (c >> 12);
+                    json[i++] = 0x80 | ((c >> 6) & 0x3f);
+                    json[i++] = 0x80 | (c & 0x3f);
+                }
+                this.i = i;
+            }
+        }
+        this.json[this.i++] = QUOTE;
+    }
+    writeUnicodeEscape(code) {
+        let { json, i } = this;
+        json[i++] = BACKSLASH;
+        json[i++] = 0x75;
+        const hex = code.toString(16).padStart(4, "0");
+        for (let j = 0; j < 4; ++j) {
+            json[i++] = hex.charCodeAt(j);
+        }
+        this.i = i;
+    }
+    static B64 = (() => {
+        const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
+        const table = new Uint8Array(64);
+        for (let i = 0; i < 64; ++i) {
+            table[i] = chars.charCodeAt(i);
+        }
+        return table;
+    })();
+    writeBase64(data) {
+        const b64Len = Math.ceil(data.length / 3) * 4;
+        this.ensure(b64Len + 2);
+        const json = this.json;
+        const B64 = JsonShapeSerializer2.B64;
+        let i = this.i;
+        json[i++] = QUOTE;
+        const len = data.length;
+        const remainder = len % 3;
+        const mainLen = len - remainder;
+        for (let j = 0; j < mainLen; j += 3) {
+            const a = data[j];
+            const b = data[j + 1];
+            const c = data[j + 2];
+            json[i++] = B64[a >> 2];
+            json[i++] = B64[((a & 0x03) << 4) | (b >> 4)];
+            json[i++] = B64[((b & 0x0f) << 2) | (c >> 6)];
+            json[i++] = B64[c & 0x3f];
+        }
+        if (remainder === 2) {
+            const a = data[mainLen];
+            const b = data[mainLen + 1];
+            json[i++] = B64[a >> 2];
+            json[i++] = B64[((a & 0x03) << 4) | (b >> 4)];
+            json[i++] = B64[(b & 0x0f) << 2];
+            json[i++] = 0x3d;
+        }
+        else if (remainder === 1) {
+            const a = data[mainLen];
+            json[i++] = B64[a >> 2];
+            json[i++] = B64[(a & 0x03) << 4];
+            json[i++] = 0x3d;
+            json[i++] = 0x3d;
+        }
+        json[i++] = QUOTE;
+        this.i = i;
+    }
+    writeValue(schema, value, container) {
+        if (value == null) {
+            if (container?.isStructSchema()) {
+                if (value === undefined) {
+                    const ns = NormalizedSchema.of(schema);
+                    if (ns.isIdempotencyToken()) {
+                        this.writeAsciiQuoted(generateIdempotencyToken());
+                        return;
+                    }
+                }
+                return;
+            }
+            this.ensure(4);
+            this.json.set(NULL, this.i);
+            this.i += 4;
+            return;
+        }
+        const ns = NormalizedSchema.of(schema);
+        const isObject = typeof value === "object";
+        if (ns.isStringSchema()) {
+            const mediaType = ns.getMergedTraits().mediaType;
+            if (mediaType) {
+                const isJson = mediaType === "application/json" || mediaType.endsWith("+json");
+                if (isJson) {
+                    this.writeJsonString(LazyJsonString.from(value).toString());
+                    return;
+                }
+            }
+        }
+        if (isObject) {
+            if (ns.isStructSchema()) {
+                this.writeStruct(ns, value);
+                return;
+            }
+            if (Array.isArray(value) && (ns.isListSchema() || ns.isDocumentSchema())) {
+                this.writeList(ns, value, ns.isDocumentSchema());
+                return;
+            }
+            if (ns.isMapSchema()) {
+                this.writeMap(ns, value, false);
+                return;
+            }
+            if (value instanceof Uint8Array && (ns.isBlobSchema() || ns.isDocumentSchema())) {
+                this.writeBase64(value);
+                return;
+            }
+            if (value instanceof Date && (ns.isTimestampSchema() || ns.isDocumentSchema())) {
+                this.writeTimestamp(ns, value);
+                return;
+            }
+            if (value instanceof NumericValue) {
+                this.writeAscii(value.string);
+                return;
+            }
+            if (ns.isDocumentSchema()) {
+                if (Array.isArray(value)) {
+                    this.writeList(ns, value, true);
+                }
+                else {
+                    this.writeMap(ns, value, true);
+                }
+                return;
+            }
+            const json = JSON.stringify(value);
+            this.writeAscii(json);
+            return;
+        }
+        if (typeof value === "string") {
+            if (ns.isBlobSchema()) {
+                const b64 = (this.serdeContext?.base64Encoder ?? toBase64)(value);
+                this.writeAsciiQuoted(b64);
+                return;
+            }
+            this.writeJsonString(value);
+            return;
+        }
+        if (typeof value === "number") {
+            if (Math.abs(value) === Infinity || Number.isNaN(value)) {
+                this.writeAsciiQuoted(String(value));
+                return;
+            }
+            const numStr = String(value);
+            this.writeAscii(numStr);
+            return;
+        }
+        if (typeof value === "boolean") {
+            this.ensure(5);
+            let { i, json } = this;
+            if (value) {
+                json.set(TRUE, i);
+                i += 4;
+            }
+            else {
+                json.set(FALSE, i);
+                i += 5;
+            }
+            this.i = i;
+            return;
+        }
+        if (typeof value === "bigint") {
+            this.writeAscii(value.toString());
+            return;
+        }
+        this.writeAscii(String(value));
+    }
+    writeStruct(ns, value) {
+        this.ensure(2);
+        this.json[this.i++] = OPEN_BRACE;
+        let wroteAny = false;
+        const hasType = typeof value.__type === "string";
+        let writtenKeys;
+        if (hasType) {
+            writtenKeys = new Set();
+        }
+        for (const [memberName, memberSchema] of ns.structIterator()) {
+            const item = value[memberName];
+            if (item == null && !memberSchema.isIdempotencyToken()) {
+                continue;
+            }
+            if (wroteAny) {
+                this.ensure(1);
+                this.json[this.i++] = COMMA;
+            }
+            wroteAny = true;
+            const targetKey = this.settings.jsonName ? (memberSchema.getMergedTraits().jsonName ?? memberName) : memberName;
+            if (writtenKeys) {
+                writtenKeys.add(memberName);
+                writtenKeys.add(targetKey);
+            }
+            this.writeAsciiQuoted(targetKey);
+            this.json[this.i++] = COLON;
+            this.writeValue(memberSchema, item, ns);
+        }
+        if (!wroteAny && ns.isUnionSchema()) {
+            const { $unknown } = value;
+            if (Array.isArray($unknown)) {
+                const [k, v] = $unknown;
+                this.writeAsciiQuoted(k);
+                this.ensure(1);
+                this.json[this.i++] = COLON;
+                this.writeValue(15, v, ns);
+            }
+        }
+        else if (hasType) {
+            for (const k in value) {
+                if (writtenKeys.has(k)) {
+                    continue;
+                }
+                writtenKeys.add(k);
+                const v = value[k];
+                if (wroteAny) {
+                    this.ensure(1);
+                    this.json[this.i++] = COMMA;
+                }
+                wroteAny = true;
+                this.writeAsciiQuoted(k);
+                this.ensure(1);
+                this.json[this.i++] = COLON;
+                this.writeValue(15, v, undefined);
+            }
+        }
+        this.ensure(1);
+        this.json[this.i++] = CLOSE_BRACE;
+    }
+    writeList(ns, value, isDocument) {
+        const sparse = !!ns.getMergedTraits().sparse;
+        const valueSchema = ns.getValueSchema();
+        if (!isDocument) {
+            if (valueSchema.isStringSchema() || valueSchema.isNumericSchema() || valueSchema.isBooleanSchema()) {
+                let hasSpecials = false;
+                for (let i = 0; i < value.length; ++i) {
+                    const v = value[i];
+                    if (Number.isNaN(v) || v === Infinity || v === -Infinity || (v == null && !sparse)) {
+                        hasSpecials = true;
+                        break;
+                    }
+                }
+                let json;
+                if (!hasSpecials) {
+                    json = JSON.stringify(value);
+                }
+                else {
+                    const out = [];
+                    for (let i = 0; i < value.length; ++i) {
+                        const v = value[i];
+                        if (v == null && !sparse)
+                            continue;
+                        if (Number.isNaN(v) || v === Infinity || v === -Infinity) {
+                            out.push(String(v));
+                        }
+                        else {
+                            out.push(v);
+                        }
+                    }
+                    json = JSON.stringify(out);
+                }
+                this.ensure(json.length * 3);
+                this.i += encoder.encodeInto(json, this.json.subarray(this.i)).written;
+                return;
+            }
+        }
+        this.ensure(2);
+        this.json[this.i++] = OPEN_BRACKET;
+        let wroteFirstItem = false;
+        for (let i = 0; i < value.length; ++i) {
+            const item = value[i];
+            if (isDocument ? item === undefined : item == null && !sparse) {
+                continue;
+            }
+            if (wroteFirstItem) {
+                this.ensure(1);
+                this.json[this.i++] = COMMA;
+            }
+            this.writeValue(valueSchema, item, undefined);
+            wroteFirstItem = true;
+        }
+        this.ensure(1);
+        this.json[this.i++] = CLOSE_BRACKET;
+    }
+    writeMap(ns, value, isDocument) {
+        const sparse = !!ns.getMergedTraits().sparse;
+        const valueSchema = ns.getValueSchema();
+        if (!isDocument) {
+            if (valueSchema.isStringSchema() || valueSchema.isNumericSchema() || valueSchema.isBooleanSchema()) {
+                let modifications;
+                for (const k in value) {
+                    const v = value[k];
+                    if (Number.isNaN(v) || v === Infinity || v === -Infinity) {
+                        (modifications ??= {})[k] = v;
+                        value[k] = String(v);
+                    }
+                    else if (v === null && !sparse) {
+                        (modifications ??= {})[k] = null;
+                        value[k] = undefined;
+                    }
+                }
+                const json = JSON.stringify(value);
+                if (modifications) {
+                    Object.assign(value, modifications);
+                }
+                this.ensure(json.length * 3);
+                this.i += encoder.encodeInto(json, this.json.subarray(this.i)).written;
+                return;
+            }
+        }
+        this.ensure(2);
+        this.json[this.i++] = OPEN_BRACE;
+        let first = true;
+        for (const k in value) {
+            const v = value[k];
+            if (isDocument ? v === undefined : v == null && !sparse) {
+                continue;
+            }
+            if (!first) {
+                this.ensure(1);
+                this.json[this.i++] = COMMA;
+            }
+            first = false;
+            this.writeJsonString(k);
+            this.ensure(1);
+            this.json[this.i++] = COLON;
+            this.writeValue(valueSchema, v, undefined);
+        }
+        this.ensure(1);
+        this.json[this.i++] = CLOSE_BRACE;
+    }
+    writeTimestamp(ns, value) {
+        const format = determineTimestampFormat(ns, this.settings);
+        switch (format) {
+            case 5: {
+                const iso = value.toISOString().replace(".000Z", "Z");
+                this.writeAsciiQuoted(iso);
+                return;
+            }
+            case 6: {
+                this.writeAsciiQuoted(dateToUtcString(value));
+                return;
+            }
+            case 7: {
+                const epochSecs = String(value.getTime() / 1000);
+                this.writeAscii(epochSecs);
+                return;
+            }
+            default: {
+                const epochSecs = String(value.getTime() / 1000);
+                this.writeAscii(epochSecs);
+                return;
+            }
+        }
+    }
+}
+
+class JsonCodec2 extends SerdeContextConfig {
+    settings;
+    constructor(settings) {
+        super();
+        this.settings = settings;
+    }
+    createSerializer() {
+        const serializer = new JsonShapeSerializer2(this.settings);
+        serializer.setSerdeContext(this.serdeContext);
+        return serializer;
+    }
+    createDeserializer() {
+        const deserializer = new JsonShapeDeserializer2(this.settings);
+        deserializer.setSerdeContext(this.serdeContext);
+        return deserializer;
+    }
+}
+
+class AwsJsonRpcProtocol extends RpcProtocol {
+    serializer;
+    deserializer;
+    serviceTarget;
+    codec;
+    mixin;
+    awsQueryCompatible;
+    constructor({ defaultNamespace, errorTypeRegistries, serviceTarget, awsQueryCompatible, jsonCodec, }) {
+        super({
+            defaultNamespace,
+            errorTypeRegistries,
+        });
+        this.serviceTarget = serviceTarget;
+        this.codec =
+            jsonCodec ??
+                new JsonCodec2({
+                    timestampFormat: {
+                        useTrait: true,
+                        default: 7,
+                    },
+                    jsonName: false,
+                });
+        this.serializer = this.codec.createSerializer();
+        this.deserializer = this.codec.createDeserializer();
+        this.awsQueryCompatible = !!awsQueryCompatible;
+        this.mixin = new ProtocolLib(this.awsQueryCompatible);
+    }
+    async serializeRequest(operationSchema, input, context) {
+        const request = await super.serializeRequest(operationSchema, input, context);
+        if (!request.path.endsWith("/")) {
+            request.path += "/";
+        }
+        request.headers["content-type"] = `application/x-amz-json-${this.getJsonRpcVersion()}`;
+        request.headers["x-amz-target"] = `${this.serviceTarget}.${operationSchema.name}`;
+        if (this.awsQueryCompatible) {
+            request.headers["x-amzn-query-mode"] = "true";
+        }
+        if (deref(operationSchema.input) === "unit" || !request.body) {
+            request.body = "{}";
+        }
+        return request;
+    }
+    getPayloadCodec() {
+        return this.codec;
+    }
+    async handleError(operationSchema, context, response, dataObject, metadata) {
+        const { awsQueryCompatible } = this;
+        if (awsQueryCompatible) {
+            this.mixin.setQueryCompatError(dataObject, response);
+        }
+        const errorIdentifier = loadJsonRpcErrorCode(response, dataObject, awsQueryCompatible) ?? "Unknown";
+        this.mixin.compose(this.compositeErrorRegistry, errorIdentifier, this.options.defaultNamespace);
+        const { errorSchema, errorMetadata } = await this.mixin.getErrorSchemaOrThrowBaseException(errorIdentifier, this.options.defaultNamespace, response, dataObject, metadata, awsQueryCompatible ? this.mixin.findQueryCompatibleError : undefined);
+        const ns = NormalizedSchema.of(errorSchema);
+        const message = dataObject.message ?? dataObject.Message ?? "UnknownError";
+        const ErrorCtor = this.compositeErrorRegistry.getErrorCtor(errorSchema) ?? Error;
+        const exception = new ErrorCtor({});
+        const output = {};
+        const errorDeserializer = this.codec.createDeserializer();
+        for (const [name, member] of ns.structIterator()) {
+            if (dataObject[name] != null) {
+                output[name] = errorDeserializer.readObject(member, dataObject[name]);
+            }
+        }
+        if (awsQueryCompatible) {
+            this.mixin.queryCompatOutput(dataObject, output);
+        }
+        throw this.mixin.decorateServiceException(Object.assign(exception, errorMetadata, {
+            $fault: ns.getMergedTraits().error,
+            message,
+        }, output), dataObject);
+    }
+}
+
+class AwsJson1_0Protocol extends AwsJsonRpcProtocol {
+    constructor({ defaultNamespace, errorTypeRegistries, serviceTarget, awsQueryCompatible, jsonCodec, }) {
+        super({
+            defaultNamespace,
+            errorTypeRegistries,
+            serviceTarget,
+            awsQueryCompatible,
+            jsonCodec,
+        });
+    }
+    getShapeId() {
+        return "aws.protocols#awsJson1_0";
+    }
+    getJsonRpcVersion() {
+        return "1.0";
+    }
+    getDefaultContentType() {
+        return "application/x-amz-json-1.0";
+    }
+}
+
+class AwsJson1_1Protocol extends AwsJsonRpcProtocol {
+    constructor({ defaultNamespace, errorTypeRegistries, serviceTarget, awsQueryCompatible, jsonCodec, }) {
+        super({
+            defaultNamespace,
+            errorTypeRegistries,
+            serviceTarget,
+            awsQueryCompatible,
+            jsonCodec,
+        });
+    }
+    getShapeId() {
+        return "aws.protocols#awsJson1_1";
+    }
+    getJsonRpcVersion() {
+        return "1.1";
+    }
+    getDefaultContentType() {
+        return "application/x-amz-json-1.1";
+    }
+}
+
+class AwsRestJsonProtocol extends HttpBindingProtocol {
+    serializer;
+    deserializer;
+    codec;
+    mixin = new ProtocolLib();
+    constructor({ defaultNamespace, errorTypeRegistries, jsonCodec, }) {
+        super({
+            defaultNamespace,
+            errorTypeRegistries,
+        });
+        const settings = {
+            timestampFormat: {
+                useTrait: true,
+                default: 7,
+            },
+            httpBindings: true,
+            jsonName: true,
+        };
+        this.codec = jsonCodec ?? new JsonCodec2(settings);
+        this.serializer = new HttpInterceptingShapeSerializer(this.codec.createSerializer(), settings);
+        this.deserializer = new HttpInterceptingShapeDeserializer(this.codec.createDeserializer(), settings);
+    }
+    getShapeId() {
+        return "aws.protocols#restJson1";
+    }
+    getPayloadCodec() {
+        return this.codec;
+    }
+    setSerdeContext(serdeContext) {
+        this.codec.setSerdeContext(serdeContext);
+        super.setSerdeContext(serdeContext);
+    }
+    async serializeRequest(operationSchema, input, context) {
+        const request = await super.serializeRequest(operationSchema, input, context);
+        const inputSchema = NormalizedSchema.of(operationSchema.input);
+        if (!request.headers["content-type"]) {
+            const contentType = this.mixin.resolveRestContentType(this.getDefaultContentType(), inputSchema);
+            if (contentType) {
+                request.headers["content-type"] = contentType;
+            }
+        }
+        if (request.body == null && request.headers["content-type"] === this.getDefaultContentType()) {
+            request.body = "{}";
+        }
+        return request;
+    }
+    async deserializeResponse(operationSchema, context, response) {
+        const output = await super.deserializeResponse(operationSchema, context, response);
+        const outputSchema = NormalizedSchema.of(operationSchema.output);
+        for (const [name, member] of outputSchema.structIterator()) {
+            if (member.getMemberTraits().httpPayload && !(name in output)) {
+                output[name] = null;
+            }
+        }
+        return output;
+    }
+    async handleError(operationSchema, context, response, dataObject, metadata) {
+        const errorIdentifier = loadRestJsonErrorCode(response, dataObject) ?? "Unknown";
+        this.mixin.compose(this.compositeErrorRegistry, errorIdentifier, this.options.defaultNamespace);
+        const { errorSchema, errorMetadata } = await this.mixin.getErrorSchemaOrThrowBaseException(errorIdentifier, this.options.defaultNamespace, response, dataObject, metadata);
+        const ns = NormalizedSchema.of(errorSchema);
+        const message = dataObject.message ?? dataObject.Message ?? "UnknownError";
+        const ErrorCtor = this.compositeErrorRegistry.getErrorCtor(errorSchema) ?? Error;
+        const exception = new ErrorCtor({});
+        await this.deserializeHttpMessage(errorSchema, context, response, dataObject);
+        const output = {};
+        const errorDeserializer = this.codec.createDeserializer();
+        for (const [name, member] of ns.structIterator()) {
+            const target = member.getMergedTraits().jsonName ?? name;
+            output[name] = errorDeserializer.readObject(member, dataObject[target]);
+        }
+        throw this.mixin.decorateServiceException(Object.assign(exception, errorMetadata, {
+            $fault: ns.getMergedTraits().error,
+            message,
+        }, output), dataObject);
+    }
+    getDefaultContentType() {
+        return "application/json";
+    }
+}
+
 class JsonShapeDeserializer extends SerdeContextConfig {
     settings;
     constructor(settings) {
@@ -12586,7 +13023,8 @@ class JsonShapeDeserializer extends SerdeContextConfig {
         this.settings = settings;
     }
     async read(schema, data) {
-        return this._read(schema, typeof data === "string" ? JSON.parse(data, jsonReviver) : await parseJsonBody(data, this.serdeContext));
+        const reviver = needsReviver(schema) ? jsonReviver : undefined;
+        return this._read(schema, typeof data === "string" ? JSON.parse(data, reviver) : await parseJsonBody(data, this.serdeContext, schema));
     }
     readObject(schema, data) {
         return this._read(schema, data);
@@ -12627,7 +13065,7 @@ class JsonShapeDeserializer extends SerdeContextConfig {
                 else if (typeof record.__type === "string") {
                     for (const k in record) {
                         const v = record[k];
-                        const t = jsonName ? nameMap[k] ?? k : k;
+                        const t = jsonName ? (nameMap[k] ?? k) : k;
                         if (!(t in out)) {
                             out[t] = v;
                         }
@@ -12647,6 +13085,9 @@ class JsonShapeDeserializer extends SerdeContextConfig {
                 const mapMember = ns.getValueSchema();
                 const out = {};
                 for (const _k in value) {
+                    if (_k === "__proto__") {
+                        writeKey(out);
+                    }
                     out[_k] = this._read(mapMember, value[_k]);
                 }
                 return out;
@@ -12705,6 +13146,9 @@ class JsonShapeDeserializer extends SerdeContextConfig {
             if (isObject) {
                 const out = Array.isArray(value) ? [] : {};
                 for (const k in value) {
+                    if (k === "__proto__") {
+                        writeKey(out);
+                    }
                     const v = value[k];
                     if (v instanceof NumericValue) {
                         out[k] = v;
@@ -12830,13 +13274,16 @@ class JsonShapeSerializer extends SerdeContextConfig {
                     const { $unknown } = record;
                     if (Array.isArray($unknown)) {
                         const [k, v] = $unknown;
+                        if (k === "__proto__") {
+                            writeKey(out);
+                        }
                         out[k] = this._write(15, v);
                     }
                 }
                 else if (typeof record.__type === "string") {
                     for (const k in record) {
                         const v = record[k];
-                        const targetKey = jsonName ? nameMap[k] ?? k : k;
+                        const targetKey = jsonName ? (nameMap[k] ?? k) : k;
                         if (!(targetKey in out)) {
                             out[targetKey] = this._write(15, v);
                         }
@@ -12862,12 +13309,15 @@ class JsonShapeSerializer extends SerdeContextConfig {
                 for (const _k in value) {
                     const _v = value[_k];
                     if (sparse || _v != null) {
+                        if (_k === "__proto__") {
+                            writeKey(out);
+                        }
                         out[_k] = this._write(mapMember, _v);
                     }
                 }
                 return out;
             }
-            if (value instanceof Uint8Array && (ns.isBlobSchema() || ns.isDocumentSchema())) {
+            if (value instanceof Uint8Array && ns.isBlobSchema()) {
                 if (ns === this.rootSchema) {
                     return value;
                 }
@@ -12907,7 +13357,7 @@ class JsonShapeSerializer extends SerdeContextConfig {
             }
             return value;
         }
-        if (typeof value === "number" && ns.isNumericSchema()) {
+        if (typeof value === "number") {
             if (Math.abs(value) === Infinity || isNaN(value)) {
                 return String(value);
             }
@@ -12924,9 +13374,15 @@ class JsonShapeSerializer extends SerdeContextConfig {
         }
         if (ns.isDocumentSchema()) {
             if (isObject) {
+                if (value instanceof Uint8Array) {
+                    return (this.serdeContext?.base64Encoder ?? toBase64)(value);
+                }
                 const out = Array.isArray(value) ? [] : {};
                 for (const k in value) {
                     const v = value[k];
+                    if (k === "__proto__") {
+                        writeKey(out);
+                    }
                     if (v instanceof NumericValue) {
                         this.useReplacer = true;
                         out[k] = v;
@@ -12962,213 +13418,6 @@ class JsonCodec extends SerdeContextConfig {
         return deserializer;
     }
 }
-
-class AwsJsonRpcProtocol extends RpcProtocol {
-    serializer;
-    deserializer;
-    serviceTarget;
-    codec;
-    mixin;
-    awsQueryCompatible;
-    constructor({ defaultNamespace, errorTypeRegistries, serviceTarget, awsQueryCompatible, jsonCodec, }) {
-        super({
-            defaultNamespace,
-            errorTypeRegistries,
-        });
-        this.serviceTarget = serviceTarget;
-        this.codec =
-            jsonCodec ??
-                new JsonCodec({
-                    timestampFormat: {
-                        useTrait: true,
-                        default: 7,
-                    },
-                    jsonName: false,
-                });
-        this.serializer = this.codec.createSerializer();
-        this.deserializer = this.codec.createDeserializer();
-        this.awsQueryCompatible = !!awsQueryCompatible;
-        this.mixin = new ProtocolLib(this.awsQueryCompatible);
-    }
-    async serializeRequest(operationSchema, input, context) {
-        const request = await super.serializeRequest(operationSchema, input, context);
-        if (!request.path.endsWith("/")) {
-            request.path += "/";
-        }
-        request.headers["content-type"] = `application/x-amz-json-${this.getJsonRpcVersion()}`;
-        request.headers["x-amz-target"] = `${this.serviceTarget}.${operationSchema.name}`;
-        if (this.awsQueryCompatible) {
-            request.headers["x-amzn-query-mode"] = "true";
-        }
-        if (deref(operationSchema.input) === "unit" || !request.body) {
-            request.body = "{}";
-        }
-        return request;
-    }
-    getPayloadCodec() {
-        return this.codec;
-    }
-    async handleError(operationSchema, context, response, dataObject, metadata) {
-        const { awsQueryCompatible } = this;
-        if (awsQueryCompatible) {
-            this.mixin.setQueryCompatError(dataObject, response);
-        }
-        const errorIdentifier = loadJsonRpcErrorCode(response, dataObject, awsQueryCompatible) ?? "Unknown";
-        this.mixin.compose(this.compositeErrorRegistry, errorIdentifier, this.options.defaultNamespace);
-        const { errorSchema, errorMetadata } = await this.mixin.getErrorSchemaOrThrowBaseException(errorIdentifier, this.options.defaultNamespace, response, dataObject, metadata, awsQueryCompatible ? this.mixin.findQueryCompatibleError : undefined);
-        const ns = NormalizedSchema.of(errorSchema);
-        const message = dataObject.message ?? dataObject.Message ?? "UnknownError";
-        const ErrorCtor = this.compositeErrorRegistry.getErrorCtor(errorSchema) ?? Error;
-        const exception = new ErrorCtor({});
-        const output = {};
-        const errorDeserializer = this.codec.createDeserializer();
-        for (const [name, member] of ns.structIterator()) {
-            if (dataObject[name] != null) {
-                output[name] = errorDeserializer.readObject(member, dataObject[name]);
-            }
-        }
-        if (awsQueryCompatible) {
-            this.mixin.queryCompatOutput(dataObject, output);
-        }
-        throw this.mixin.decorateServiceException(Object.assign(exception, errorMetadata, {
-            $fault: ns.getMergedTraits().error,
-            message,
-        }, output), dataObject);
-    }
-}
-
-class AwsJson1_0Protocol extends AwsJsonRpcProtocol {
-    constructor({ defaultNamespace, errorTypeRegistries, serviceTarget, awsQueryCompatible, jsonCodec, }) {
-        super({
-            defaultNamespace,
-            errorTypeRegistries,
-            serviceTarget,
-            awsQueryCompatible,
-            jsonCodec,
-        });
-    }
-    getShapeId() {
-        return "aws.protocols#awsJson1_0";
-    }
-    getJsonRpcVersion() {
-        return "1.0";
-    }
-    getDefaultContentType() {
-        return "application/x-amz-json-1.0";
-    }
-}
-
-class AwsJson1_1Protocol extends AwsJsonRpcProtocol {
-    constructor({ defaultNamespace, errorTypeRegistries, serviceTarget, awsQueryCompatible, jsonCodec, }) {
-        super({
-            defaultNamespace,
-            errorTypeRegistries,
-            serviceTarget,
-            awsQueryCompatible,
-            jsonCodec,
-        });
-    }
-    getShapeId() {
-        return "aws.protocols#awsJson1_1";
-    }
-    getJsonRpcVersion() {
-        return "1.1";
-    }
-    getDefaultContentType() {
-        return "application/x-amz-json-1.1";
-    }
-}
-
-class AwsRestJsonProtocol extends HttpBindingProtocol {
-    serializer;
-    deserializer;
-    codec;
-    mixin = new ProtocolLib();
-    constructor({ defaultNamespace, errorTypeRegistries, }) {
-        super({
-            defaultNamespace,
-            errorTypeRegistries,
-        });
-        const settings = {
-            timestampFormat: {
-                useTrait: true,
-                default: 7,
-            },
-            httpBindings: true,
-            jsonName: true,
-        };
-        this.codec = new JsonCodec(settings);
-        this.serializer = new HttpInterceptingShapeSerializer(this.codec.createSerializer(), settings);
-        this.deserializer = new HttpInterceptingShapeDeserializer(this.codec.createDeserializer(), settings);
-    }
-    getShapeId() {
-        return "aws.protocols#restJson1";
-    }
-    getPayloadCodec() {
-        return this.codec;
-    }
-    setSerdeContext(serdeContext) {
-        this.codec.setSerdeContext(serdeContext);
-        super.setSerdeContext(serdeContext);
-    }
-    async serializeRequest(operationSchema, input, context) {
-        const request = await super.serializeRequest(operationSchema, input, context);
-        const inputSchema = NormalizedSchema.of(operationSchema.input);
-        if (!request.headers["content-type"]) {
-            const contentType = this.mixin.resolveRestContentType(this.getDefaultContentType(), inputSchema);
-            if (contentType) {
-                request.headers["content-type"] = contentType;
-            }
-        }
-        if (request.body == null && request.headers["content-type"] === this.getDefaultContentType()) {
-            request.body = "{}";
-        }
-        return request;
-    }
-    async deserializeResponse(operationSchema, context, response) {
-        const output = await super.deserializeResponse(operationSchema, context, response);
-        const outputSchema = NormalizedSchema.of(operationSchema.output);
-        for (const [name, member] of outputSchema.structIterator()) {
-            if (member.getMemberTraits().httpPayload && !(name in output)) {
-                output[name] = null;
-            }
-        }
-        return output;
-    }
-    async handleError(operationSchema, context, response, dataObject, metadata) {
-        const errorIdentifier = loadRestJsonErrorCode(response, dataObject) ?? "Unknown";
-        this.mixin.compose(this.compositeErrorRegistry, errorIdentifier, this.options.defaultNamespace);
-        const { errorSchema, errorMetadata } = await this.mixin.getErrorSchemaOrThrowBaseException(errorIdentifier, this.options.defaultNamespace, response, dataObject, metadata);
-        const ns = NormalizedSchema.of(errorSchema);
-        const message = dataObject.message ?? dataObject.Message ?? "UnknownError";
-        const ErrorCtor = this.compositeErrorRegistry.getErrorCtor(errorSchema) ?? Error;
-        const exception = new ErrorCtor({});
-        await this.deserializeHttpMessage(errorSchema, context, response, dataObject);
-        const output = {};
-        const errorDeserializer = this.codec.createDeserializer();
-        for (const [name, member] of ns.structIterator()) {
-            const target = member.getMergedTraits().jsonName ?? name;
-            output[name] = errorDeserializer.readObject(member, dataObject[target]);
-        }
-        throw this.mixin.decorateServiceException(Object.assign(exception, errorMetadata, {
-            $fault: ns.getMergedTraits().error,
-            message,
-        }, output), dataObject);
-    }
-    getDefaultContentType() {
-        return "application/json";
-    }
-}
-
-const awsExpectUnion = (value) => {
-    if (value == null) {
-        return undefined;
-    }
-    if (typeof value === "object" && "__type" in value) {
-        delete value.__type;
-    }
-    return expectUnion(value);
-};
 
 class XmlShapeDeserializer extends SerdeContextConfig {
     settings;
@@ -13250,6 +13499,9 @@ class XmlShapeDeserializer extends SerdeContextConfig {
                 for (const entry of entries) {
                     const key = entry[keyProperty];
                     const value = entry[valueProperty];
+                    if (key === "__proto__") {
+                        writeKey(buffer);
+                    }
                     buffer[key] = this.readSchema(memberNs, value);
                 }
                 return buffer;
@@ -13263,8 +13515,8 @@ class XmlShapeDeserializer extends SerdeContextConfig {
                 for (const [memberName, memberSchema] of ns.structIterator()) {
                     const memberTraits = memberSchema.getMergedTraits();
                     const xmlObjectKey = !memberTraits.httpPayload
-                        ? memberSchema.getMemberTraits().xmlName ?? memberName
-                        : memberTraits.xmlName ?? memberSchema.getName();
+                        ? (memberSchema.getMemberTraits().xmlName ?? memberName)
+                        : (memberTraits.xmlName ?? memberSchema.getName());
                     if (union) {
                         unionSerde.mark(xmlObjectKey);
                     }
@@ -13746,8 +13998,8 @@ class XmlShapeSerializer extends SerdeContextConfig {
     writeStruct(ns, value, parentXmlns) {
         const traits = ns.getMergedTraits();
         const name = ns.isMemberSchema() && !traits.httpPayload
-            ? ns.getMemberTraits().xmlName ?? ns.getMemberName()
-            : traits.xmlName ?? ns.getName();
+            ? (ns.getMemberTraits().xmlName ?? ns.getMemberName())
+            : (traits.xmlName ?? ns.getName());
         if (!name || !ns.isStructSchema()) {
             throw new Error(`@aws-sdk/core/protocols - xml serializer, cannot write struct with empty name or non-struct, schema=${ns.getName(true)}.`);
         }
@@ -13816,10 +14068,10 @@ class XmlShapeSerializer extends SerdeContextConfig {
             }
             else if (listValueSchema.isStructSchema()) {
                 const struct = this.writeStruct(listValueSchema, value, xmlns);
-                container.addChildNode(struct.withName(flat ? listTraits.xmlName ?? listMember.getMemberName() : listValueTraits.xmlName ?? "member"));
+                container.addChildNode(struct.withName(flat ? (listTraits.xmlName ?? listMember.getMemberName()) : (listValueTraits.xmlName ?? "member")));
             }
             else {
-                const listItemNode = XmlNode.of(flat ? listTraits.xmlName ?? listMember.getMemberName() : listValueTraits.xmlName ?? "member");
+                const listItemNode = XmlNode.of(flat ? (listTraits.xmlName ?? listMember.getMemberName()) : (listValueTraits.xmlName ?? "member"));
                 this.writeSimpleInto(listValueSchema, value, listItemNode, xmlns);
                 container.addChildNode(listItemNode);
             }
@@ -14099,6 +14351,66 @@ class AwsRestXmlProtocol extends HttpBindingProtocol {
     }
 }
 
+const awsExpectUnion = (value) => {
+    if (value == null) {
+        return undefined;
+    }
+    if (typeof value === "object" && "__type" in value) {
+        delete value.__type;
+    }
+    return expectUnion(value);
+};
+
+const _toStr = (val) => {
+    if (val == null) {
+        return val;
+    }
+    if (typeof val === "number" || typeof val === "bigint") {
+        const warning = new Error(`Received number ${val} where a string was expected.`);
+        warning.name = "Warning";
+        console.warn(warning);
+        return String(val);
+    }
+    if (typeof val === "boolean") {
+        const warning = new Error(`Received boolean ${val} where a string was expected.`);
+        warning.name = "Warning";
+        console.warn(warning);
+        return String(val);
+    }
+    return val;
+};
+const _toBool = (val) => {
+    if (val == null) {
+        return val;
+    }
+    if (typeof val === "string") {
+        const lowercase = val.toLowerCase();
+        if (val !== "" && lowercase !== "false" && lowercase !== "true") {
+            const warning = new Error(`Received string "${val}" where a boolean was expected.`);
+            warning.name = "Warning";
+            console.warn(warning);
+        }
+        return val !== "" && lowercase !== "false";
+    }
+    return val;
+};
+const _toNum = (val) => {
+    if (val == null) {
+        return val;
+    }
+    if (typeof val === "string") {
+        const num = Number(val);
+        if (num.toString() !== val) {
+            const warning = new Error(`Received string "${val}" where a number was expected.`);
+            warning.name = "Warning";
+            console.warn(warning);
+            return val;
+        }
+        return num;
+    }
+    return val;
+};
+
 exports.AwsEc2QueryProtocol = AwsEc2QueryProtocol;
 exports.AwsJson1_0Protocol = AwsJson1_0Protocol;
 exports.AwsJson1_1Protocol = AwsJson1_1Protocol;
@@ -14108,8 +14420,11 @@ exports.AwsRestJsonProtocol = AwsRestJsonProtocol;
 exports.AwsRestXmlProtocol = AwsRestXmlProtocol;
 exports.AwsSmithyRpcV2CborProtocol = AwsSmithyRpcV2CborProtocol;
 exports.JsonCodec = JsonCodec;
+exports.JsonCodec2 = JsonCodec2;
 exports.JsonShapeDeserializer = JsonShapeDeserializer;
+exports.JsonShapeDeserializer2 = JsonShapeDeserializer2;
 exports.JsonShapeSerializer = JsonShapeSerializer;
+exports.JsonShapeSerializer2 = JsonShapeSerializer2;
 exports.QueryShapeSerializer = QueryShapeSerializer;
 exports.XmlCodec = XmlCodec;
 exports.XmlShapeDeserializer = XmlShapeDeserializer;
@@ -14303,18 +14618,18 @@ const fromHttp = (options = {}) => {
     if (relative && full) {
         warn("@aws-sdk/credential-provider-http: " +
             "you have set both awsContainerCredentialsRelativeUri and awsContainerCredentialsFullUri.");
-        warn("awsContainerCredentialsFullUri will take precedence.");
+        warn("awsContainerCredentialsRelativeUri will take precedence.");
     }
     if (token && tokenFile) {
         warn("@aws-sdk/credential-provider-http: " +
             "you have set both awsContainerAuthorizationToken and awsContainerAuthorizationTokenFile.");
-        warn("awsContainerAuthorizationToken will take precedence.");
+        warn("awsContainerAuthorizationTokenFile will take precedence.");
     }
-    if (full) {
-        host = full;
-    }
-    else if (relative) {
+    if (relative) {
         host = `${DEFAULT_LINK_LOCAL_HOST}${relative}`;
+    }
+    else if (full) {
+        host = full;
     }
     else {
         throw new CredentialsProviderError(`No HTTP credential provider host provided.
@@ -14326,11 +14641,11 @@ Set AWS_CONTAINER_CREDENTIALS_FULL_URI or AWS_CONTAINER_CREDENTIALS_RELATIVE_URI
     const requestTimeout = options.timeout ?? 1000;
     const provider = retryWrapper(async () => {
         const request = createGetRequest(url);
-        if (token) {
-            request.headers.Authorization = token;
+        if (tokenFile) {
+            request.headers.Authorization = validateToken((await fs.readFile(tokenFile)).toString());
         }
-        else if (tokenFile) {
-            request.headers.Authorization = (await fs.readFile(tokenFile)).toString();
+        else if (token) {
+            request.headers.Authorization = validateToken(token);
         }
         try {
             const result = await requestHandler.handle(request, { requestTimeout });
@@ -14349,6 +14664,12 @@ Set AWS_CONTAINER_CREDENTIALS_FULL_URI or AWS_CONTAINER_CREDENTIALS_RELATIVE_URI
         }
     };
 };
+const validateToken = (token) => {
+    if (token.includes("\r\n")) {
+        throw new CredentialsProviderError("Authorization token contains invalid \\r\\n sequence.");
+    }
+    return token;
+};
 
 exports.fromHttp = fromHttp;
 
@@ -14360,7 +14681,6 @@ exports.fromHttp = fromHttp;
 
 const { CredentialsProviderError, chain, getProfileName, parseKnownFiles } = __nccwpck_require__(7291);
 const { setCredentialFeature } = __nccwpck_require__(5152);
-const { fromLoginCredentials } = __nccwpck_require__(4072);
 
 const resolveCredentialSource = (credentialSource, profileName, logger) => {
     const sourceProvidersMap = {
@@ -14472,6 +14792,7 @@ const isLoginProfile = (data) => {
     return Boolean(data && data.login_session);
 };
 const resolveLoginCredentials = async (profileName, options, callerClientConfig) => {
+    const { fromLoginCredentials } = __nccwpck_require__(4072);
     const credentials = await fromLoginCredentials({
         ...options,
         profile: profileName,
@@ -14595,7 +14916,7 @@ exports.fromIni = fromIni;
 /***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 const { setCredentialFeature } = __nccwpck_require__(5152);
-const { CredentialsProviderError, readFile, parseKnownFiles, getProfileName } = __nccwpck_require__(7291);
+const { CredentialsProviderError, parseKnownFiles, getProfileName } = __nccwpck_require__(7291);
 const { HttpRequest } = __nccwpck_require__(3422);
 const { createHash, createPrivateKey, createPublicKey, sign } = __nccwpck_require__(7598);
 const { promises } = __nccwpck_require__(3024);
@@ -14624,13 +14945,7 @@ class LoginCredentialsFetcher {
         if (timeUntilExpiry <= LoginCredentialsFetcher.REFRESH_THRESHOLD) {
             return this.refresh(token);
         }
-        return {
-            accessKeyId: accessToken.accessKeyId,
-            secretAccessKey: accessToken.secretAccessKey,
-            sessionToken: accessToken.sessionToken,
-            accountId: accessToken.accountId,
-            expiration: new Date(accessToken.expiresAt),
-        };
+        return this.toCredentials(token.accessToken);
     }
     get logger() {
         return this.init?.logger;
@@ -14638,7 +14953,25 @@ class LoginCredentialsFetcher {
     get loginSession() {
         return this.profileData.login_session;
     }
+    toCredentials(token) {
+        return {
+            accessKeyId: token.accessKeyId,
+            secretAccessKey: token.secretAccessKey,
+            sessionToken: token.sessionToken,
+            accountId: token.accountId,
+            expiration: new Date(token.expiresAt),
+        };
+    }
     async refresh(token) {
+        const diskToken = await this.loadToken().catch(() => token);
+        const now = Date.now();
+        const diskExpiry = new Date(diskToken.accessToken.expiresAt).getTime();
+        const tokenExpiry = new Date(token.accessToken.expiresAt).getTime();
+        const freshToken = diskExpiry <= now && tokenExpiry > now ? token : diskToken;
+        const freshExpiry = new Date(freshToken.accessToken.expiresAt).getTime();
+        if (freshExpiry - Date.now() > LoginCredentialsFetcher.REFRESH_THRESHOLD) {
+            return this.toCredentials(freshToken.accessToken);
+        }
         const { SigninClient, CreateOAuth2TokenCommand } = __nccwpck_require__(9762);
         const { logger, userAgentAppId } = this.callerClientConfig ?? {};
         const isH2 = (requestHandler) => {
@@ -14662,8 +14995,8 @@ class LoginCredentialsFetcher {
         this.createDPoPInterceptor(client.middlewareStack);
         const commandInput = {
             tokenInput: {
-                clientId: token.clientId,
-                refreshToken: token.refreshToken,
+                clientId: freshToken.clientId,
+                refreshToken: freshToken.refreshToken,
                 grantType: "refresh_token",
             },
         };
@@ -14680,25 +15013,18 @@ class LoginCredentialsFetcher {
             const expiresInMs = (expiresIn ?? 900) * 1000;
             const expiration = new Date(Date.now() + expiresInMs);
             const updatedToken = {
-                ...token,
+                ...freshToken,
                 accessToken: {
-                    ...token.accessToken,
-                    accessKeyId: accessKeyId,
-                    secretAccessKey: secretAccessKey,
-                    sessionToken: sessionToken,
+                    ...freshToken.accessToken,
+                    accessKeyId,
+                    secretAccessKey,
+                    sessionToken,
                     expiresAt: expiration.toISOString(),
                 },
-                refreshToken: refreshToken,
+                refreshToken,
             };
             await this.saveToken(updatedToken);
-            const newAccessToken = updatedToken.accessToken;
-            return {
-                accessKeyId: newAccessToken.accessKeyId,
-                secretAccessKey: newAccessToken.secretAccessKey,
-                sessionToken: newAccessToken.sessionToken,
-                accountId: newAccessToken.accountId,
-                expiration,
-            };
+            return this.toCredentials(updatedToken.accessToken);
         }
         catch (error) {
             if (error.name === "AccessDeniedException") {
@@ -14719,7 +15045,15 @@ class LoginCredentialsFetcher {
                     default:
                         message = `Failed to refresh token: ${String(error)}. Please re-authenticate using \`aws login\``;
                 }
-                throw new CredentialsProviderError(message, { logger: this.logger, tryNextLink: false });
+                throw new CredentialsProviderError(message, {
+                    logger: this.logger,
+                    tryNextLink: false,
+                });
+            }
+            const tokenExpiry = new Date(freshToken.accessToken.expiresAt).getTime();
+            if (tokenExpiry > Date.now()) {
+                this.logger?.warn?.(`Failed to refresh token: ${String(error)}. Using existing token until expiry.`);
+                return this.toCredentials(freshToken.accessToken);
             }
             throw new CredentialsProviderError(`Failed to refresh token: ${String(error)}. Please re-authenticate using aws login`, { logger: this.logger });
         }
@@ -14727,13 +15061,7 @@ class LoginCredentialsFetcher {
     async loadToken() {
         const tokenFilePath = this.getTokenFilePath();
         try {
-            let tokenData;
-            try {
-                tokenData = await readFile(tokenFilePath, { ignoreCache: this.init?.ignoreCache });
-            }
-            catch {
-                tokenData = await promises.readFile(tokenFilePath, "utf8");
-            }
+            const tokenData = await promises.readFile(tokenFilePath, "utf8");
             const token = JSON.parse(tokenData);
             const missingFields = ["accessToken", "clientId", "refreshToken", "dpopKey"].filter((k) => !token[k]);
             if (!token.accessToken?.accountId) {
@@ -15414,8 +15742,9 @@ exports.fromWebToken = fromWebToken;
 
 const { awsEndpointFunctions, emitWarningIfUnsupportedVersion: emitWarningIfUnsupportedVersion$1, createDefaultUserAgentProvider, NODE_APP_ID_CONFIG_OPTIONS, getAwsRegionExtensionConfiguration, resolveAwsRegionExtensionConfiguration, resolveUserAgentConfig, resolveHostHeaderConfig, getUserAgentPlugin, getHostHeaderPlugin, getLoggerPlugin, getRecursionDetectionPlugin } = __nccwpck_require__(5152);
 const { NoAuthSigner, getHttpAuthSchemeEndpointRuleSetPlugin, DefaultIdentityProviderConfig, getHttpSigningPlugin } = __nccwpck_require__(402);
-const { normalizeProvider, getSmithyContext, ServiceException, NoOpLogger, emitWarningIfUnsupportedVersion, loadConfigsForDefaultMode, getDefaultExtensionConfiguration, resolveDefaultRuntimeConfig, Client, Command, createAggregatedClient } = __nccwpck_require__(2658);
-exports.$Command = Command;
+const { normalizeProvider, getSmithyContext, ServiceException, NoOpLogger, emitWarningIfUnsupportedVersion, loadConfigsForDefaultMode, getDefaultExtensionConfiguration, resolveDefaultRuntimeConfig, Client, makeBuilder, createAggregatedClient } = __nccwpck_require__(2658);
+const { Command: $Command } = __nccwpck_require__(2658);
+exports.$Command = $Command;
 exports.__Client = Client;
 const { resolveDefaultsModeConfig, loadConfig, NODE_USE_FIPS_ENDPOINT_CONFIG_OPTIONS, NODE_USE_DUALSTACK_ENDPOINT_CONFIG_OPTIONS, NODE_REGION_CONFIG_OPTIONS, NODE_REGION_CONFIG_FILE_OPTIONS, resolveRegionConfig } = __nccwpck_require__(7291);
 const { BinaryDecisionDiagram, EndpointCache, decideEndpoint, customEndpointFunctions, resolveEndpointConfig, getEndpointPlugin } = __nccwpck_require__(2085);
@@ -15459,10 +15788,11 @@ function createSmithyApiNoAuthHttpAuthOption(authParameters) {
 const defaultSigninHttpAuthSchemeProvider = (authParameters) => {
     const options = [];
     switch (authParameters.operation) {
-        case "CreateOAuth2Token": {
-            options.push(createSmithyApiNoAuthHttpAuthOption());
-            break;
-        }
+        case "CreateOAuth2Token":
+            {
+                options.push(createSmithyApiNoAuthHttpAuthOption());
+                break;
+            }
         default: {
             options.push(createAwsAuthSigv4HttpAuthOption(authParameters));
         }
@@ -15490,58 +15820,61 @@ const commonParams = {
     UseDualStack: { type: "builtInParams", name: "useDualstackEndpoint" },
 };
 
-var version = "3.997.24";
+var version = "3.997.41";
 var packageInfo = {
 	version: version};
 
-const p = "ref";
-const a = -1, b = true, c = "isSet", d = "booleanEquals", e = "PartitionResult", f = "stringEquals", g = "getAttr", h = "https://signin.{Region}.{PartitionResult#dualStackDnsSuffix}", i = { [p]: "Endpoint" }, j = { "fn": g, "argv": [{ [p]: e }, "name"] }, k = { [p]: e }, l = { [p]: "Region" }, m = { "authSchemes": [{ "name": "sigv4", "signingName": "signin", "signingRegion": "{Region}" }] }, n = {}, o = [l];
+const s = "ref";
+const a = -1, b = false, c = true, d = "isSet", e = "booleanEquals", f = "coalesce", g = "PartitionResult", h = "stringEquals", i = "getAttr", j = "https://signin.{Region}.{PartitionResult#dualStackDnsSuffix}", k = { [s]: "Endpoint" }, l = { "fn": i, "argv": [{ [s]: g }, "name"] }, m = { [s]: "Region" }, n = { [s]: g }, o = { "authSchemes": [{ "name": "sigv4", "signingName": "signin", "signingRegion": "{Region}" }] }, p = {}, q = [m];
 const _data = {
     conditions: [
-        [c, o],
-        [d, [{ fn: "coalesce", argv: [{ [p]: "IsControlPlane" }, false] }, b]],
-        [c, [i]],
-        ["aws.partition", o, e],
-        [d, [{ [p]: "UseFIPS" }, b]],
-        [d, [{ [p]: "UseDualStack" }, b]],
-        [f, [j, "aws"]],
-        [f, [j, "aws-cn"]],
-        [d, [{ fn: g, argv: [k, "supportsDualStack"] }, b]],
-        [f, [l, "us-gov-west-1"]],
-        [f, [j, "aws-us-gov"]],
-        [d, [{ fn: g, argv: [k, "supportsFIPS"] }, b]],
-        [f, [j, "aws-iso"]],
-        [f, [j, "aws-iso-b"]],
-        [f, [j, "aws-iso-f"]],
-        [f, [j, "aws-iso-e"]],
-        [f, [j, "aws-eusc"]]
+        [d, q],
+        [e, [{ fn: f, argv: [{ [s]: "IsControlPlane" }, b] }, c]],
+        [d, [k]],
+        ["aws.partition", q, g],
+        [e, [{ [s]: "UseFIPS" }, c]],
+        [h, [l, "aws"]],
+        [e, [{ fn: f, argv: [{ [s]: "IsOAuthEndpoint" }, b] }, c]],
+        [e, [{ [s]: "UseDualStack" }, c]],
+        [h, [l, "aws-cn"]],
+        [h, [m, "us-gov-west-1"]],
+        [h, [l, "aws-us-gov"]],
+        [e, [{ fn: i, argv: [n, "supportsFIPS"] }, c]],
+        [h, [l, "aws-iso"]],
+        [h, [l, "aws-iso-b"]],
+        [h, [l, "aws-iso-f"]],
+        [h, [l, "aws-iso-e"]],
+        [h, [l, "aws-eusc"]],
+        [e, [{ fn: i, argv: [n, "supportsDualStack"] }, c]]
     ],
     results: [
         [a],
-        ["https://signin.{Region}.api.aws", m],
-        ["https://signin.{Region}.api.amazonwebservices.com.cn", m],
-        [h, m],
-        ["https://{Region}.signin.aws.amazon.com", n],
-        ["https://{Region}.signin.amazonaws.cn", n],
-        ["https://{Region}.signin.amazonaws-us-gov.com", n],
-        ["https://{Region}.signin.c2shome.ic.gov", n],
-        ["https://{Region}.signin.sc2shome.sgov.gov", n],
-        ["https://{Region}.signin.csphome.hci.ic.gov", n],
-        ["https://{Region}.signin.csphome.adc-e.uk", n],
-        ["https://{Region}.signin.amazonaws-eusc.eu", n],
-        ["https://signin-fips.amazonaws-us-gov.com", n],
-        ["https://{Region}.signin-fips.amazonaws-us-gov.com", n],
-        ["https://{Region}.signin.{PartitionResult#dnsSuffix}", n],
+        ["https://signin.{Region}.api.aws", o],
+        ["https://signin.{Region}.api.amazonwebservices.com.cn", o],
+        [j, o],
+        [a, "FIPS endpoints are not supported for OAuth operations. Disable FIPS or use a non-OAuth operation."],
+        ["https://{Region}.oauth.signin.aws", o],
+        ["https://{Region}.signin.aws.amazon.com", p],
+        ["https://{Region}.signin.amazonaws.cn", p],
+        ["https://{Region}.signin.amazonaws-us-gov.com", p],
+        ["https://{Region}.signin.c2shome.ic.gov", p],
+        ["https://{Region}.signin.sc2shome.sgov.gov", p],
+        ["https://{Region}.signin.csphome.hci.ic.gov", p],
+        ["https://{Region}.signin.csphome.adc-e.uk", p],
+        ["https://{Region}.signin.amazonaws-eusc.eu", p],
+        ["https://signin-fips.amazonaws-us-gov.com", p],
+        ["https://{Region}.signin-fips.amazonaws-us-gov.com", p],
+        ["https://{Region}.signin.{PartitionResult#dnsSuffix}", p],
         [a, "Invalid Configuration: FIPS and custom endpoint are not supported"],
         [a, "Invalid Configuration: Dualstack and custom endpoint are not supported"],
-        [i, n],
-        ["https://signin-fips.{Region}.{PartitionResult#dualStackDnsSuffix}", n],
+        [k, p],
+        ["https://signin-fips.{Region}.{PartitionResult#dualStackDnsSuffix}", p],
         [a, "FIPS and DualStack are enabled, but this partition does not support one or both"],
-        ["https://signin-fips.{Region}.{PartitionResult#dnsSuffix}", n],
+        ["https://signin-fips.{Region}.{PartitionResult#dnsSuffix}", p],
         [a, "FIPS is enabled but this partition does not support FIPS"],
-        [h, n],
+        [j, p],
         [a, "DualStack is enabled but this partition does not support DualStack"],
-        ["https://signin.{Region}.{PartitionResult#dnsSuffix}", n],
+        ["https://signin.{Region}.{PartitionResult#dnsSuffix}", p],
         [a, "Invalid Configuration: Missing Region"]
     ]
 };
@@ -15549,44 +15882,51 @@ const root = 2;
 const r = 100_000_000;
 const nodes = new Int32Array([
     -1, 1, -1,
-    0, 4, 3,
-    2, 30, r + 25,
-    1, 24, 5,
-    2, 30, 6,
-    3, 7, 26,
-    4, 18, 8,
-    5, 17, 9,
-    6, r + 4, 10,
-    7, r + 5, 11,
-    10, r + 6, 12,
-    12, r + 7, 13,
-    13, r + 8, 14,
-    14, r + 9, 15,
-    15, r + 10, 16,
-    16, r + 11, r + 14,
-    8, r + 22, r + 23,
-    5, 22, 19,
-    9, r + 12, 20,
-    10, r + 13, 21,
-    11, r + 20, r + 21,
-    8, 23, r + 19,
-    11, r + 18, r + 19,
-    2, 29, 25,
-    3, 32, 26,
-    4, 27, r + 25,
-    5, r + 25, 28,
-    9, r + 12, r + 25,
-    3, 32, 30,
-    4, r + 15, 31,
-    5, r + 16, r + 17,
-    6, r + 1, 33,
-    7, r + 2, r + 3,
+    0, 6, 3,
+    2, 36, 4,
+    4, 5, r + 27,
+    6, r + 4, r + 27,
+    1, 29, 7,
+    2, 36, 8,
+    3, 9, 31,
+    4, 22, 10,
+    5, 19, 11,
+    7, 21, 12,
+    8, r + 7, 13,
+    10, r + 8, 14,
+    12, r + 9, 15,
+    13, r + 10, 16,
+    14, r + 11, 17,
+    15, r + 12, 18,
+    16, r + 13, r + 16,
+    6, r + 5, 20,
+    7, 21, r + 6,
+    17, r + 24, r + 25,
+    6, r + 4, 23,
+    7, 27, 24,
+    9, r + 14, 25,
+    10, r + 15, 26,
+    11, r + 22, r + 23,
+    11, 28, r + 21,
+    17, r + 20, r + 21,
+    2, 35, 30,
+    3, 39, 31,
+    4, 32, r + 27,
+    6, r + 4, 33,
+    7, r + 27, 34,
+    9, r + 14, r + 27,
+    3, 39, 36,
+    4, 38, 37,
+    7, r + 18, r + 19,
+    6, r + 4, r + 17,
+    5, r + 1, 40,
+    8, r + 2, r + 3,
 ]);
 const bdd = BinaryDecisionDiagram.from(nodes, root, _data.conditions, _data.results);
 
 const cache = new EndpointCache({
     size: 50,
-    params: ["Endpoint", "IsControlPlane", "Region", "UseDualStack", "UseFIPS"],
+    params: ["Endpoint", "IsControlPlane", "IsOAuthEndpoint", "Region", "UseDualStack", "UseFIPS"],
 });
 const defaultEndpointResolver = (endpointParams, context = {}) => {
     return cache.get(endpointParams, () => decideEndpoint(bdd, {
@@ -15667,24 +16007,32 @@ const _COATR = "CreateOAuth2TokenRequest";
 const _COATRB = "CreateOAuth2TokenRequestBody";
 const _COATRBr = "CreateOAuth2TokenResponseBody";
 const _COATRr = "CreateOAuth2TokenResponse";
+const _COATWIAM = "CreateOAuth2TokenWithIAM";
+const _COATWIAMR = "CreateOAuth2TokenWithIAMRequest";
+const _COATWIAMRr = "CreateOAuth2TokenWithIAMResponse";
 const _ISE = "InternalServerException";
+const _OAAT = "OAuthAccessToken";
 const _RT = "RefreshToken";
 const _TMRE = "TooManyRequestsError";
 const _VE = "ValidationException";
 const _aKI = "accessKeyId";
 const _aT = "accessToken";
+const _at = "access_token";
 const _c = "client";
 const _cI = "clientId";
 const _cV = "codeVerifier";
 const _co = "code";
 const _e = "error";
 const _eI = "expiresIn";
+const _ei = "expires_in";
 const _gT = "grantType";
+const _gt = "grant_type";
 const _h = "http";
 const _hE = "httpError";
 const _iT = "idToken";
 const _jN = "jsonName";
 const _m = "message";
+const _r = "resource";
 const _rT = "refreshToken";
 const _rU = "redirectUri";
 const _s = "smithy.ts.sdk.synthetic.com.amazonaws.signin";
@@ -15694,6 +16042,7 @@ const _se = "server";
 const _tI = "tokenInput";
 const _tO = "tokenOutput";
 const _tT = "tokenType";
+const _tt = "token_type";
 const n0 = "com.amazonaws.signin";
 const _s_registry = TypeRegistry.for(_s);
 var SigninServiceException$ = [-3, _s, "SigninServiceException", 0, [], []];
@@ -15727,6 +16076,7 @@ const errorTypeRegistries = [
     _s_registry,
     n0_registry,
 ];
+var OAuthAccessToken = [0, n0, _OAAT, 8, 0];
 var RefreshToken = [0, n0, _RT, 8, 0];
 var AccessToken$ = [3, n0, _AT,
     8,
@@ -15753,8 +16103,21 @@ var CreateOAuth2TokenResponseBody$ = [3, n0, _COATRBr,
     [_aT, _tT, _eI, _rT, _iT],
     [[() => AccessToken$, { [_jN]: _aT }], [0, { [_jN]: _tT }], [1, { [_jN]: _eI }], [() => RefreshToken, { [_jN]: _rT }], [0, { [_jN]: _iT }]], 4
 ];
+var CreateOAuth2TokenWithIAMRequest$ = [3, n0, _COATWIAMR,
+    0,
+    [_gT, _r],
+    [[0, { [_jN]: _gt }], 0], 2
+];
+var CreateOAuth2TokenWithIAMResponse$ = [3, n0, _COATWIAMRr,
+    0,
+    [_aT, _tT, _eI],
+    [[() => OAuthAccessToken, { [_jN]: _at }], [0, { [_jN]: _tt }], [1, { [_jN]: _ei }]], 3
+];
 var CreateOAuth2Token$ = [9, n0, _COAT,
     { [_h]: ["POST", "/v1/token", 200] }, () => CreateOAuth2TokenRequest$, () => CreateOAuth2TokenResponse$
+];
+var CreateOAuth2TokenWithIAM$ = [9, n0, _COATWIAM,
+    { [_h]: ["POST", "/v1/token?x-amz-client-auth-method=iam", 200] }, () => CreateOAuth2TokenWithIAMRequest$, () => CreateOAuth2TokenWithIAMResponse$
 ];
 
 const getRuntimeConfig$1 = (config) => {
@@ -15907,23 +16270,24 @@ class SigninClient extends Client {
     }
 }
 
-class CreateOAuth2TokenCommand extends Command
-    .classBuilder()
-    .ep({
-    ...commonParams,
+const command = makeBuilder(commonParams, "Signin", "SigninClient", getEndpointPlugin);
+const _ep0 = {
     IsControlPlane: { type: "staticContextParams", value: false },
-})
-    .m(function (Command, cs, config, o) {
-    return [getEndpointPlugin(config, Command.getEndpointParameterInstructions())];
-})
-    .s("Signin", "CreateOAuth2Token", {})
-    .n("SigninClient", "CreateOAuth2TokenCommand")
-    .sc(CreateOAuth2Token$)
-    .build() {
+};
+const _ep1 = {
+    IsOAuthEndpoint: { type: "staticContextParams", value: true },
+};
+const _mw0 = (Command, cs, config, o) => [];
+
+class CreateOAuth2TokenCommand extends command(_ep0, _mw0, "CreateOAuth2Token", CreateOAuth2Token$) {
+}
+
+class CreateOAuth2TokenWithIAMCommand extends command(_ep1, _mw0, "CreateOAuth2TokenWithIAM", CreateOAuth2TokenWithIAM$) {
 }
 
 const commands = {
     CreateOAuth2TokenCommand,
+    CreateOAuth2TokenWithIAMCommand,
 };
 class Signin extends SigninClient {
 }
@@ -15950,6 +16314,10 @@ exports.CreateOAuth2TokenRequest$ = CreateOAuth2TokenRequest$;
 exports.CreateOAuth2TokenRequestBody$ = CreateOAuth2TokenRequestBody$;
 exports.CreateOAuth2TokenResponse$ = CreateOAuth2TokenResponse$;
 exports.CreateOAuth2TokenResponseBody$ = CreateOAuth2TokenResponseBody$;
+exports.CreateOAuth2TokenWithIAM$ = CreateOAuth2TokenWithIAM$;
+exports.CreateOAuth2TokenWithIAMCommand = CreateOAuth2TokenWithIAMCommand;
+exports.CreateOAuth2TokenWithIAMRequest$ = CreateOAuth2TokenWithIAMRequest$;
+exports.CreateOAuth2TokenWithIAMResponse$ = CreateOAuth2TokenWithIAMResponse$;
 exports.InternalServerException = InternalServerException;
 exports.InternalServerException$ = InternalServerException$;
 exports.OAuth2ErrorCode = OAuth2ErrorCode;
@@ -15971,8 +16339,9 @@ exports.errorTypeRegistries = errorTypeRegistries;
 
 const { awsEndpointFunctions, emitWarningIfUnsupportedVersion: emitWarningIfUnsupportedVersion$1, createDefaultUserAgentProvider, NODE_APP_ID_CONFIG_OPTIONS, getAwsRegionExtensionConfiguration, resolveAwsRegionExtensionConfiguration, resolveUserAgentConfig, resolveHostHeaderConfig, getUserAgentPlugin, getHostHeaderPlugin, getLoggerPlugin, getRecursionDetectionPlugin } = __nccwpck_require__(5152);
 const { NoAuthSigner, getHttpAuthSchemeEndpointRuleSetPlugin, DefaultIdentityProviderConfig, getHttpSigningPlugin } = __nccwpck_require__(402);
-const { normalizeProvider, getSmithyContext, ServiceException, NoOpLogger, emitWarningIfUnsupportedVersion, loadConfigsForDefaultMode, getDefaultExtensionConfiguration, resolveDefaultRuntimeConfig, Client, Command, createAggregatedClient } = __nccwpck_require__(2658);
-exports.$Command = Command;
+const { normalizeProvider, getSmithyContext, ServiceException, NoOpLogger, emitWarningIfUnsupportedVersion, loadConfigsForDefaultMode, getDefaultExtensionConfiguration, resolveDefaultRuntimeConfig, Client, makeBuilder, createAggregatedClient } = __nccwpck_require__(2658);
+const { Command: $Command } = __nccwpck_require__(2658);
+exports.$Command = $Command;
 exports.__Client = Client;
 const { resolveDefaultsModeConfig, loadConfig, NODE_USE_FIPS_ENDPOINT_CONFIG_OPTIONS, NODE_USE_DUALSTACK_ENDPOINT_CONFIG_OPTIONS, NODE_REGION_CONFIG_OPTIONS, NODE_REGION_CONFIG_FILE_OPTIONS, resolveRegionConfig } = __nccwpck_require__(7291);
 const { BinaryDecisionDiagram, EndpointCache, decideEndpoint, customEndpointFunctions, resolveEndpointConfig, getEndpointPlugin } = __nccwpck_require__(2085);
@@ -16016,10 +16385,11 @@ function createSmithyApiNoAuthHttpAuthOption(authParameters) {
 const defaultSSOOIDCHttpAuthSchemeProvider = (authParameters) => {
     const options = [];
     switch (authParameters.operation) {
-        case "CreateToken": {
-            options.push(createSmithyApiNoAuthHttpAuthOption());
-            break;
-        }
+        case "CreateToken":
+            {
+                options.push(createSmithyApiNoAuthHttpAuthOption());
+                break;
+            }
         default: {
             options.push(createAwsAuthSigv4HttpAuthOption(authParameters));
         }
@@ -16047,7 +16417,7 @@ const commonParams = {
     UseDualStack: { type: "builtInParams", name: "useDualstackEndpoint" },
 };
 
-var version = "3.997.24";
+var version = "3.997.41";
 var packageInfo = {
 	version: version};
 
@@ -16584,16 +16954,11 @@ class SSOOIDCClient extends Client {
     }
 }
 
-class CreateTokenCommand extends Command
-    .classBuilder()
-    .ep(commonParams)
-    .m(function (Command, cs, config, o) {
-    return [getEndpointPlugin(config, Command.getEndpointParameterInstructions())];
-})
-    .s("AWSSSOOIDCService", "CreateToken", {})
-    .n("SSOOIDCClient", "CreateTokenCommand")
-    .sc(CreateToken$)
-    .build() {
+const command = makeBuilder(commonParams, "AWSSSOOIDCService", "SSOOIDCClient", getEndpointPlugin);
+const _ep0 = {};
+const _mw0 = (Command, cs, config, o) => [];
+
+class CreateTokenCommand extends command(_ep0, _mw0, "CreateToken", CreateToken$) {
 }
 
 const commands = {
@@ -16655,8 +17020,9 @@ exports.errorTypeRegistries = errorTypeRegistries;
 
 const { awsEndpointFunctions, emitWarningIfUnsupportedVersion: emitWarningIfUnsupportedVersion$1, createDefaultUserAgentProvider, NODE_APP_ID_CONFIG_OPTIONS, getAwsRegionExtensionConfiguration, resolveAwsRegionExtensionConfiguration, resolveUserAgentConfig, resolveHostHeaderConfig, getUserAgentPlugin, getHostHeaderPlugin, getLoggerPlugin, getRecursionDetectionPlugin } = __nccwpck_require__(5152);
 const { NoAuthSigner, getHttpAuthSchemeEndpointRuleSetPlugin, DefaultIdentityProviderConfig, getHttpSigningPlugin } = __nccwpck_require__(402);
-const { normalizeProvider, getSmithyContext, ServiceException, NoOpLogger, emitWarningIfUnsupportedVersion, loadConfigsForDefaultMode, getDefaultExtensionConfiguration, resolveDefaultRuntimeConfig, Client, Command, createAggregatedClient } = __nccwpck_require__(2658);
-exports.$Command = Command;
+const { normalizeProvider, getSmithyContext, ServiceException, NoOpLogger, emitWarningIfUnsupportedVersion, loadConfigsForDefaultMode, getDefaultExtensionConfiguration, resolveDefaultRuntimeConfig, Client, makeBuilder, createAggregatedClient } = __nccwpck_require__(2658);
+const { Command: $Command } = __nccwpck_require__(2658);
+exports.$Command = $Command;
 exports.__Client = Client;
 const { resolveDefaultsModeConfig, loadConfig, NODE_USE_FIPS_ENDPOINT_CONFIG_OPTIONS, NODE_USE_DUALSTACK_ENDPOINT_CONFIG_OPTIONS, NODE_REGION_CONFIG_OPTIONS, NODE_REGION_CONFIG_FILE_OPTIONS, resolveRegionConfig } = __nccwpck_require__(7291);
 const { BinaryDecisionDiagram, EndpointCache, decideEndpoint, customEndpointFunctions, resolveEndpointConfig, getEndpointPlugin } = __nccwpck_require__(2085);
@@ -16700,10 +17066,11 @@ function createSmithyApiNoAuthHttpAuthOption(authParameters) {
 const defaultSSOHttpAuthSchemeProvider = (authParameters) => {
     const options = [];
     switch (authParameters.operation) {
-        case "GetRoleCredentials": {
-            options.push(createSmithyApiNoAuthHttpAuthOption());
-            break;
-        }
+        case "GetRoleCredentials":
+            {
+                options.push(createSmithyApiNoAuthHttpAuthOption());
+                break;
+            }
         default: {
             options.push(createAwsAuthSigv4HttpAuthOption(authParameters));
         }
@@ -16731,7 +17098,7 @@ const commonParams = {
     UseDualStack: { type: "builtInParams", name: "useDualstackEndpoint" },
 };
 
-var version = "3.997.24";
+var version = "3.997.41";
 var packageInfo = {
 	version: version};
 
@@ -17087,16 +17454,11 @@ class SSOClient extends Client {
     }
 }
 
-class GetRoleCredentialsCommand extends Command
-    .classBuilder()
-    .ep(commonParams)
-    .m(function (Command, cs, config, o) {
-    return [getEndpointPlugin(config, Command.getEndpointParameterInstructions())];
-})
-    .s("SWBPortalService", "GetRoleCredentials", {})
-    .n("SSOClient", "GetRoleCredentialsCommand")
-    .sc(GetRoleCredentials$)
-    .build() {
+const command = makeBuilder(commonParams, "SWBPortalService", "SSOClient", getEndpointPlugin);
+const _ep0 = {};
+const _mw0 = (Command, cs, config, o) => [];
+
+class GetRoleCredentialsCommand extends command(_ep0, _mw0, "GetRoleCredentials", GetRoleCredentials$) {
 }
 
 const commands = {
@@ -17133,8 +17495,9 @@ exports.errorTypeRegistries = errorTypeRegistries;
 
 const { awsEndpointFunctions, emitWarningIfUnsupportedVersion: emitWarningIfUnsupportedVersion$1, createDefaultUserAgentProvider, NODE_APP_ID_CONFIG_OPTIONS, getAwsRegionExtensionConfiguration, resolveAwsRegionExtensionConfiguration, resolveUserAgentConfig, resolveHostHeaderConfig, getUserAgentPlugin, getHostHeaderPlugin, getLoggerPlugin, getRecursionDetectionPlugin, setCredentialFeature, stsRegionDefaultResolver } = __nccwpck_require__(5152);
 const { NoAuthSigner, getHttpAuthSchemeEndpointRuleSetPlugin, DefaultIdentityProviderConfig, getHttpSigningPlugin } = __nccwpck_require__(402);
-const { normalizeProvider, getSmithyContext, ServiceException, NoOpLogger, emitWarningIfUnsupportedVersion, loadConfigsForDefaultMode, getDefaultExtensionConfiguration, resolveDefaultRuntimeConfig, Client, Command, createAggregatedClient } = __nccwpck_require__(2658);
-exports.$Command = Command;
+const { normalizeProvider, getSmithyContext, ServiceException, NoOpLogger, emitWarningIfUnsupportedVersion, loadConfigsForDefaultMode, getDefaultExtensionConfiguration, resolveDefaultRuntimeConfig, Client, makeBuilder, createAggregatedClient } = __nccwpck_require__(2658);
+const { Command: $Command } = __nccwpck_require__(2658);
+exports.$Command = $Command;
 exports.__Client = Client;
 const { resolveDefaultsModeConfig, loadConfig, NODE_USE_FIPS_ENDPOINT_CONFIG_OPTIONS, NODE_USE_DUALSTACK_ENDPOINT_CONFIG_OPTIONS, NODE_REGION_CONFIG_OPTIONS, NODE_REGION_CONFIG_FILE_OPTIONS, resolveRegionConfig } = __nccwpck_require__(7291);
 const { BinaryDecisionDiagram, EndpointCache, decideEndpoint, customEndpointFunctions, resolveParams, resolveEndpointConfig, getEndpointPlugin } = __nccwpck_require__(2085);
@@ -17390,7 +17753,7 @@ const commonParams = {
     UseDualStack: { type: "builtInParams", name: "useDualstackEndpoint" },
 };
 
-var version = "3.997.24";
+var version = "3.997.41";
 var packageInfo = {
 	version: version};
 
@@ -17835,28 +18198,14 @@ class STSClient extends Client {
     }
 }
 
-class AssumeRoleCommand extends Command
-    .classBuilder()
-    .ep(commonParams)
-    .m(function (Command, cs, config, o) {
-    return [getEndpointPlugin(config, Command.getEndpointParameterInstructions())];
-})
-    .s("AWSSecurityTokenServiceV20110615", "AssumeRole", {})
-    .n("STSClient", "AssumeRoleCommand")
-    .sc(AssumeRole$)
-    .build() {
+const command = makeBuilder(commonParams, "AWSSecurityTokenServiceV20110615", "STSClient", getEndpointPlugin);
+const _ep0 = {};
+const _mw0 = (Command, cs, config, o) => [];
+
+class AssumeRoleCommand extends command(_ep0, _mw0, "AssumeRole", AssumeRole$) {
 }
 
-class AssumeRoleWithWebIdentityCommand extends Command
-    .classBuilder()
-    .ep(commonParams)
-    .m(function (Command, cs, config, o) {
-    return [getEndpointPlugin(config, Command.getEndpointParameterInstructions())];
-})
-    .s("AWSSecurityTokenServiceV20110615", "AssumeRoleWithWebIdentity", {})
-    .n("STSClient", "AssumeRoleWithWebIdentityCommand")
-    .sc(AssumeRoleWithWebIdentity$)
-    .build() {
+class AssumeRoleWithWebIdentityCommand extends command(_ep0, _mw0, "AssumeRoleWithWebIdentity", AssumeRoleWithWebIdentity$) {
 }
 
 const commands = {
@@ -18476,6 +18825,9 @@ class XmlNode {
     }
 }
 
+function writeKey(obj) {
+    Object.defineProperty(obj, "__proto__", { value: undefined, writable: true, enumerable: true, configurable: true });
+}
 function parseXML(xml) {
     const state = new AwsXmlParser(xml);
     return state.parse();
@@ -18561,7 +18913,7 @@ class AwsXmlParser {
             tag += p.x[p.i++];
         }
         let hasAttrs = false;
-        const attrs = Object.create(null);
+        const attrs = {};
         while (p.i < p.z) {
             p.trim();
             if (">/".includes(p.x[p.i])) {
@@ -18577,6 +18929,9 @@ class AwsXmlParser {
             }
             ++p.i;
             p.trim();
+            if (name === "__proto__") {
+                writeKey(attrs);
+            }
             attrs[name] = p.readAttrValue();
             hasAttrs = true;
         }
@@ -18589,7 +18944,6 @@ class AwsXmlParser {
                 throw new Error("@aws-sdk XML parse error: expected > at the end of self-closing tag.");
             }
             ++p.i;
-            Object.setPrototypeOf(attrs, Object.prototype);
             return { tag, value: hasAttrs ? attrs : "" };
         }
         if (p.x[p.i] !== ">") {
@@ -18645,7 +18999,7 @@ class AwsXmlParser {
             }
             return { tag, value: text };
         }
-        const obj = Object.create(null);
+        const obj = {};
         for (const text of textParts) {
             if (text.trim() === "" && text.includes("\n")) {
                 continue;
@@ -18653,6 +19007,9 @@ class AwsXmlParser {
             obj["#text"] = "#text" in obj ? obj["#text"] + text : text;
         }
         for (const child of childTags) {
+            if (child.tag === "__proto__") {
+                writeKey(obj);
+            }
             if (child.tag in obj) {
                 if (Array.isArray(obj[child.tag])) {
                     obj[child.tag].push(child.value);
@@ -18666,9 +19023,11 @@ class AwsXmlParser {
             }
         }
         for (const [k, v] of Object.entries(attrs)) {
+            if (k === "__proto__") {
+                writeKey(obj);
+            }
             obj[k] = v;
         }
-        Object.setPrototypeOf(obj, Object.prototype);
         return { tag, value: obj };
     }
     static ENTITIES = {
@@ -18728,6 +19087,9 @@ const PROTECTED_KEYS = {
     REQUEST_ID: Symbol.for("_AWS_LAMBDA_REQUEST_ID"),
     X_RAY_TRACE_ID: Symbol.for("_AWS_LAMBDA_X_RAY_TRACE_ID"),
     TENANT_ID: Symbol.for("_AWS_LAMBDA_TENANT_ID"),
+    TRACEPARENT: Symbol.for("_AWS_LAMBDA_TRACEPARENT"),
+    TRACESTATE: Symbol.for("_AWS_LAMBDA_TRACESTATE"),
+    BAGGAGE: Symbol.for("_AWS_LAMBDA_BAGGAGE"),
 };
 const NO_GLOBAL_AWS_LAMBDA = ["true", "1"].includes(process.env?.AWS_LAMBDA_NODEJS_NO_GLOBAL_AWSLAMBDA ?? "");
 if (!NO_GLOBAL_AWS_LAMBDA) {
@@ -18746,6 +19108,15 @@ class InvokeStoreBase {
     }
     getTenantId() {
         return this.get(PROTECTED_KEYS.TENANT_ID);
+    }
+    getTraceparent() {
+        return this.get(PROTECTED_KEYS.TRACEPARENT);
+    }
+    getTracestate() {
+        return this.get(PROTECTED_KEYS.TRACESTATE);
+    }
+    getBaggage() {
+        return this.get(PROTECTED_KEYS.BAGGAGE);
     }
 }
 class InvokeStoreSingle extends InvokeStoreBase {
@@ -19197,7 +19568,7 @@ exports.setFeature = setFeature;
 /***/ 4645:
 /***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
-const { nv, NumericValue, calculateBodyLength, _parseEpochTimestamp, fromBase64, generateIdempotencyToken } = __nccwpck_require__(2430);
+const { nv, NumericValue, calculateBodyLength, generateIdempotencyToken, fromBase64, _parseEpochTimestamp } = __nccwpck_require__(2430);
 const { HttpRequest, collectBody, SerdeContext, RpcProtocol } = __nccwpck_require__(3422);
 const { NormalizedSchema, deref, TypeRegistry } = __nccwpck_require__(6890);
 const { getSmithyContext } = __nccwpck_require__(4534);
@@ -19228,23 +19599,23 @@ function tag(data) {
     return data;
 }
 
-const USE_BUFFER$1 = typeof Buffer !== "undefined";
-const textDecoder = new TextDecoder();
-let payload = alloc(0);
-let isBuffer = false;
-let dataView$1 = new DataView(payload.buffer, payload.byteOffset, payload.byteLength);
+const USE_BUFFER$3 = typeof Buffer !== "undefined";
+const textDecoder$1 = new TextDecoder();
+let payload$1 = alloc(0);
+let isBuffer$1 = false;
+let dataView$2 = new DataView(payload$1.buffer, payload$1.byteOffset, payload$1.byteLength);
 let _offset = 0;
 function setPayload(bytes) {
-    payload = bytes;
-    isBuffer = USE_BUFFER$1 && payload instanceof Buffer;
-    dataView$1 = new DataView(payload.buffer, payload.byteOffset, payload.byteLength);
+    payload$1 = bytes;
+    isBuffer$1 = USE_BUFFER$3 && payload$1 instanceof Buffer;
+    dataView$2 = new DataView(payload$1.buffer, payload$1.byteOffset, payload$1.byteLength);
 }
 function decode(at, to) {
     if (at >= to) {
         throw new Error("unexpected end of (decode) payload.");
     }
-    const major = (payload[at] & 0b1110_0000) >> 5;
-    const minor = payload[at] & 0b0001_1111;
+    const major = (payload$1[at] & 0b1110_0000) >> 5;
+    const minor = payload$1[at] & 0b0001_1111;
     if (minor === minorIndefinite && 2 <= major && major <= 5) {
         return decodeIndefinite(at, to);
     }
@@ -19262,36 +19633,36 @@ function decode(at, to) {
                 switch (minor) {
                     case extendedOneByte:
                         if (to - at < 2) {
-                            overflow(1);
+                            overflow$1(1);
                         }
-                        unsignedInt = payload[at + 1];
+                        unsignedInt = payload$1[at + 1];
                         offset = 2;
                         break;
                     case extendedFloat16:
                         if (to - at < 3) {
-                            overflow(2);
+                            overflow$1(2);
                         }
-                        unsignedInt = dataView$1.getUint16(at + 1);
+                        unsignedInt = dataView$2.getUint16(at + 1);
                         offset = 3;
                         break;
                     case extendedFloat32:
                         if (to - at < 5) {
-                            overflow(4);
+                            overflow$1(4);
                         }
-                        unsignedInt = dataView$1.getUint32(at + 1);
+                        unsignedInt = dataView$2.getUint32(at + 1);
                         offset = 5;
                         break;
                     case extendedFloat64:
                         if (to - at < 9) {
-                            overflow(8);
+                            overflow$1(8);
                         }
                         {
-                            const hi = dataView$1.getUint32(at + 1);
+                            const hi = dataView$2.getUint32(at + 1);
                             if (hi < 0x00200000) {
-                                unsignedInt = hi * 4294967296 + dataView$1.getUint32(at + 5);
+                                unsignedInt = hi * 4294967296 + dataView$2.getUint32(at + 5);
                             }
                             else {
-                                unsignedInt = dataView$1.getBigUint64(at + 1);
+                                unsignedInt = dataView$2.getBigUint64(at + 1);
                             }
                         }
                         offset = 9;
@@ -19302,7 +19673,7 @@ function decode(at, to) {
             }
             if (major === majorUint64) {
                 _offset = offset;
-                return castBigInt(unsignedInt);
+                return castBigInt$1(unsignedInt);
             }
             else if (major === majorNegativeInt64) {
                 let negativeInt;
@@ -19313,7 +19684,7 @@ function decode(at, to) {
                     negativeInt = -1 - unsignedInt;
                 }
                 _offset = offset;
-                return castBigInt(negativeInt);
+                return castBigInt$1(negativeInt);
             }
             else {
                 return decodeTagValue(at, to, minor, unsignedInt, offset);
@@ -19332,8 +19703,8 @@ function decode(at, to) {
     }
 }
 function decodeIndefinite(at, to) {
-    const major = (payload[at] & 0b1110_0000) >> 5;
-    const minor = payload[at] & 0b0001_1111;
+    const major = (payload$1[at] & 0b1110_0000) >> 5;
+    const minor = payload$1[at] & 0b0001_1111;
     if (minor === minorIndefinite) {
         switch (major) {
             case majorUtf8String:
@@ -19347,7 +19718,7 @@ function decodeIndefinite(at, to) {
         }
     }
 }
-function bytesToFloat16(a, b) {
+function bytesToFloat16$1(a, b) {
     const sign = a >> 7;
     const exponent = (a & 0b0111_1100) >> 2;
     const fraction = ((a & 0b0000_0011) << 8) | b;
@@ -19367,8 +19738,8 @@ function bytesToFloat16(a, b) {
     return scalar * (Math.pow(2, exponent - 15) * (1 + fraction / 1024));
 }
 function decodeMap(at, to) {
-    const mapDataLength = decodeCount(at, to);
-    if (mapDataLength < 15) {
+    const mapDataLength = decodeCount$1(at, to);
+    if (mapDataLength < 25) {
         return decodeMapSmall(at, to, mapDataLength);
     }
     return decodeMapLarge(at, to, mapDataLength);
@@ -19381,7 +19752,7 @@ function decodeMapLarge(at, to, mapDataLength) {
     for (let i = 0; i < mapDataLength; ++i) {
         const key = decodeUtf8String(at, to);
         at += _offset;
-        const valMajor = (payload[at] & 0b1110_0000) >> 5;
+        const valMajor = (payload$1[at] & 0b1110_0000) >> 5;
         if (valMajor === majorUtf8String) {
             map[key] = decodeUtf8String(at, to);
         }
@@ -19409,7 +19780,7 @@ function decodeMapSmall(at, to, mapDataLength) {
     return map;
 }
 function decodeList(at, to) {
-    const listDataLength = decodeCount(at, to);
+    const listDataLength = decodeCount$1(at, to);
     const offset = _offset;
     at += offset;
     const base = at;
@@ -19422,76 +19793,76 @@ function decodeList(at, to) {
     return list;
 }
 function decodeUtf8String(at, to) {
-    const length = decodeCount(at, to);
+    const length = decodeCount$1(at, to);
     const offset = _offset;
     at += offset;
     if (to - at < length) {
-        overflow(length);
+        overflow$1(length);
     }
     _offset = offset + length;
     if (length < 24) {
         return decodeUtf8StringCached(at, length);
     }
-    if (isBuffer) {
-        return payload.toString("utf-8", at, at + length);
+    if (isBuffer$1) {
+        return payload$1.toString("utf-8", at, at + length);
     }
-    return textDecoder.decode(payload.subarray(at, at + length));
+    return textDecoder$1.decode(payload$1.subarray(at, at + length));
 }
-const stringCache = new Array(2048);
-const stringCacheEpochs = new Uint16Array(2048);
-let cacheEpoch = 0;
+const stringCache$1 = new Array(2048);
+const stringCacheEpochs$1 = new Uint16Array(2048);
+let cacheEpoch$1 = 0;
 function advanceDecodingEpoch() {
-    cacheEpoch = (cacheEpoch + 1) & 0b1111_1111_1111_1111;
+    cacheEpoch$1 = (cacheEpoch$1 + 1) & 0b1111_1111_1111_1111;
 }
 function decodeUtf8StringCached(at, length) {
     let h = length;
     for (let i = 0; i < length; ++i) {
-        h = (h * 31 + payload[at + i]) | 0;
+        h = (h * 31 + payload$1[at + i]) | 0;
     }
     const slot = (h >>> 0) & 2047;
-    const cached = stringCache[slot];
+    const cached = stringCache$1[slot];
     if (cached !== undefined) {
         if (cached.length === length) {
             let match = true;
             for (let i = 0; i < length; ++i) {
-                if (cached.charCodeAt(i) !== payload[at + i]) {
+                if (cached.charCodeAt(i) !== payload$1[at + i]) {
                     match = false;
                     break;
                 }
             }
             if (match) {
-                stringCacheEpochs[slot] = cacheEpoch;
+                stringCacheEpochs$1[slot] = cacheEpoch$1;
                 return cached;
             }
         }
     }
-    const result = isBuffer
-        ? payload.toString("utf-8", at, at + length)
-        : textDecoder.decode(payload.subarray(at, at + length));
-    if (stringCacheEpochs[slot] !== cacheEpoch) {
-        stringCache[slot] = result;
-        stringCacheEpochs[slot] = cacheEpoch;
+    const result = isBuffer$1
+        ? payload$1.toString("utf-8", at, at + length)
+        : textDecoder$1.decode(payload$1.subarray(at, at + length));
+    if (stringCacheEpochs$1[slot] !== cacheEpoch$1) {
+        stringCache$1[slot] = result;
+        stringCacheEpochs$1[slot] = cacheEpoch$1;
     }
     return result;
 }
 function decodeUnstructuredByteString(at, to) {
-    const length = decodeCount(at, to);
+    const length = decodeCount$1(at, to);
     const offset = _offset;
     at += offset;
     if (to - at < length) {
-        overflow(length);
+        overflow$1(length);
     }
-    const value = payload.subarray(at, at + length);
+    const value = payload$1.subarray(at, at + length);
     _offset = offset + length;
     return value;
 }
 function decodeTagValue(at, to, minor, unsignedInt, offset) {
     if (minor === 2 || minor === 3) {
-        const length = decodeCount(at + offset, to);
+        const length = decodeCount$1(at + offset, to);
         let b = BigInt(0);
         const start = at + offset + _offset;
         for (let i = start; i < start + length; ++i) {
-            b = (b << BigInt(8)) | BigInt(payload[i]);
+            b = (b << BigInt(8)) | BigInt(payload$1[i]);
         }
         _offset = offset + _offset + length;
         return minor === 3 ? -b - BigInt(1) : b;
@@ -19522,11 +19893,11 @@ function decodeTagValue(at, to, minor, unsignedInt, offset) {
         const value = decode(at + offset, to);
         const valueOffset = _offset;
         _offset = offset + valueOffset;
-        return tag({ tag: castBigInt(unsignedInt), value });
+        return tag({ tag: castBigInt$1(unsignedInt), value });
     }
 }
 function decodeSpecial(at, to) {
-    const minor = payload[at] & 0b0001_1111;
+    const minor = payload$1[at] & 0b0001_1111;
     switch (minor) {
         case specialTrue:
         case specialFalse:
@@ -19543,25 +19914,25 @@ function decodeSpecial(at, to) {
                 throw new Error("incomplete float16 at end of buf.");
             }
             _offset = 3;
-            return bytesToFloat16(payload[at + 1], payload[at + 2]);
+            return bytesToFloat16$1(payload$1[at + 1], payload$1[at + 2]);
         case extendedFloat32:
             if (to - at < 5) {
                 throw new Error("incomplete float32 at end of buf.");
             }
             _offset = 5;
-            return dataView$1.getFloat32(at + 1);
+            return dataView$2.getFloat32(at + 1);
         case extendedFloat64:
             if (to - at < 9) {
                 throw new Error("incomplete float64 at end of buf.");
             }
             _offset = 9;
-            return dataView$1.getFloat64(at + 1);
+            return dataView$2.getFloat64(at + 1);
         default:
             unexpectedMinor(minor);
     }
 }
-function decodeCount(at, to) {
-    const minor = payload[at] & 0b0001_1111;
+function decodeCount$1(at, to) {
+    const minor = payload$1[at] & 0b0001_1111;
     if (minor < 24) {
         _offset = 1;
         return minor;
@@ -19569,28 +19940,28 @@ function decodeCount(at, to) {
     switch (minor) {
         case extendedOneByte:
             if (to - at < 2) {
-                overflow(1);
+                overflow$1(1);
             }
             _offset = 2;
-            return payload[at + 1];
+            return payload$1[at + 1];
         case extendedFloat16:
             if (to - at < 3) {
-                overflow(2);
+                overflow$1(2);
             }
             _offset = 3;
-            return dataView$1.getUint16(at + 1);
+            return dataView$2.getUint16(at + 1);
         case extendedFloat32:
             if (to - at < 5) {
-                overflow(4);
+                overflow$1(4);
             }
             _offset = 5;
-            return dataView$1.getUint32(at + 1);
+            return dataView$2.getUint32(at + 1);
         case extendedFloat64:
             if (to - at < 9) {
-                overflow(8);
+                overflow$1(8);
             }
             _offset = 9;
-            return demote(dataView$1.getBigUint64(at + 1));
+            return demote(dataView$2.getBigUint64(at + 1));
         default:
             unexpectedMinor(minor);
     }
@@ -19600,7 +19971,7 @@ function decodeMapIndefinite(at, to) {
     const base = at;
     const map = {};
     for (; at < to;) {
-        if (payload[at] === 0b1111_1111) {
+        if (payload$1[at] === 0b1111_1111) {
             _offset = at - base + 2;
             return map;
         }
@@ -19615,7 +19986,7 @@ function decodeListIndefinite(at, to) {
     at += 1;
     const list = [];
     for (const base = at; at < to;) {
-        if (payload[at] === 0b1111_1111) {
+        if (payload$1[at] === 0b1111_1111) {
             _offset = at - base + 2;
             return list;
         }
@@ -19628,17 +19999,17 @@ function decodeUtf8StringIndefinite(at, to) {
     at += 1;
     const vector = [];
     for (const base = at; at < to;) {
-        if (payload[at] === 0b1111_1111) {
+        if (payload$1[at] === 0b1111_1111) {
             const data = alloc(vector.length);
             data.set(vector, 0);
             _offset = at - base + 2;
-            if (USE_BUFFER$1) {
+            if (USE_BUFFER$3) {
                 return data.toString("utf-8", 0, data.length);
             }
-            return textDecoder.decode(data);
+            return textDecoder$1.decode(data);
         }
-        const major = (payload[at] & 0b1110_0000) >> 5;
-        const minor = payload[at] & 0b0001_1111;
+        const major = (payload$1[at] & 0b1110_0000) >> 5;
+        const minor = payload$1[at] & 0b0001_1111;
         if (major !== majorUtf8String) {
             unexpectedMajorInIndefiniteString(major);
         }
@@ -19658,14 +20029,14 @@ function decodeUnstructuredByteStringIndefinite(at, to) {
     at += 1;
     const vector = [];
     for (const base = at; at < to;) {
-        if (payload[at] === 0b1111_1111) {
+        if (payload$1[at] === 0b1111_1111) {
             const data = alloc(vector.length);
             data.set(vector, 0);
             _offset = at - base + 2;
             return data;
         }
-        const major = (payload[at] & 0b1110_0000) >> 5;
-        const minor = payload[at] & 0b0001_1111;
+        const major = (payload$1[at] & 0b1110_0000) >> 5;
+        const minor = payload$1[at] & 0b0001_1111;
         if (major !== majorUnstructuredByteString) {
             unexpectedMajorInIndefiniteString(major);
         }
@@ -19681,7 +20052,7 @@ function decodeUnstructuredByteStringIndefinite(at, to) {
     }
     throw new Error("expected break marker.");
 }
-function castBigInt(bigInt) {
+function castBigInt$1(bigInt) {
     if (typeof bigInt === "number") {
         return bigInt;
     }
@@ -19698,7 +20069,7 @@ function demote(bigInteger) {
     }
     return num;
 }
-function overflow(n) {
+function overflow$1(n) {
     throw new Error(`length ${n} greater than remaining buf len.`);
 }
 function unexpectedMinor(minor) {
@@ -19708,25 +20079,25 @@ function unexpectedMajorInIndefiniteString(major) {
     throw new Error(`unexpected major type ${major} in indefinite string.`);
 }
 
-const USE_BUFFER = typeof Buffer !== "undefined";
+const USE_BUFFER$2 = typeof Buffer !== "undefined";
 const encodeStringCache = new Map();
-let encodeCacheEpoch = 0;
-let encodeCacheSaturated = false;
+let encodeCacheEpoch$1 = 0;
+let encodeCacheSaturated$1 = false;
 const initialSize = 2048;
 let data = alloc(initialSize);
-let dataView = new DataView(data.buffer, data.byteOffset, data.byteLength);
-let cursor = 0;
+let dataView$1 = new DataView(data.buffer, data.byteOffset, data.byteLength);
+let cursor$1 = 0;
 function encode(_input) {
     const encodeStack = [_input];
     while (encodeStack.length) {
         const input = encodeStack.pop();
         if (typeof input === "string") {
             const len = input.length;
-            if (USE_BUFFER) {
+            if (USE_BUFFER$2) {
                 ensureSpace(len * 3 + 9);
                 if (len > 23) {
-                    encodeHeader(majorUtf8String, Buffer.byteLength(input));
-                    cursor += data.write(input, cursor);
+                    encodeHeader$1(majorUtf8String, Buffer.byteLength(input));
+                    cursor$1 += data.write(input, cursor$1);
                 }
                 else {
                     encodeStringCached(input);
@@ -19735,8 +20106,8 @@ function encode(_input) {
             else {
                 const maxBytes = len * 3;
                 ensureSpace(maxBytes + 9);
-                const headerPos = cursor;
-                const result = new TextEncoder().encodeInto(input, data.subarray(cursor + 9));
+                const headerPos = cursor$1;
+                const result = new TextEncoder().encodeInto(input, data.subarray(cursor$1 + 9));
                 const byteLen = result.written;
                 let headerSize;
                 if (byteLen < 24) {
@@ -19757,50 +20128,50 @@ function encode(_input) {
                 if (headerSize < 9) {
                     data.copyWithin(headerPos + headerSize, headerPos + 9, headerPos + 9 + byteLen);
                 }
-                cursor = headerPos;
+                cursor$1 = headerPos;
                 encodeInteger(majorUtf8String, byteLen);
-                cursor += byteLen;
+                cursor$1 += byteLen;
             }
             continue;
         }
-        if (data.byteLength - cursor < 9) {
+        if (data.byteLength - cursor$1 < 9) {
             ensureSpace(64);
         }
         if (typeof input === "number") {
-            if (Number.isInteger(input)) {
+            if (Number.isInteger(input) && input >= -9007199254740992 && input <= 0x1fffffffffffff) {
                 const nonNegative = input >= 0;
                 const major = nonNegative ? majorUint64 : majorNegativeInt64;
                 const value = nonNegative ? input : -input - 1;
                 if (value < 24) {
-                    data[cursor++] = (major << 5) | value;
+                    data[cursor$1++] = (major << 5) | value;
                 }
                 else if (value < 256) {
-                    data[cursor++] = (major << 5) | 24;
-                    data[cursor++] = value;
+                    data[cursor$1++] = (major << 5) | 24;
+                    data[cursor$1++] = value;
                 }
                 else if (value < 65536) {
-                    data[cursor++] = (major << 5) | extendedFloat16;
-                    data[cursor++] = value >> 8;
-                    data[cursor++] = value & 0xff;
+                    data[cursor$1++] = (major << 5) | extendedFloat16;
+                    data[cursor$1++] = value >> 8;
+                    data[cursor$1++] = value & 0xff;
                 }
                 else if (value < 4294967296) {
-                    data[cursor++] = (major << 5) | extendedFloat32;
-                    dataView.setUint32(cursor, value);
-                    cursor += 4;
+                    data[cursor$1++] = (major << 5) | extendedFloat32;
+                    dataView$1.setUint32(cursor$1, value);
+                    cursor$1 += 4;
                 }
                 else {
-                    data[cursor++] = (major << 5) | extendedFloat64;
+                    data[cursor$1++] = (major << 5) | extendedFloat64;
                     const hi = (value / 4294967296) | 0;
                     const lo = (value - hi * 4294967296) | 0;
-                    dataView.setUint32(cursor, hi);
-                    dataView.setUint32(cursor + 4, lo);
-                    cursor += 8;
+                    dataView$1.setUint32(cursor$1, hi);
+                    dataView$1.setUint32(cursor$1 + 4, lo);
+                    cursor$1 += 8;
                 }
                 continue;
             }
-            data[cursor++] = (majorSpecial << 5) | extendedFloat64;
-            dataView.setFloat64(cursor, input);
-            cursor += 8;
+            data[cursor$1++] = (majorSpecial << 5) | extendedFloat64;
+            dataView$1.setFloat64(cursor$1, input);
+            cursor$1 += 8;
             continue;
         }
         else if (typeof input === "bigint") {
@@ -19813,9 +20184,9 @@ function encode(_input) {
                     encodeInteger(major, n);
                 }
                 else {
-                    data[cursor++] = (major << 5) | extendedFloat64;
-                    dataView.setBigUint64(cursor, value);
-                    cursor += 8;
+                    data[cursor$1++] = (major << 5) | extendedFloat64;
+                    dataView$1.setBigUint64(cursor$1, value);
+                    cursor$1 += 8;
                 }
             }
             else {
@@ -19828,19 +20199,19 @@ function encode(_input) {
                     b >>= BigInt(8);
                 }
                 ensureSpace(bigIntBytes.byteLength * 2 + 16);
-                data[cursor++] = nonNegative ? 0b110_00010 : 0b110_00011;
-                encodeHeader(majorUnstructuredByteString, bigIntBytes.byteLength);
-                data.set(bigIntBytes, cursor);
-                cursor += bigIntBytes.byteLength;
+                data[cursor$1++] = nonNegative ? 0b110_00010 : 0b110_00011;
+                encodeHeader$1(majorUnstructuredByteString, bigIntBytes.byteLength);
+                data.set(bigIntBytes, cursor$1);
+                cursor$1 += bigIntBytes.byteLength;
             }
             continue;
         }
         else if (input === null) {
-            data[cursor++] = (majorSpecial << 5) | specialNull;
+            data[cursor$1++] = (majorSpecial << 5) | specialNull;
             continue;
         }
         else if (typeof input === "boolean") {
-            data[cursor++] = (majorSpecial << 5) | (input ? specialTrue : specialFalse);
+            data[cursor$1++] = (majorSpecial << 5) | (input ? specialTrue : specialFalse);
             continue;
         }
         else if (typeof input === "undefined") {
@@ -19857,8 +20228,8 @@ function encode(_input) {
         else if (typeof input.byteLength === "number") {
             ensureSpace(input.length * 2 + 9);
             encodeInteger(majorUnstructuredByteString, input.length);
-            data.set(input, cursor);
-            cursor += input.byteLength;
+            data.set(input, cursor$1);
+            cursor$1 += input.byteLength;
             continue;
         }
         else if (typeof input === "object") {
@@ -19866,7 +20237,7 @@ function encode(_input) {
                 const decimalIndex = input.string.indexOf(".");
                 const exponent = decimalIndex === -1 ? 0 : decimalIndex - input.string.length + 1;
                 const mantissa = BigInt(input.string.replace(".", ""));
-                data[cursor++] = 0b110_00100;
+                data[cursor$1++] = 0b110_00100;
                 encodeInteger(majorList, 2);
                 encodeStack.push(mantissa);
                 encodeStack.push(exponent);
@@ -19875,7 +20246,7 @@ function encode(_input) {
             if (input[tagSymbol]) {
                 if ("tag" in input && "value" in input) {
                     encodeStack.push(input.value);
-                    encodeHeader(majorTag, input.tag);
+                    encodeHeader$1(majorTag, input.tag);
                     continue;
                 }
                 else {
@@ -19895,13 +20266,13 @@ function encode(_input) {
     }
 }
 function advanceEncodingEpoch() {
-    encodeCacheEpoch = (encodeCacheEpoch + 1) & 0b1111_1111_1111_1111;
-    encodeCacheSaturated = false;
+    encodeCacheEpoch$1 = (encodeCacheEpoch$1 + 1) & 0b1111_1111_1111_1111;
+    encodeCacheSaturated$1 = false;
 }
 function toUint8Array() {
-    const out = alloc(cursor);
-    out.set(data.subarray(0, cursor), 0);
-    cursor = 0;
+    const out = alloc(cursor$1);
+    out.set(data.subarray(0, cursor$1), 0);
+    cursor$1 = 0;
     return out;
 }
 function resize(size) {
@@ -19915,23 +20286,23 @@ function resize(size) {
             data.set(old, 0);
         }
     }
-    dataView = new DataView(data.buffer, data.byteOffset, data.byteLength);
+    dataView$1 = new DataView(data.buffer, data.byteOffset, data.byteLength);
 }
 function encodeStringCached(input) {
     const cached = encodeStringCache.get(input);
     if (cached !== undefined) {
-        data.set(cached.bytes, cursor);
-        cursor += cached.bytes.length;
-        cached.epoch = encodeCacheEpoch;
+        data.set(cached.bytes, cursor$1);
+        cursor$1 += cached.bytes.length;
+        cached.epoch = encodeCacheEpoch$1;
         return;
     }
-    const start = cursor;
+    const start = cursor$1;
     const byteLen = Buffer.byteLength(input);
     encodeInteger(majorUtf8String, byteLen);
-    cursor += data.write(input, cursor);
-    const bytes = Uint8Array.prototype.slice.call(data, start, cursor);
+    cursor$1 += data.write(input, cursor$1);
+    const bytes = Uint8Array.prototype.slice.call(data, start, cursor$1);
     if (encodeStringCache.size >= 2048) {
-        if (encodeCacheSaturated) {
+        if (encodeCacheSaturated$1) {
             return;
         }
         let evicted = 0;
@@ -19939,24 +20310,24 @@ function encodeStringCached(input) {
             if (evicted >= 1024) {
                 break;
             }
-            if (entry.epoch !== encodeCacheEpoch) {
+            if (entry.epoch !== encodeCacheEpoch$1) {
                 encodeStringCache.delete(key);
                 evicted++;
             }
         }
         if (evicted === 0) {
-            encodeCacheSaturated = true;
+            encodeCacheSaturated$1 = true;
             return;
         }
     }
     if (encodeStringCache.size < 2048) {
-        encodeStringCache.set(input, { epoch: encodeCacheEpoch, bytes });
+        encodeStringCache.set(input, { epoch: encodeCacheEpoch$1, bytes });
     }
 }
 function ensureSpace(bytes) {
-    const remaining = data.byteLength - cursor;
+    const remaining = data.byteLength - cursor$1;
     if (remaining < bytes) {
-        if (cursor < 16_000_000) {
+        if (cursor$1 < 16_000_000) {
             resize(Math.max(data.byteLength * 4, data.byteLength + bytes));
         }
         else {
@@ -19964,55 +20335,55 @@ function ensureSpace(bytes) {
         }
     }
 }
-function encodeHeader(major, value) {
+function encodeHeader$1(major, value) {
     if (value < 24) {
-        data[cursor++] = (major << 5) | value;
+        data[cursor$1++] = (major << 5) | value;
     }
     else if (value < 256) {
-        data[cursor++] = (major << 5) | 24;
-        data[cursor++] = value;
+        data[cursor$1++] = (major << 5) | 24;
+        data[cursor$1++] = value;
     }
     else if (value < 65536) {
-        data[cursor++] = (major << 5) | extendedFloat16;
-        dataView.setUint16(cursor, value);
-        cursor += 2;
+        data[cursor$1++] = (major << 5) | extendedFloat16;
+        dataView$1.setUint16(cursor$1, value);
+        cursor$1 += 2;
     }
     else if (value < 4294967296) {
-        data[cursor++] = (major << 5) | extendedFloat32;
-        dataView.setUint32(cursor, value);
-        cursor += 4;
+        data[cursor$1++] = (major << 5) | extendedFloat32;
+        dataView$1.setUint32(cursor$1, value);
+        cursor$1 += 4;
     }
     else {
-        data[cursor++] = (major << 5) | extendedFloat64;
-        dataView.setBigUint64(cursor, typeof value === "bigint" ? value : BigInt(value));
-        cursor += 8;
+        data[cursor$1++] = (major << 5) | extendedFloat64;
+        dataView$1.setBigUint64(cursor$1, typeof value === "bigint" ? value : BigInt(value));
+        cursor$1 += 8;
     }
 }
 function encodeInteger(major, value) {
     if (value < 24) {
-        data[cursor++] = (major << 5) | value;
+        data[cursor$1++] = (major << 5) | value;
     }
     else if (value < 256) {
-        data[cursor++] = (major << 5) | 24;
-        data[cursor++] = value;
+        data[cursor$1++] = (major << 5) | 24;
+        data[cursor$1++] = value;
     }
     else if (value < 65536) {
-        data[cursor++] = (major << 5) | extendedFloat16;
-        data[cursor++] = value >> 8;
-        data[cursor++] = value & 0xff;
+        data[cursor$1++] = (major << 5) | extendedFloat16;
+        data[cursor$1++] = value >> 8;
+        data[cursor$1++] = value & 0xff;
     }
     else if (value < 4294967296) {
-        data[cursor++] = (major << 5) | extendedFloat32;
-        dataView.setUint32(cursor, value);
-        cursor += 4;
+        data[cursor$1++] = (major << 5) | extendedFloat32;
+        dataView$1.setUint32(cursor$1, value);
+        cursor$1 += 4;
     }
     else {
-        data[cursor++] = (major << 5) | extendedFloat64;
+        data[cursor$1++] = (major << 5) | extendedFloat64;
         const hi = (value / 4294967296) | 0;
         const lo = (value - hi * 4294967296) | 0;
-        dataView.setUint32(cursor, hi);
-        dataView.setUint32(cursor + 4, lo);
-        cursor += 8;
+        dataView$1.setUint32(cursor$1, hi);
+        dataView$1.setUint32(cursor$1 + 4, lo);
+        cursor$1 += 8;
     }
 }
 
@@ -20127,23 +20498,1331 @@ const buildHttpRpcRequest = async (context, headers, path, resolvedHostname, bod
         try {
             contents.headers["content-length"] = String(calculateBodyLength(body));
         }
-        catch (e) { }
+        catch (ignored) { }
     }
     return new HttpRequest(contents);
 };
 
+class CborShapeSerializer2 extends SerdeContext {
+    write(schema, value) {
+        cursor = 0;
+        const ns = NormalizedSchema.of(schema);
+        writeValue(ns, value, undefined, this.serdeContext);
+    }
+    flush() {
+        const result = buf.subarray(0, cursor);
+        cursor = 0;
+        buf = allocUnsafe(INITIAL_BUFFER_SIZE);
+        view = new DataView(buf.buffer, buf.byteOffset, buf.byteLength);
+        return result;
+    }
+}
+const CBOR_STRUCT_CACHE = Symbol.for("@smithy/cbor-struct-cache");
+function loadCborStructIterator(ns) {
+    const schema = ns.getSchema();
+    const existing = schema[CBOR_STRUCT_CACHE];
+    if (existing) {
+        return existing;
+    }
+    const memberNames = [];
+    const memberSchemas = [];
+    for (const [name, memberSchema] of ns.structIterator()) {
+        memberNames.push(name);
+        memberSchemas.push(memberSchema);
+    }
+    const encodedKeys = new Array(memberNames.length);
+    for (let i = 0; i < memberNames.length; ++i) {
+        encodedKeys[i] = encodeCborStringKey(memberNames[i]);
+    }
+    const cache = { memberNames, memberSchemas, encodedKeys };
+    schema[CBOR_STRUCT_CACHE] = cache;
+    return cache;
+}
+function encodeCborStringKey(s) {
+    let utf8Bytes;
+    if (USE_BUFFER$1) {
+        utf8Bytes = Buffer.from(s, "utf-8");
+    }
+    else {
+        utf8Bytes = new TextEncoder().encode(s);
+    }
+    const byteLen = utf8Bytes.length;
+    let headerSize;
+    if (byteLen < 24) {
+        headerSize = 1;
+    }
+    else if (byteLen < 256) {
+        headerSize = 2;
+    }
+    else {
+        headerSize = 3;
+    }
+    const result = new Uint8Array(headerSize + byteLen);
+    if (headerSize === 1) {
+        result[0] = (majorUtf8String << 5) | byteLen;
+    }
+    else if (headerSize === 2) {
+        result[0] = (majorUtf8String << 5) | 24;
+        result[1] = byteLen;
+    }
+    else {
+        result[0] = (majorUtf8String << 5) | extendedFloat16;
+        result[1] = byteLen >> 8;
+        result[2] = byteLen & 0xff;
+    }
+    result.set(utf8Bytes, headerSize);
+    return result;
+}
+const USE_BUFFER$1 = typeof Buffer !== "undefined";
+const textEncoder = new TextEncoder();
+const INITIAL_BUFFER_SIZE = 2048;
+let buf = USE_BUFFER$1 ? Buffer.allocUnsafe(INITIAL_BUFFER_SIZE) : new Uint8Array(INITIAL_BUFFER_SIZE);
+let view = new DataView(buf.buffer, buf.byteOffset, buf.byteLength);
+let cursor = 0;
+const STRING_CACHE_MAX = 2048;
+const stringEncodeCache = new Map();
+let encodeCacheEpoch = 0;
+let encodeCacheSaturated = false;
+function allocUnsafe(size) {
+    return USE_BUFFER$1 ? Buffer.allocUnsafe(size) : new Uint8Array(size);
+}
+function writeValue(ns, value, container, serdeContext) {
+    if (value == null) {
+        if (value === undefined && ns.isIdempotencyToken()) {
+            writeString(generateIdempotencyToken());
+            return;
+        }
+        ensure(1);
+        buf[cursor++] = (majorSpecial << 5) | specialNull;
+        return;
+    }
+    if (ns.isUnitSchema()) {
+        ensure(1);
+        encodeHeader(majorMap, 0);
+        return;
+    }
+    const isObject = typeof value === "object";
+    if (isObject) {
+        if (ns.isBlobSchema()) {
+            if (value instanceof Uint8Array) {
+                writeBytes(value);
+                return;
+            }
+        }
+        if (ns.isTimestampSchema()) {
+            if (value instanceof Date) {
+                writeTimestamp(value);
+                return;
+            }
+        }
+        if (ns.isStructSchema()) {
+            writeStruct(ns, value, serdeContext);
+            return;
+        }
+        if (Array.isArray(value) && (ns.isListSchema() || ns.isDocumentSchema())) {
+            writeList(ns, value, ns.isDocumentSchema(), serdeContext);
+            return;
+        }
+        if (ns.isMapSchema()) {
+            writeMap(ns, value, false, serdeContext);
+            return;
+        }
+        if (value instanceof Date) {
+            writeTimestamp(value);
+            return;
+        }
+        if (value instanceof Uint8Array) {
+            writeBytes(value);
+            return;
+        }
+        if (value instanceof NumericValue) {
+            writeNumericValue(value);
+            return;
+        }
+        if (value[tagSymbol]) {
+            const tagged = value;
+            writeTag(tagged.tag, tagged.value);
+            return;
+        }
+        if (ns.isDocumentSchema()) {
+            if (Array.isArray(value)) {
+                writeList(ns, value, true, serdeContext);
+            }
+            else {
+                writeMap(ns, value, true, serdeContext);
+            }
+            return;
+        }
+        if (ns.isBigDecimalSchema()) {
+            writeUntypedValue(value);
+            return;
+        }
+        writeMap(ns, value, true, serdeContext);
+        return;
+    }
+    if (typeof value === "string") {
+        if (ns.isBlobSchema()) {
+            const bytes = (serdeContext?.base64Decoder ?? fromBase64)(value);
+            writeBytes(bytes);
+            return;
+        }
+        writeString(value);
+        return;
+    }
+    if (typeof value === "number") {
+        ensure(9);
+        if (Number.isInteger(value) && value >= -9007199254740992 && value <= 0x1fffffffffffff) {
+            writeInteger(value);
+        }
+        else {
+            writeFloat64(value);
+        }
+        return;
+    }
+    if (typeof value === "boolean") {
+        ensure(1);
+        buf[cursor++] = (majorSpecial << 5) | (value ? specialTrue : specialFalse);
+        return;
+    }
+    if (typeof value === "bigint") {
+        writeBigInt(value);
+        return;
+    }
+    writeString(String(value));
+}
+function writeStruct(ns, value, serdeContext) {
+    if (ns.isUnionSchema()) {
+        let wrote = false;
+        for (const [memberName, memberSchema] of ns.structIterator()) {
+            const item = value[memberName];
+            if (item != null) {
+                ensure(9);
+                encodeHeader(majorMap, 1);
+                writeString(memberName);
+                writeValue(memberSchema, item, ns, serdeContext);
+                wrote = true;
+                break;
+            }
+        }
+        if (!wrote) {
+            const { $unknown } = value;
+            if (Array.isArray($unknown)) {
+                ensure(9);
+                encodeHeader(majorMap, 1);
+                writeString($unknown[0]);
+                writeUntypedValue($unknown[1]);
+            }
+            else {
+                ensure(9);
+                encodeHeader(majorMap, 0);
+            }
+        }
+        return;
+    }
+    const cache = loadCborStructIterator(ns);
+    const { memberNames, memberSchemas, encodedKeys } = cache;
+    const z = memberNames.length;
+    let headerSize;
+    if (z < 24) {
+        headerSize = 1;
+    }
+    else if (z < 256) {
+        headerSize = 2;
+    }
+    else {
+        headerSize = 3;
+    }
+    ensure(headerSize);
+    const headerPos = cursor;
+    cursor += headerSize;
+    let count = 0;
+    for (let i = 0; i < z; ++i) {
+        const item = value[memberNames[i]];
+        if (item == null && !memberSchemas[i].isIdempotencyToken()) {
+            continue;
+        }
+        const key = encodedKeys[i];
+        ensure(key.length);
+        buf.set(key, cursor);
+        cursor += key.length;
+        writeValue(memberSchemas[i], item, ns, serdeContext);
+        ++count;
+    }
+    if (typeof value.__type === "string") {
+        for (const k in value) {
+            if (!memberNames.includes(k)) {
+                writeString(k);
+                writeUntypedValue(value[k]);
+                ++count;
+            }
+        }
+    }
+    if (headerSize === 1) {
+        buf[headerPos] = (majorMap << 5) | count;
+    }
+    else if (headerSize === 2) {
+        buf[headerPos] = (majorMap << 5) | 24;
+        buf[headerPos + 1] = count;
+    }
+    else {
+        buf[headerPos] = (majorMap << 5) | extendedFloat16;
+        buf[headerPos + 1] = count >> 8;
+        buf[headerPos + 2] = count & 0xff;
+    }
+}
+function writeList(ns, value, isDocument, serdeContext) {
+    const sparse = !!ns.getMergedTraits().sparse;
+    const valueSchema = ns.getValueSchema();
+    if (isDocument || sparse) {
+        const items = [];
+        for (let i = 0; i < value.length; ++i) {
+            const item = value[i];
+            if (isDocument) {
+                if (item !== undefined) {
+                    items.push(item);
+                }
+            }
+            else {
+                if (item != null || sparse) {
+                    items.push(item);
+                }
+            }
+        }
+        ensure(9);
+        encodeHeader(majorList, items.length);
+        for (let i = 0; i < items.length; ++i) {
+            writeValue(valueSchema, items[i], undefined, serdeContext);
+        }
+    }
+    else {
+        let count = 0;
+        for (let i = 0; i < value.length; ++i) {
+            if (value[i] != null) {
+                ++count;
+            }
+        }
+        ensure(9);
+        encodeHeader(majorList, count);
+        for (let i = 0; i < value.length; ++i) {
+            if (value[i] != null) {
+                writeValue(valueSchema, value[i], undefined, serdeContext);
+            }
+        }
+    }
+}
+function writeMap(ns, value, isDocument, serdeContext) {
+    const sparse = !!ns.getMergedTraits().sparse;
+    const valueSchema = ns.getValueSchema();
+    const keys = [];
+    for (const k in value) {
+        const v = value[k];
+        if (isDocument ? v !== undefined : v != null || sparse) {
+            keys.push(k);
+        }
+    }
+    ensure(9);
+    encodeHeader(majorMap, keys.length);
+    for (let i = 0; i < keys.length; ++i) {
+        const k = keys[i];
+        writeString(k);
+        writeValue(valueSchema, value[k], undefined, serdeContext);
+    }
+}
+function writeUntypedValue(value) {
+    if (value == null) {
+        ensure(1);
+        buf[cursor++] = (majorSpecial << 5) | specialNull;
+        return;
+    }
+    if (typeof value === "string") {
+        writeString(value);
+        return;
+    }
+    if (typeof value === "number") {
+        ensure(9);
+        if (Number.isInteger(value) && value >= -9007199254740992 && value <= 0x1fffffffffffff) {
+            writeInteger(value);
+        }
+        else {
+            writeFloat64(value);
+        }
+        return;
+    }
+    if (typeof value === "boolean") {
+        ensure(1);
+        buf[cursor++] = (majorSpecial << 5) | (value ? specialTrue : specialFalse);
+        return;
+    }
+    if (typeof value === "bigint") {
+        writeBigInt(value);
+        return;
+    }
+    if (value instanceof Uint8Array) {
+        writeBytes(value);
+        return;
+    }
+    if (value instanceof Date) {
+        writeTimestamp(value);
+        return;
+    }
+    if (value instanceof NumericValue) {
+        writeNumericValue(value);
+        return;
+    }
+    if (value[tagSymbol]) {
+        const tagged = value;
+        writeTag(tagged.tag, tagged.value);
+        return;
+    }
+    if (Array.isArray(value)) {
+        ensure(9);
+        encodeHeader(majorList, value.length);
+        for (let i = 0; i < value.length; ++i) {
+            writeUntypedValue(value[i]);
+        }
+        return;
+    }
+    if (typeof value === "object") {
+        const keys = Object.keys(value);
+        ensure(9);
+        encodeHeader(majorMap, keys.length);
+        for (let i = 0; i < keys.length; ++i) {
+            writeString(keys[i]);
+            writeUntypedValue(value[keys[i]]);
+        }
+        return;
+    }
+    writeString(String(value));
+}
+function ensure(n) {
+    if (cursor + n > buf.length) {
+        let newSize = buf.length * 2;
+        while (newSize < cursor + n) {
+            newSize *= 2;
+        }
+        const next = allocUnsafe(newSize);
+        next.set(buf.subarray(0, cursor));
+        buf = next;
+        view = new DataView(next.buffer, next.byteOffset, next.byteLength);
+    }
+}
+function encodeHeader(major, value) {
+    if (value < 24) {
+        buf[cursor++] = (major << 5) | value;
+    }
+    else if (value < 256) {
+        buf[cursor++] = (major << 5) | 24;
+        buf[cursor++] = value;
+    }
+    else if (value < 65536) {
+        buf[cursor++] = (major << 5) | extendedFloat16;
+        buf[cursor++] = value >> 8;
+        buf[cursor++] = value & 0xff;
+    }
+    else if (value < 4294967296) {
+        buf[cursor++] = (major << 5) | extendedFloat32;
+        view.setUint32(cursor, value);
+        cursor += 4;
+    }
+    else {
+        buf[cursor++] = (major << 5) | extendedFloat64;
+        const hi = (value / 4294967296) | 0;
+        const lo = (value - hi * 4294967296) | 0;
+        view.setUint32(cursor, hi);
+        view.setUint32(cursor + 4, lo);
+        cursor += 8;
+    }
+}
+function encodeBigHeader(major, value) {
+    const n = Number(value);
+    if (n < 4294967296) {
+        encodeHeader(major, n);
+        return;
+    }
+    buf[cursor++] = (major << 5) | extendedFloat64;
+    view.setBigUint64(cursor, value);
+    cursor += 8;
+}
+function writeString(s) {
+    const len = s.length;
+    if (len <= 23) {
+        const cached = stringEncodeCache.get(s);
+        if (cached) {
+            ensure(cached.bytes.length);
+            buf.set(cached.bytes, cursor);
+            cursor += cached.bytes.length;
+            cached.epoch = encodeCacheEpoch;
+            return;
+        }
+        const start = cursor;
+        writeStringUncached(s, len);
+        const end = cursor;
+        const bytes = Uint8Array.prototype.slice.call(buf, start, end);
+        if (stringEncodeCache.size >= STRING_CACHE_MAX) {
+            if (encodeCacheSaturated) {
+                return;
+            }
+            let evicted = 0;
+            for (const [key, entry] of stringEncodeCache) {
+                if (evicted >= 1024) {
+                    break;
+                }
+                if (entry.epoch !== encodeCacheEpoch) {
+                    stringEncodeCache.delete(key);
+                    ++evicted;
+                }
+            }
+            if (evicted === 0) {
+                encodeCacheSaturated = true;
+                return;
+            }
+        }
+        if (stringEncodeCache.size < STRING_CACHE_MAX) {
+            stringEncodeCache.set(s, { epoch: encodeCacheEpoch, bytes });
+        }
+        return;
+    }
+    writeStringUncached(s, len);
+}
+function writeStringUncached(s, len) {
+    if (USE_BUFFER$1) {
+        const maxBytes = len * 3;
+        ensure(maxBytes + 9);
+        const byteLen = Buffer.byteLength(s);
+        encodeHeader(majorUtf8String, byteLen);
+        cursor += buf.write(s, cursor);
+    }
+    else {
+        const maxBytes = len * 3;
+        ensure(maxBytes + 9);
+        const headerPos = cursor;
+        const result = textEncoder.encodeInto(s, buf.subarray(headerPos + 9));
+        const byteLen = result.written;
+        let headerSize;
+        if (byteLen < 24) {
+            headerSize = 1;
+        }
+        else if (byteLen < 256) {
+            headerSize = 2;
+        }
+        else if (byteLen < 65536) {
+            headerSize = 3;
+        }
+        else if (byteLen < 4294967296) {
+            headerSize = 5;
+        }
+        else {
+            headerSize = 9;
+        }
+        if (headerSize < 9) {
+            buf.copyWithin(headerPos + headerSize, headerPos + 9, headerPos + 9 + byteLen);
+        }
+        cursor = headerPos;
+        encodeHeader(majorUtf8String, byteLen);
+        cursor += byteLen;
+    }
+}
+function writeFloat64(value) {
+    ensure(9);
+    buf[cursor++] = (majorSpecial << 5) | extendedFloat64;
+    view.setFloat64(cursor, value);
+    cursor += 8;
+}
+function writeInteger(value) {
+    ensure(9);
+    const nonNegative = value >= 0;
+    const major = nonNegative ? majorUint64 : majorNegativeInt64;
+    const abs = nonNegative ? value : -value - 1;
+    encodeHeader(major, abs);
+}
+function writeBigInt(value) {
+    const nonNegative = value >= 0;
+    const major = nonNegative ? majorUint64 : majorNegativeInt64;
+    const abs = nonNegative ? value : -value - BigInt(1);
+    if (abs < BigInt("18446744073709551616")) {
+        ensure(9);
+        encodeBigHeader(major, abs);
+    }
+    else {
+        const binaryStr = abs.toString(2);
+        const byteLen = Math.ceil(binaryStr.length / 8);
+        const bigIntBytes = new Uint8Array(byteLen);
+        let b = abs;
+        for (let i = byteLen - 1; i >= 0; --i) {
+            bigIntBytes[i] = Number(b & BigInt(255));
+            b >>= BigInt(8);
+        }
+        ensure(byteLen + 16);
+        buf[cursor++] = nonNegative ? 0b110_00010 : 0b110_00011;
+        encodeHeader(majorUnstructuredByteString, byteLen);
+        buf.set(bigIntBytes, cursor);
+        cursor += byteLen;
+    }
+}
+function writeBytes(data) {
+    ensure(data.length + 9);
+    encodeHeader(majorUnstructuredByteString, data.length);
+    buf.set(data, cursor);
+    cursor += data.length;
+}
+function writeTag(tagValue, innerValue) {
+    ensure(9);
+    if (typeof tagValue === "bigint") {
+        encodeBigHeader(majorTag, tagValue);
+    }
+    else {
+        encodeHeader(majorTag, tagValue);
+    }
+    writeUntypedValue(innerValue);
+}
+function writeNumericValue(nv) {
+    const decimalIndex = nv.string.indexOf(".");
+    const exponent = decimalIndex === -1 ? 0 : decimalIndex - nv.string.length + 1;
+    const mantissa = BigInt(nv.string.replace(".", ""));
+    ensure(9);
+    buf[cursor++] = 0b110_00100;
+    encodeHeader(majorList, 2);
+    ensure(9);
+    writeInteger(exponent);
+    writeBigInt(mantissa);
+}
+function writeTimestamp(date) {
+    ensure(18);
+    encodeHeader(majorTag, 1);
+    const epochSecs = date.getTime() / 1000;
+    if (Number.isInteger(epochSecs)) {
+        writeInteger(epochSecs);
+    }
+    else {
+        writeFloat64(epochSecs);
+    }
+}
+
+class CborShapeDeserializer2 extends SerdeContext {
+    read(schema, bytes) {
+        payload = bytes;
+        isBuffer = USE_BUFFER && bytes instanceof Buffer;
+        dataView = new DataView(bytes.buffer, bytes.byteOffset, bytes.byteLength);
+        pos = 0;
+        end = bytes.length;
+        cacheEpoch = (cacheEpoch + 1) & 0xffff;
+        return readValue(NormalizedSchema.of(schema));
+    }
+    readValue(_schema, value) {
+        return transformObject(NormalizedSchema.of(_schema), value);
+    }
+}
+const USE_BUFFER = typeof Buffer !== "undefined";
+const textDecoder = new TextDecoder();
+let payload = new Uint8Array(0);
+let isBuffer = false;
+let dataView = new DataView(new ArrayBuffer(0));
+let pos = 0;
+let end = 0;
+const STRING_CACHE_SIZE = 2048;
+const stringCache = new Array(STRING_CACHE_SIZE);
+const stringCacheEpochs = new Uint16Array(STRING_CACHE_SIZE);
+let cacheEpoch = 0;
+function readValue(ns) {
+    if (pos >= end) {
+        throw new Error("unexpected end of CBOR payload.");
+    }
+    const major = (payload[pos] & 0b1110_0000) >> 5;
+    const minor = payload[pos] & 0b0001_1111;
+    if (minor === minorIndefinite && major >= 2 && major <= 5) {
+        return readIndefinite(ns, major);
+    }
+    switch (major) {
+        case majorUint64:
+            return readUnsignedInt();
+        case majorNegativeInt64:
+            return readNegativeInt();
+        case majorUnstructuredByteString:
+            return readByteString();
+        case majorUtf8String:
+            return readUtf8String();
+        case majorList:
+            return readList(ns);
+        case majorMap:
+            return readMap(ns);
+        case majorTag:
+            return readTag();
+        case majorSpecial:
+            return readSpecial();
+        default:
+            throw new Error(`unexpected CBOR major type ${major}.`);
+    }
+}
+function readList(ns) {
+    const count = decodeCount();
+    const memberSchema = ns.isListSchema() ? ns.getValueSchema() : ns;
+    const list = Array(count);
+    for (let i = 0; i < count; ++i) {
+        list[i] = readValue(memberSchema);
+    }
+    return list;
+}
+function readMap(ns) {
+    const count = decodeCount();
+    if (ns.isStructSchema()) {
+        const startPos = pos;
+        return readStruct(ns, count, startPos);
+    }
+    const valueSchema = ns.isMapSchema() ? ns.getValueSchema() : ns;
+    const map = {};
+    for (let i = 0; i < count; ++i) {
+        const key = readUtf8String();
+        map[key] = readValue(valueSchema);
+    }
+    return map;
+}
+function readStruct(ns, count, startPos) {
+    const isUnion = ns.isUnionSchema();
+    const cache = loadCborStructIterator(ns);
+    const { memberSchemas, encodedKeys, memberNames } = cache;
+    const z = encodedKeys.length;
+    const result = {};
+    let unknownKey;
+    let unknownValue;
+    let unknownCount = 0;
+    let hasType = false;
+    let hint = 0;
+    for (let i = 0; i < count; ++i) {
+        const matchIdx = matchStructKey(encodedKeys, z, hint);
+        if (matchIdx >= 0) {
+            hint = matchIdx + 1;
+            if (hint >= z) {
+                hint = 0;
+            }
+            const val = readValue(memberSchemas[matchIdx]);
+            if (val != null) {
+                result[memberNames[matchIdx]] = val;
+            }
+        }
+        else {
+            const key = readUtf8String();
+            const val = readValue(NormalizedSchema.of(15));
+            if (key === "__type" && typeof val === "string") {
+                hasType = true;
+            }
+            else {
+                unknownKey = key;
+                unknownValue = val;
+                ++unknownCount;
+            }
+        }
+    }
+    if (isUnion) {
+        let resultEmpty = true;
+        for (const _ in result) {
+            resultEmpty = false;
+            break;
+        }
+        if (resultEmpty && unknownCount === 1) {
+            result.$unknown = [unknownKey, unknownValue];
+        }
+    }
+    else if (hasType) {
+        pos = startPos;
+        const docSchema = NormalizedSchema.of(15);
+        for (let i = 0; i < count; ++i) {
+            const key = readUtf8String();
+            const val = readValue(docSchema);
+            if (!(key in result)) {
+                result[key] = val;
+            }
+        }
+    }
+    return result;
+}
+function readTag(ns) {
+    const tagNum = decodeArgument();
+    const tagNumber = typeof tagNum === "bigint" ? Number(tagNum) : tagNum;
+    if (tagNumber === 1) {
+        const docSchema = NormalizedSchema.of(15);
+        const epochValue = readValue(docSchema);
+        return _parseEpochTimestamp(epochValue);
+    }
+    if (tagNumber === 2 || tagNumber === 3) {
+        const byteStr = readByteString();
+        let b = BigInt(0);
+        for (let i = 0; i < byteStr.length; ++i) {
+            b = (b << BigInt(8)) | BigInt(byteStr[i]);
+        }
+        return tagNumber === 3 ? -b - BigInt(1) : b;
+    }
+    if (tagNumber === 4) {
+        const docSchema = NormalizedSchema.of(15);
+        const pair = readValue(docSchema);
+        const [exponent, mantissa] = pair;
+        const normalizer = mantissa < 0 ? -1 : 1;
+        const mantissaStr = "0".repeat(Math.abs(exponent) + 1) + String(BigInt(normalizer) * BigInt(mantissa));
+        let numericString;
+        const sign = mantissa < 0 ? "-" : "";
+        numericString =
+            exponent === 0
+                ? mantissaStr
+                : mantissaStr.slice(0, mantissaStr.length + exponent) + "." + mantissaStr.slice(exponent);
+        numericString = numericString.replace(/^0+/g, "");
+        if (numericString === "") {
+            numericString = "0";
+        }
+        if (numericString[0] === ".") {
+            numericString = "0" + numericString;
+        }
+        numericString = sign + numericString;
+        return nv(numericString);
+    }
+    const docSchema = NormalizedSchema.of(15);
+    const innerValue = readValue(docSchema);
+    return { tag: castBigInt(tagNum), value: innerValue };
+}
+function readIndefinite(ns, major) {
+    switch (major) {
+        case majorUtf8String:
+            return readUtf8StringIndefinite();
+        case majorUnstructuredByteString:
+            return readByteStringIndefinite();
+        case majorList:
+            return readListIndefinite(ns);
+        case majorMap:
+            return readMapIndefinite(ns);
+        default:
+            throw new Error(`unexpected indefinite length for major ${major}.`);
+    }
+}
+function readUtf8StringIndefinite() {
+    pos += 1;
+    const chunks = [];
+    let totalLen = 0;
+    while (pos < end) {
+        if (payload[pos] === 0xff) {
+            pos += 1;
+            const combined = new Uint8Array(totalLen);
+            let offset = 0;
+            for (let i = 0; i < chunks.length; ++i) {
+                combined.set(chunks[i], offset);
+                offset += chunks[i].length;
+            }
+            if (USE_BUFFER) {
+                return Buffer.from(combined.buffer, combined.byteOffset, combined.byteLength).toString("utf-8");
+            }
+            return textDecoder.decode(combined);
+        }
+        const bytes = readByteString();
+        chunks.push(bytes);
+        totalLen += bytes.length;
+    }
+    throw new Error("expected break marker.");
+}
+function readByteStringIndefinite() {
+    pos += 1;
+    const chunks = [];
+    let totalLen = 0;
+    while (pos < end) {
+        if (payload[pos] === 0xff) {
+            pos += 1;
+            const combined = new Uint8Array(totalLen);
+            let offset = 0;
+            for (let i = 0; i < chunks.length; ++i) {
+                combined.set(chunks[i], offset);
+                offset += chunks[i].length;
+            }
+            return combined;
+        }
+        const bytes = readByteString();
+        chunks.push(bytes);
+        totalLen += bytes.length;
+    }
+    throw new Error("expected break marker.");
+}
+function readListIndefinite(ns) {
+    pos += 1;
+    const memberSchema = ns.isListSchema() ? ns.getValueSchema() : ns;
+    const list = [];
+    while (pos < end) {
+        if (payload[pos] === 0xff) {
+            pos += 1;
+            return list;
+        }
+        list.push(readValue(memberSchema));
+    }
+    throw new Error("expected break marker.");
+}
+function readMapIndefinite(ns) {
+    pos += 1;
+    if (ns.isStructSchema()) {
+        const cache = loadCborStructIterator(ns);
+        const { memberSchemas, encodedKeys, memberNames } = cache;
+        const z = encodedKeys.length;
+        const isUnion = ns.isUnionSchema();
+        const result = {};
+        let unknownKey;
+        let unknownValue;
+        let unknownCount = 0;
+        let hint = 0;
+        while (pos < end) {
+            if (payload[pos] === 0xff) {
+                pos += 1;
+                if (isUnion) {
+                    let resultEmpty = true;
+                    for (const _ in result) {
+                        resultEmpty = false;
+                        break;
+                    }
+                    if (resultEmpty && unknownCount === 1) {
+                        result.$unknown = [unknownKey, unknownValue];
+                    }
+                }
+                return result;
+            }
+            const matchIdx = matchStructKey(encodedKeys, z, hint);
+            if (matchIdx >= 0) {
+                hint = matchIdx + 1;
+                if (hint >= z) {
+                    hint = 0;
+                }
+                const val = readValue(memberSchemas[matchIdx]);
+                if (val != null) {
+                    result[memberNames[matchIdx]] = val;
+                }
+            }
+            else {
+                const key = readUtf8String();
+                const val = readValue(NormalizedSchema.of(15));
+                if (key !== "__type") {
+                    unknownKey = key;
+                    unknownValue = val;
+                    ++unknownCount;
+                }
+            }
+        }
+        throw new Error("expected break marker.");
+    }
+    const valueSchema = ns.isMapSchema() ? ns.getValueSchema() : ns;
+    const map = {};
+    while (pos < end) {
+        if (payload[pos] === 0xff) {
+            pos += 1;
+            return map;
+        }
+        const key = readUtf8String();
+        map[key] = readValue(valueSchema);
+    }
+    throw new Error("expected break marker.");
+}
+function matchStructKey(encodedKeys, z, hint) {
+    const hintKey = encodedKeys[hint];
+    if (pos + hintKey.length <= end && bytesMatch(pos, hintKey)) {
+        pos += hintKey.length;
+        return hint;
+    }
+    for (let i = 0; i < z; ++i) {
+        if (i === hint) {
+            continue;
+        }
+        const ek = encodedKeys[i];
+        if (pos + ek.length <= end && bytesMatch(pos, ek)) {
+            pos += ek.length;
+            return i;
+        }
+    }
+    return -1;
+}
+function bytesMatch(at, expected) {
+    const len = expected.length;
+    if (payload[at] !== expected[0]) {
+        return false;
+    }
+    for (let i = 1; i < len; ++i) {
+        if (payload[at + i] !== expected[i]) {
+            return false;
+        }
+    }
+    return true;
+}
+function decodeArgument() {
+    const minor = payload[pos] & 0b0001_1111;
+    if (minor < 24) {
+        pos += 1;
+        return minor;
+    }
+    switch (minor) {
+        case extendedOneByte:
+            if (end - pos < 2) {
+                overflow(1);
+            }
+            pos += 2;
+            return payload[pos - 1];
+        case extendedFloat16:
+            if (end - pos < 3) {
+                overflow(2);
+            }
+            pos += 3;
+            return dataView.getUint16(pos - 2);
+        case extendedFloat32:
+            if (end - pos < 5) {
+                overflow(4);
+            }
+            pos += 5;
+            return dataView.getUint32(pos - 4);
+        case extendedFloat64: {
+            if (end - pos < 9) {
+                overflow(8);
+            }
+            pos += 9;
+            const hi = dataView.getUint32(pos - 8);
+            if (hi < 0x00200000) {
+                return hi * 4294967296 + dataView.getUint32(pos - 4);
+            }
+            return dataView.getBigUint64(pos - 8);
+        }
+        default:
+            throw new Error(`unexpected minor value ${minor}.`);
+    }
+}
+function decodeCount() {
+    const val = decodeArgument();
+    return typeof val === "bigint" ? Number(val) : val;
+}
+function readUnsignedInt() {
+    const val = decodeArgument();
+    return castBigInt(val);
+}
+function readNegativeInt() {
+    const val = decodeArgument();
+    if (typeof val === "bigint") {
+        return BigInt(-1) - val;
+    }
+    return -1 - val;
+}
+function readByteString() {
+    const length = decodeCount();
+    if (end - pos < length) {
+        overflow(length);
+    }
+    const start = pos;
+    pos += length;
+    return payload.subarray(start, start + length);
+}
+function readUtf8String() {
+    const length = decodeCount();
+    if (end - pos < length) {
+        overflow(length);
+    }
+    const start = pos;
+    pos += length;
+    if (length < 24) {
+        return decodeUtf8Cached(start, length);
+    }
+    if (isBuffer) {
+        return payload.toString("utf-8", start, start + length);
+    }
+    return textDecoder.decode(payload.subarray(start, start + length));
+}
+function decodeUtf8Cached(at, length) {
+    let h = length;
+    for (let i = 0; i < length; ++i) {
+        h = (h * 31 + payload[at + i]) | 0;
+    }
+    const slot = (h >>> 0) & (STRING_CACHE_SIZE - 1);
+    const cached = stringCache[slot];
+    if (cached !== undefined && cached.length === length) {
+        let match = true;
+        for (let i = 0; i < length; ++i) {
+            if (cached.charCodeAt(i) !== payload[at + i]) {
+                match = false;
+                break;
+            }
+        }
+        if (match) {
+            stringCacheEpochs[slot] = cacheEpoch;
+            return cached;
+        }
+    }
+    const result = isBuffer
+        ? payload.toString("utf-8", at, at + length)
+        : textDecoder.decode(payload.subarray(at, at + length));
+    if (stringCacheEpochs[slot] !== cacheEpoch) {
+        stringCache[slot] = result;
+        stringCacheEpochs[slot] = cacheEpoch;
+    }
+    return result;
+}
+function readSpecial() {
+    const p = pos;
+    const minor = payload[p] & 0b0001_1111;
+    switch (minor) {
+        case specialTrue:
+            pos = p + 1;
+            return true;
+        case specialFalse:
+            pos = p + 1;
+            return false;
+        case specialNull:
+            pos = p + 1;
+            return null;
+        case specialUndefined:
+            pos = p + 1;
+            return null;
+        case extendedFloat16: {
+            if (end - p < 3) {
+                overflow(2);
+            }
+            pos = p + 3;
+            return bytesToFloat16(payload[p + 1], payload[p + 2]);
+        }
+        case extendedFloat32: {
+            if (end - p < 5) {
+                overflow(4);
+            }
+            pos = p + 5;
+            return dataView.getFloat32(p + 1);
+        }
+        case extendedFloat64: {
+            if (end - p < 9) {
+                overflow(8);
+            }
+            pos = p + 9;
+            return dataView.getFloat64(p + 1);
+        }
+        default:
+            throw new Error(`unexpected minor value ${minor} for major 7.`);
+    }
+}
+function bytesToFloat16(a, b) {
+    const sign = a >> 7;
+    const exponent = (a & 0b0111_1100) >> 2;
+    const fraction = ((a & 0b0000_0011) << 8) | b;
+    const scalar = sign === 0 ? 1 : -1;
+    if (exponent === 0b00000) {
+        if (fraction === 0) {
+            return 0;
+        }
+        return scalar * (Math.pow(2, 1 - 15) * (fraction / 1024));
+    }
+    else if (exponent === 0b11111) {
+        if (fraction === 0) {
+            return scalar * Infinity;
+        }
+        return NaN;
+    }
+    return scalar * (Math.pow(2, exponent - 15) * (1 + fraction / 1024));
+}
+function castBigInt(value) {
+    if (typeof value === "number") {
+        return value;
+    }
+    const num = Number(value);
+    if (Number.MIN_SAFE_INTEGER <= num && num <= Number.MAX_SAFE_INTEGER) {
+        return num;
+    }
+    return value;
+}
+function overflow(n) {
+    throw new Error(`CBOR: length ${n} greater than remaining buffer length.`);
+}
+function transformObject(ns, value) {
+    if (ns.isTimestampSchema()) {
+        if (typeof value === "number") {
+            return _parseEpochTimestamp(value);
+        }
+        if (typeof value === "object" && value !== null) {
+            if (value.tag === 1 && "value" in value) {
+                return _parseEpochTimestamp(value.value);
+            }
+        }
+    }
+    if (ns.isBlobSchema()) {
+        return value;
+    }
+    if (typeof value === "undefined" ||
+        typeof value === "boolean" ||
+        typeof value === "number" ||
+        typeof value === "string" ||
+        typeof value === "bigint" ||
+        typeof value === "symbol") {
+        return value;
+    }
+    if (typeof value !== "object" || value === null) {
+        return value;
+    }
+    if ("byteLength" in value) {
+        return value;
+    }
+    if (value instanceof Date) {
+        return value;
+    }
+    if (value instanceof NumericValue) {
+        return value;
+    }
+    if (ns.isDocumentSchema()) {
+        return value;
+    }
+    if (ns.isListSchema()) {
+        const memberSchema = ns.getValueSchema();
+        const out = [];
+        for (const item of value) {
+            out.push(transformObject(memberSchema, item));
+        }
+        return out;
+    }
+    const newObject = {};
+    if (ns.isMapSchema()) {
+        const targetSchema = ns.getValueSchema();
+        for (const key in value) {
+            newObject[key] = transformObject(targetSchema, value[key]);
+        }
+    }
+    else if (ns.isStructSchema()) {
+        const isUnion = ns.isUnionSchema();
+        let keys;
+        if (isUnion) {
+            keys = new Set();
+            for (const k in value) {
+                if (k !== "__type") {
+                    keys.add(k);
+                }
+            }
+        }
+        for (const [key, memberSchema] of ns.structIterator()) {
+            if (isUnion) {
+                keys.delete(key);
+            }
+            if (value[key] != null) {
+                newObject[key] = transformObject(memberSchema, value[key]);
+            }
+        }
+        if (isUnion && keys?.size === 1) {
+            let newObjectEmpty = true;
+            for (const _ in newObject) {
+                newObjectEmpty = false;
+                break;
+            }
+            if (newObjectEmpty) {
+                const k = keys.values().next().value;
+                newObject.$unknown = [k, value[k]];
+            }
+        }
+        else if (typeof value.__type === "string") {
+            for (const k in value) {
+                if (!(k in newObject)) {
+                    newObject[k] = value[k];
+                }
+            }
+        }
+    }
+    return newObject;
+}
+
 class CborCodec extends SerdeContext {
     createSerializer() {
-        const serializer = new CborShapeSerializer();
+        const serializer = new CborShapeSerializer2();
         serializer.setSerdeContext(this.serdeContext);
         return serializer;
     }
     createDeserializer() {
-        const deserializer = new CborShapeDeserializer();
+        const deserializer = new CborShapeDeserializer2();
         deserializer.setSerdeContext(this.serdeContext);
         return deserializer;
     }
 }
+
+class SmithyRpcV2CborProtocol extends RpcProtocol {
+    codec = new CborCodec();
+    serializer = this.codec.createSerializer();
+    deserializer = this.codec.createDeserializer();
+    constructor({ defaultNamespace, errorTypeRegistries, }) {
+        super({ defaultNamespace, errorTypeRegistries });
+    }
+    getShapeId() {
+        return "smithy.protocols#rpcv2Cbor";
+    }
+    getPayloadCodec() {
+        return this.codec;
+    }
+    async serializeRequest(operationSchema, input, context) {
+        const request = await super.serializeRequest(operationSchema, input, context);
+        Object.assign(request.headers, {
+            "content-type": this.getDefaultContentType(),
+            "smithy-protocol": "rpc-v2-cbor",
+            accept: this.getDefaultContentType(),
+        });
+        if (deref(operationSchema.input) === "unit") {
+            delete request.body;
+            delete request.headers["content-type"];
+        }
+        else {
+            if (!request.body) {
+                this.serializer.write(15, {});
+                request.body = this.serializer.flush();
+            }
+            try {
+                request.headers["content-length"] = String(request.body.byteLength);
+            }
+            catch (ignored) { }
+        }
+        const { service, operation } = getSmithyContext(context);
+        const path = `/service/${service}/operation/${operation}`;
+        if (request.path.endsWith("/")) {
+            request.path += path.slice(1);
+        }
+        else {
+            request.path += path;
+        }
+        return request;
+    }
+    async deserializeResponse(operationSchema, context, response) {
+        return super.deserializeResponse(operationSchema, context, response);
+    }
+    async handleError(operationSchema, context, response, dataObject, metadata) {
+        const errorName = loadSmithyRpcV2CborErrorCode(response, dataObject) ?? "Unknown";
+        const errorMetadata = {
+            $metadata: metadata,
+            $fault: response.statusCode <= 500 ? "client" : "server",
+        };
+        let namespace = this.options.defaultNamespace;
+        if (errorName.includes("#")) {
+            [namespace] = errorName.split("#");
+        }
+        const registry = this.compositeErrorRegistry;
+        const nsRegistry = TypeRegistry.for(namespace);
+        registry.copyFrom(nsRegistry);
+        let errorSchema;
+        try {
+            errorSchema = registry.getSchema(errorName);
+        }
+        catch (ignored) {
+            if (dataObject.Message) {
+                dataObject.message = dataObject.Message;
+            }
+            const syntheticRegistry = TypeRegistry.for("smithy.ts.sdk.synthetic." + namespace);
+            registry.copyFrom(syntheticRegistry);
+            const baseExceptionSchema = registry.getBaseException();
+            if (baseExceptionSchema) {
+                const ErrorCtor = registry.getErrorCtor(baseExceptionSchema);
+                throw Object.assign(new ErrorCtor({ name: errorName }), errorMetadata, dataObject);
+            }
+            throw Object.assign(new Error(errorName), errorMetadata, dataObject);
+        }
+        const ns = NormalizedSchema.of(errorSchema);
+        const ErrorCtor = registry.getErrorCtor(errorSchema);
+        const message = dataObject.message ?? dataObject.Message ?? "Unknown";
+        const exception = new ErrorCtor({});
+        const output = {};
+        for (const [name, member] of ns.structIterator()) {
+            output[name] = this.deserializer.readValue(member, dataObject[name]);
+        }
+        throw Object.assign(exception, errorMetadata, {
+            $fault: ns.getMergedTraits().error,
+            message,
+        }, output);
+    }
+    getDefaultContentType() {
+        return "application/cbor";
+    }
+}
+
 class CborShapeSerializer extends SerdeContext {
     value;
     write(schema, value) {
@@ -20217,6 +21896,14 @@ class CborShapeSerializer extends SerdeContext {
                 }
             }
             else if (ns.isDocumentSchema()) {
+                if (Array.isArray(sourceObject)) {
+                    const newArray = [];
+                    let i = 0;
+                    for (const item of sourceObject) {
+                        newArray[i++] = this.serialize(ns.getValueSchema(), item);
+                    }
+                    return newArray;
+                }
                 for (const key in sourceObject) {
                     newObject[key] = this.serialize(ns.getValueSchema(), sourceObject[key]);
                 }
@@ -20234,6 +21921,7 @@ class CborShapeSerializer extends SerdeContext {
         return buffer;
     }
 }
+
 class CborShapeDeserializer extends SerdeContext {
     read(schema, bytes) {
         const data = cbor.deserialize(bytes);
@@ -20344,104 +22032,11 @@ class CborShapeDeserializer extends SerdeContext {
     }
 }
 
-class SmithyRpcV2CborProtocol extends RpcProtocol {
-    codec = new CborCodec();
-    serializer = this.codec.createSerializer();
-    deserializer = this.codec.createDeserializer();
-    constructor({ defaultNamespace, errorTypeRegistries, }) {
-        super({ defaultNamespace, errorTypeRegistries });
-    }
-    getShapeId() {
-        return "smithy.protocols#rpcv2Cbor";
-    }
-    getPayloadCodec() {
-        return this.codec;
-    }
-    async serializeRequest(operationSchema, input, context) {
-        const request = await super.serializeRequest(operationSchema, input, context);
-        Object.assign(request.headers, {
-            "content-type": this.getDefaultContentType(),
-            "smithy-protocol": "rpc-v2-cbor",
-            accept: this.getDefaultContentType(),
-        });
-        if (deref(operationSchema.input) === "unit") {
-            delete request.body;
-            delete request.headers["content-type"];
-        }
-        else {
-            if (!request.body) {
-                this.serializer.write(15, {});
-                request.body = this.serializer.flush();
-            }
-            try {
-                request.headers["content-length"] = String(request.body.byteLength);
-            }
-            catch (e) { }
-        }
-        const { service, operation } = getSmithyContext(context);
-        const path = `/service/${service}/operation/${operation}`;
-        if (request.path.endsWith("/")) {
-            request.path += path.slice(1);
-        }
-        else {
-            request.path += path;
-        }
-        return request;
-    }
-    async deserializeResponse(operationSchema, context, response) {
-        return super.deserializeResponse(operationSchema, context, response);
-    }
-    async handleError(operationSchema, context, response, dataObject, metadata) {
-        const errorName = loadSmithyRpcV2CborErrorCode(response, dataObject) ?? "Unknown";
-        const errorMetadata = {
-            $metadata: metadata,
-            $fault: response.statusCode <= 500 ? "client" : "server",
-        };
-        let namespace = this.options.defaultNamespace;
-        if (errorName.includes("#")) {
-            [namespace] = errorName.split("#");
-        }
-        const registry = this.compositeErrorRegistry;
-        const nsRegistry = TypeRegistry.for(namespace);
-        registry.copyFrom(nsRegistry);
-        let errorSchema;
-        try {
-            errorSchema = registry.getSchema(errorName);
-        }
-        catch (e) {
-            if (dataObject.Message) {
-                dataObject.message = dataObject.Message;
-            }
-            const syntheticRegistry = TypeRegistry.for("smithy.ts.sdk.synthetic." + namespace);
-            registry.copyFrom(syntheticRegistry);
-            const baseExceptionSchema = registry.getBaseException();
-            if (baseExceptionSchema) {
-                const ErrorCtor = registry.getErrorCtor(baseExceptionSchema);
-                throw Object.assign(new ErrorCtor({ name: errorName }), errorMetadata, dataObject);
-            }
-            throw Object.assign(new Error(errorName), errorMetadata, dataObject);
-        }
-        const ns = NormalizedSchema.of(errorSchema);
-        const ErrorCtor = registry.getErrorCtor(errorSchema);
-        const message = dataObject.message ?? dataObject.Message ?? "Unknown";
-        const exception = new ErrorCtor({});
-        const output = {};
-        for (const [name, member] of ns.structIterator()) {
-            output[name] = this.deserializer.readValue(member, dataObject[name]);
-        }
-        throw Object.assign(exception, errorMetadata, {
-            $fault: ns.getMergedTraits().error,
-            message,
-        }, output);
-    }
-    getDefaultContentType() {
-        return "application/cbor";
-    }
-}
-
 exports.CborCodec = CborCodec;
 exports.CborShapeDeserializer = CborShapeDeserializer;
+exports.CborShapeDeserializer2 = CborShapeDeserializer2;
 exports.CborShapeSerializer = CborShapeSerializer;
+exports.CborShapeSerializer2 = CborShapeSerializer2;
 exports.SmithyRpcV2CborProtocol = SmithyRpcV2CborProtocol;
 exports.buildHttpRpcRequest = buildHttpRpcRequest;
 exports.cbor = cbor;
@@ -22135,6 +23730,23 @@ const _json = (obj) => {
     return obj;
 };
 
+function makeBuilder(common, service, name, ep) {
+    return function makeCommand(added, plugins, op, $, smithyContext = {}) {
+        const epMerged = Object.assign({}, common, added);
+        return Command.classBuilder()
+            .ep(epMerged)
+            .m(function (CommandCtor, clientStack, config, options) {
+            const list = plugins.call(this, CommandCtor, clientStack, config, options);
+            list.unshift(ep(config, CommandCtor.getEndpointParameterInstructions()));
+            return list;
+        })
+            .s(service, op, smithyContext)
+            .n(name, op.charAt(0).toUpperCase() + op.slice(1) + "Command")
+            .sc($)
+            .build();
+    };
+}
+
 exports.Client = Client;
 exports.Command = Command;
 exports.NoOpLogger = NoOpLogger;
@@ -22159,6 +23771,7 @@ exports.invalidFunction = invalidFunction;
 exports.invalidProvider = invalidProvider;
 exports.isSerializableHeaderValue = isSerializableHeaderValue;
 exports.loadConfigsForDefaultMode = loadConfigsForDefaultMode;
+exports.makeBuilder = makeBuilder;
 exports.map = map;
 exports.resolveChecksumRuntimeConfig = resolveChecksumRuntimeConfig;
 exports.resolveDefaultRuntimeConfig = resolveDefaultRuntimeConfig;
@@ -22386,7 +23999,7 @@ const getConfigFilepath = () => process.env[ENV_CONFIG_PATH] || join(getHomeDir(
 const ENV_CREDENTIALS_PATH = "AWS_SHARED_CREDENTIALS_FILE";
 const getCredentialsFilepath = () => process.env[ENV_CREDENTIALS_PATH] || join(getHomeDir(), ".aws", "credentials");
 
-const prefixKeyRegex = /^([\w-]+)\s(["'])?([\w-@\+\.%:/]+)\2$/;
+const prefixKeyRegex = /^([\w-]+)\s(["'])?([\w-@+.%:/]+)\2$/;
 const profileNameBlockList = ["__proto__", "profile __proto__"];
 const parseIni = (iniData) => {
     const map = {};
@@ -22534,7 +24147,7 @@ function getSelectorName(functionString) {
         constants.delete("ENV");
         return [...constants].join(", ");
     }
-    catch (e) {
+    catch (ignored) {
         return functionString;
     }
 }
@@ -22838,7 +24451,7 @@ const getResolvedSigningRegion = (hostname, { signingRegion, regionRegex, useFip
 
 const getRegionInfo = (region, { useFipsEndpoint = false, useDualstackEndpoint = false, signingService, regionHash, partitionHash, }) => {
     const partition = getResolvedPartition(region, { partitionHash });
-    const resolvedRegion = region in regionHash ? region : partitionHash[partition]?.endpoint ?? region;
+    const resolvedRegion = region in regionHash ? region : (partitionHash[partition]?.endpoint ?? region);
     const hostnameOptions = { useFipsEndpoint, useDualstackEndpoint };
     const regionHostname = getHostnameFromVariants(regionHash[resolvedRegion]?.variants, hostnameOptions);
     const partitionHostname = getHostnameFromVariants(partitionHash[partition]?.variants, hostnameOptions);
@@ -22963,7 +24576,7 @@ exports.resolveRegionConfig = resolveRegionConfig;
 /***/ 2085:
 /***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
-const { CONFIG_PREFIX_SEPARATOR, loadConfig } = __nccwpck_require__(7291);
+const { CONFIG_PREFIX_SEPARATOR, booleanSelector, SelectorType, loadConfig } = __nccwpck_require__(7291);
 const { toEndpointV1, getSmithyContext, normalizeProvider, isValidHostLabel } = __nccwpck_require__(4534);
 exports.isValidHostLabel = isValidHostLabel;
 exports.middlewareEndpointToEndpointV1 = toEndpointV1;
@@ -22984,14 +24597,16 @@ const getEndpointUrlConfig = (serviceId) => ({
         return undefined;
     },
     configFileSelector: (profile, config) => {
-        if (config && profile.services) {
-            const servicesSection = config[["services", profile.services].join(CONFIG_PREFIX_SEPARATOR)];
-            if (servicesSection) {
-                const servicePrefixParts = serviceId.split(" ").map((w) => w.toLowerCase());
-                const endpointUrl = servicesSection[[servicePrefixParts.join("_"), CONFIG_ENDPOINT_URL].join(CONFIG_PREFIX_SEPARATOR)];
-                if (endpointUrl)
-                    return endpointUrl;
+        if (profile.services) {
+            const servicesSectionKey = ["services", profile.services].join(CONFIG_PREFIX_SEPARATOR);
+            if (!config || !config[servicesSectionKey]) {
+                throw new Error(`The services section "${profile.services}" specified in the profile is not present in the shared configuration file.`);
             }
+            const servicesSection = config[servicesSectionKey];
+            const servicePrefixParts = serviceId.split(" ").map((w) => w.toLowerCase());
+            const endpointUrl = servicesSection[[servicePrefixParts.join("_"), CONFIG_ENDPOINT_URL].join(CONFIG_PREFIX_SEPARATOR)];
+            if (endpointUrl)
+                return endpointUrl;
         }
         const endpointUrl = profile[CONFIG_ENDPOINT_URL];
         if (endpointUrl)
@@ -23001,7 +24616,21 @@ const getEndpointUrlConfig = (serviceId) => ({
     default: undefined,
 });
 
-const getEndpointFromConfig = async (serviceId) => loadConfig(getEndpointUrlConfig(serviceId ?? ""))();
+const ENV_IGNORE_CONFIGURED_ENDPOINT_URLS = "AWS_IGNORE_CONFIGURED_ENDPOINT_URLS";
+const CONFIG_IGNORE_CONFIGURED_ENDPOINT_URLS = "ignore_configured_endpoint_urls";
+const ignoreConfiguredEndpointUrlsConfigSelectors = {
+    environmentVariableSelector: (env) => booleanSelector(env, ENV_IGNORE_CONFIGURED_ENDPOINT_URLS, SelectorType.ENV),
+    configFileSelector: (profile) => booleanSelector(profile, CONFIG_IGNORE_CONFIGURED_ENDPOINT_URLS, SelectorType.CONFIG),
+    default: false,
+};
+
+const getEndpointFromConfig = async (serviceId) => {
+    const ignore = await loadConfig(ignoreConfiguredEndpointUrlsConfigSelectors)();
+    if (ignore) {
+        return undefined;
+    }
+    return loadConfig(getEndpointUrlConfig(serviceId ?? ""))();
+};
 
 const resolveParamsForS3 = async (endpointParams) => {
     const bucket = endpointParams?.Bucket || "";
@@ -23025,7 +24654,7 @@ const resolveParamsForS3 = async (endpointParams) => {
     }
     return endpointParams;
 };
-const DOMAIN_PATTERN = /^[a-z0-9][a-z0-9\.\-]{1,61}[a-z0-9]$/;
+const DOMAIN_PATTERN = /^[a-z0-9][a-z0-9.-]{1,61}[a-z0-9]$/;
 const IP_ADDRESS_PATTERN = /(\d+\.){3}\d+/;
 const DOTS_PATTERN = /\.\./;
 const isDnsCompatibleBucketName = (bucketName) => DOMAIN_PATTERN.test(bucketName) && !IP_ADDRESS_PATTERN.test(bucketName) && !DOTS_PATTERN.test(bucketName);
@@ -23092,7 +24721,7 @@ const createConfigValueProvider = (configKey, canonicalEndpointParamKey, config,
 
 function bindGetEndpointFromInstructions(getEndpointFromConfig) {
     return async (commandInput, instructionsSupplier, clientConfig, context) => {
-        if (!clientConfig.isCustomEndpoint) {
+        if (!clientConfig.isCustomEndpoint && !clientConfig.ignoreConfiguredEndpointUrls) {
             let endpointFromConfig;
             if (clientConfig.serviceConfiguredEndpoint) {
                 endpointFromConfig = await clientConfig.serviceConfiguredEndpoint();
@@ -23103,6 +24732,7 @@ function bindGetEndpointFromInstructions(getEndpointFromConfig) {
             if (endpointFromConfig) {
                 clientConfig.endpoint = () => Promise.resolve(toEndpointV1(endpointFromConfig));
                 clientConfig.isCustomEndpoint = true;
+                context?.logger?.debug?.(`@smithy/core/endpoints - resolved endpoint from config: ${endpointFromConfig}`);
             }
         }
         const endpointParams = await resolveParams(commandInput, instructionsSupplier, clientConfig);
@@ -23233,6 +24863,7 @@ function bindResolveEndpointConfig(getEndpointFromConfig) {
             isCustomEndpoint,
             useDualstackEndpoint: normalizeProvider(useDualstackEndpoint ?? false),
             useFipsEndpoint: normalizeProvider(useFipsEndpoint ?? false),
+            ignoreConfiguredEndpointUrls: !!input.ignoreConfiguredEndpointUrls,
         });
         let configuredEndpointPromise = undefined;
         resolvedConfig.serviceConfiguredEndpoint = async () => {
@@ -23414,7 +25045,7 @@ const parseURL = (value) => {
             }
             return new URL(value);
         }
-        catch (error) {
+        catch (ignored) {
             return null;
         }
     })();
@@ -23831,6 +25462,7 @@ exports.resolveParams = resolveParams;
 const { Crc32 } = __nccwpck_require__(9542);
 const { toHex, fromHex, toUtf8, fromUtf8 } = __nccwpck_require__(2430);
 const { Readable } = __nccwpck_require__(7075);
+const { TypeRegistry } = __nccwpck_require__(6890);
 
 class Int64 {
     bytes;
@@ -23900,27 +25532,27 @@ class HeaderMarshaller {
     formatHeaderValue(header) {
         switch (header.type) {
             case "boolean":
-                return Uint8Array.from([header.value ? 0 : 1]);
+                return Uint8Array.from([header.value ? HEADER_VALUE_TYPE.boolTrue : HEADER_VALUE_TYPE.boolFalse]);
             case "byte":
-                return Uint8Array.from([2, header.value]);
+                return Uint8Array.from([HEADER_VALUE_TYPE.byte, header.value]);
             case "short":
                 const shortView = new DataView(new ArrayBuffer(3));
-                shortView.setUint8(0, 3);
+                shortView.setUint8(0, HEADER_VALUE_TYPE.short);
                 shortView.setInt16(1, header.value, false);
                 return new Uint8Array(shortView.buffer);
             case "integer":
                 const intView = new DataView(new ArrayBuffer(5));
-                intView.setUint8(0, 4);
+                intView.setUint8(0, HEADER_VALUE_TYPE.integer);
                 intView.setInt32(1, header.value, false);
                 return new Uint8Array(intView.buffer);
             case "long":
                 const longBytes = new Uint8Array(9);
-                longBytes[0] = 5;
+                longBytes[0] = HEADER_VALUE_TYPE.long;
                 longBytes.set(header.value.bytes, 1);
                 return longBytes;
             case "binary":
                 const binView = new DataView(new ArrayBuffer(3 + header.value.byteLength));
-                binView.setUint8(0, 6);
+                binView.setUint8(0, HEADER_VALUE_TYPE.byteArray);
                 binView.setUint16(1, header.value.byteLength, false);
                 const binBytes = new Uint8Array(binView.buffer);
                 binBytes.set(header.value, 3);
@@ -23928,14 +25560,14 @@ class HeaderMarshaller {
             case "string":
                 const utf8Bytes = this.fromUtf8(header.value);
                 const strView = new DataView(new ArrayBuffer(3 + utf8Bytes.byteLength));
-                strView.setUint8(0, 7);
+                strView.setUint8(0, HEADER_VALUE_TYPE.string);
                 strView.setUint16(1, utf8Bytes.byteLength, false);
                 const strBytes = new Uint8Array(strView.buffer);
                 strBytes.set(utf8Bytes, 3);
                 return strBytes;
             case "timestamp":
                 const tsBytes = new Uint8Array(9);
-                tsBytes[0] = 8;
+                tsBytes[0] = HEADER_VALUE_TYPE.timestamp;
                 tsBytes.set(Int64.fromNumber(header.value.valueOf()).bytes, 1);
                 return tsBytes;
             case "uuid":
@@ -23943,8 +25575,8 @@ class HeaderMarshaller {
                     throw new Error(`Invalid UUID received: ${header.value}`);
                 }
                 const uuidBytes = new Uint8Array(17);
-                uuidBytes[0] = 9;
-                uuidBytes.set(fromHex(header.value.replace(/\-/g, "")), 1);
+                uuidBytes[0] = HEADER_VALUE_TYPE.uuid;
+                uuidBytes.set(fromHex(header.value.replace(/-/g, "")), 1);
                 return uuidBytes;
         }
     }
@@ -23956,46 +25588,46 @@ class HeaderMarshaller {
             const name = this.toUtf8(new Uint8Array(headers.buffer, headers.byteOffset + position, nameLength));
             position += nameLength;
             switch (headers.getUint8(position++)) {
-                case 0:
+                case HEADER_VALUE_TYPE.boolTrue:
                     out[name] = {
                         type: BOOLEAN_TAG,
                         value: true,
                     };
                     break;
-                case 1:
+                case HEADER_VALUE_TYPE.boolFalse:
                     out[name] = {
                         type: BOOLEAN_TAG,
                         value: false,
                     };
                     break;
-                case 2:
+                case HEADER_VALUE_TYPE.byte:
                     out[name] = {
                         type: BYTE_TAG,
                         value: headers.getInt8(position++),
                     };
                     break;
-                case 3:
+                case HEADER_VALUE_TYPE.short:
                     out[name] = {
                         type: SHORT_TAG,
                         value: headers.getInt16(position, false),
                     };
                     position += 2;
                     break;
-                case 4:
+                case HEADER_VALUE_TYPE.integer:
                     out[name] = {
                         type: INT_TAG,
                         value: headers.getInt32(position, false),
                     };
                     position += 4;
                     break;
-                case 5:
+                case HEADER_VALUE_TYPE.long:
                     out[name] = {
                         type: LONG_TAG,
                         value: new Int64(new Uint8Array(headers.buffer, headers.byteOffset + position, 8)),
                     };
                     position += 8;
                     break;
-                case 6:
+                case HEADER_VALUE_TYPE.byteArray:
                     const binaryLength = headers.getUint16(position, false);
                     position += 2;
                     out[name] = {
@@ -24004,7 +25636,7 @@ class HeaderMarshaller {
                     };
                     position += binaryLength;
                     break;
-                case 7:
+                case HEADER_VALUE_TYPE.string:
                     const stringLength = headers.getUint16(position, false);
                     position += 2;
                     out[name] = {
@@ -24013,14 +25645,14 @@ class HeaderMarshaller {
                     };
                     position += stringLength;
                     break;
-                case 8:
+                case HEADER_VALUE_TYPE.timestamp:
                     out[name] = {
                         type: TIMESTAMP_TAG,
                         value: new Date(new Int64(new Uint8Array(headers.buffer, headers.byteOffset + position, 8)).valueOf()),
                     };
                     position += 8;
                     break;
-                case 9:
+                case HEADER_VALUE_TYPE.uuid:
                     const uuidBytes = new Uint8Array(headers.buffer, headers.byteOffset + position, 16);
                     position += 16;
                     out[name] = {
@@ -24446,12 +26078,14 @@ class EventStreamSerde {
     deserializer;
     serdeContext;
     defaultContentType;
-    constructor({ marshaller, serializer, deserializer, serdeContext, defaultContentType, }) {
+    compositeErrorRegistry;
+    constructor({ marshaller, serializer, deserializer, serdeContext, defaultContentType, compositeErrorRegistry, }) {
         this.marshaller = marshaller;
         this.serializer = serializer;
         this.deserializer = deserializer;
         this.serdeContext = serdeContext;
         this.defaultContentType = defaultContentType;
+        this.compositeErrorRegistry = compositeErrorRegistry;
     }
     async serializeEventStream({ eventStream, requestSchema, initialRequest, }) {
         const marshaller = this.marshaller;
@@ -24567,16 +26201,9 @@ class EventStreamSerde {
                             }
                         }
                     }
-                    if (hasBindings) {
-                        return {
-                            [unionMember]: out,
-                        };
-                    }
-                    if (body.byteLength === 0) {
-                        return {
-                            [unionMember]: {},
-                        };
-                    }
+                    return {
+                        [unionMember]: await this.readEventMember(eventStreamSchema, body, hasBindings, out),
+                    };
                 }
                 return {
                     [unionMember]: await this.deserializer.read(eventStreamSchema, body),
@@ -24615,6 +26242,33 @@ class EventStreamSerde {
                 }
             },
         };
+    }
+    async readEventMember(eventStreamSchema, body, hasBindings, out) {
+        let ErrCtor;
+        const staticStructuralSchema = eventStreamSchema.getSchema();
+        if (Array.isArray(staticStructuralSchema) && staticStructuralSchema[0] === -3) {
+            const namespace = staticStructuralSchema[1];
+            const nsRegistry = TypeRegistry.for(namespace);
+            this.compositeErrorRegistry?.copyFrom(nsRegistry);
+            ErrCtor = (this.compositeErrorRegistry ?? nsRegistry)?.getErrorCtor(staticStructuralSchema);
+        }
+        const dataObject = hasBindings
+            ? out
+            : body.byteLength === 0
+                ? {}
+                : await this.deserializer.read(eventStreamSchema, body);
+        if (ErrCtor) {
+            const message = dataObject.message ?? dataObject.Message ?? "Unknown";
+            const metadata = {};
+            const $fault = eventStreamSchema.getMergedTraits().error;
+            if ($fault) {
+                metadata.$fault = $fault;
+            }
+            return Object.assign(new ErrCtor({}), metadata, {
+                message,
+            }, dataObject);
+        }
+        return dataObject;
     }
     writeEventBody(unionMember, unionSchema, event) {
         const serializer = this.serializer;
@@ -24884,6 +26538,7 @@ class HttpProtocol extends SerdeContext {
             deserializer: this.deserializer,
             serdeContext: this.serdeContext,
             defaultContentType: this.getDefaultContentType(),
+            compositeErrorRegistry: this.compositeErrorRegistry,
         });
     }
     resolveEventStreamMarshaller(importedProvider) {
@@ -25694,7 +27349,7 @@ function contentLengthMiddleware(bodyLengthChecker) {
                         [CONTENT_LENGTH_HEADER]: String(length),
                     };
                 }
-                catch (error) {
+                catch (ignored) {
                 }
             }
         }
@@ -25782,6 +27437,7 @@ const isStreamingPayload = (request) => request?.body instanceof Readable ||
     (typeof ReadableStream !== "undefined" && request?.body instanceof ReadableStream);
 
 const CLOCK_SKEW_ERROR_CODES = [
+    "AccessDeniedException",
     "AuthFailure",
     "InvalidSignatureException",
     "RequestExpired",
@@ -25958,7 +27614,7 @@ function bindRetryMiddleware(isStreamingPayload) {
                     try {
                         retryToken = await retryStrategy.refreshRetryTokenForRetry(retryToken, retryErrorInfo);
                     }
-                    catch (refreshError) {
+                    catch (ignoredRefreshError) {
                         if (!lastError.$metadata) {
                             lastError.$metadata = {};
                         }
@@ -26276,7 +27932,7 @@ let StandardRetryStrategy$1 = class StandardRetryStrategy {
         try {
             return await this.maxAttemptsProvider();
         }
-        catch (error) {
+        catch (ignored) {
             console.warn(`Max attempts provider could not resolve. Using default of ${DEFAULT_MAX_ATTEMPTS}`);
             return DEFAULT_MAX_ATTEMPTS;
         }
@@ -26403,7 +28059,7 @@ class StandardRetryStrategy {
         try {
             maxAttempts = await this.maxAttemptsProvider();
         }
-        catch (error) {
+        catch (ignored) {
             maxAttempts = DEFAULT_MAX_ATTEMPTS;
         }
         return maxAttempts;
@@ -26666,7 +28322,7 @@ const schemaDeserializationMiddleware = (config) => (next, context) => async (ar
             try {
                 error.message += "\n  " + hint;
             }
-            catch (e) {
+            catch (ignored) {
                 if (!context.logger || context.logger?.constructor?.name === "NoOpLogger") {
                     console.warn(hint);
                 }
@@ -26691,7 +28347,7 @@ const schemaDeserializationMiddleware = (config) => (next, context) => async (ar
                     };
                 }
             }
-            catch (e) {
+            catch (ignored) {
             }
         }
         throw error;
@@ -26765,8 +28421,6 @@ class Schema {
 
 class ListSchema extends Schema {
     static symbol = Symbol.for("@smithy/lis");
-    name;
-    traits;
     valueSchema;
     symbol = ListSchema.symbol;
 }
@@ -26779,8 +28433,6 @@ const list = (namespace, name, traits, valueSchema) => Schema.assign(new ListSch
 
 class MapSchema extends Schema {
     static symbol = Symbol.for("@smithy/map");
-    name;
-    traits;
     keySchema;
     valueSchema;
     symbol = MapSchema.symbol;
@@ -26795,8 +28447,6 @@ const map = (namespace, name, traits, keySchema, valueSchema) => Schema.assign(n
 
 class OperationSchema extends Schema {
     static symbol = Symbol.for("@smithy/ope");
-    name;
-    traits;
     input;
     output;
     symbol = OperationSchema.symbol;
@@ -26811,8 +28461,6 @@ const op = (namespace, name, traits, input, output) => Schema.assign(new Operati
 
 class StructureSchema extends Schema {
     static symbol = Symbol.for("@smithy/str");
-    name;
-    traits;
     memberNames;
     memberList;
     symbol = StructureSchema.symbol;
@@ -26830,7 +28478,7 @@ class ErrorSchema extends StructureSchema {
     ctor;
     symbol = ErrorSchema.symbol;
 }
-const error = (namespace, name, traits, memberNames, memberList, ctor) => Schema.assign(new ErrorSchema(), {
+const error = (namespace, name, traits, memberNames, memberList, _ctor) => Schema.assign(new ErrorSchema(), {
     name,
     namespace,
     traits,
@@ -27082,7 +28730,7 @@ class NormalizedSchema {
         const schema = this.getSchema();
         const memberSchema = isDoc
             ? 15
-            : schema[4] ?? 0;
+            : (schema[4] ?? 0);
         return member([memberSchema, 0], "key");
     }
     getValueSchema() {
@@ -27170,9 +28818,7 @@ const isStaticSchema = (sc) => Array.isArray(sc) && sc.length >= 5;
 
 class SimpleSchema extends Schema {
     static symbol = Symbol.for("@smithy/sim");
-    name;
     schemaRef;
-    traits;
     symbol = SimpleSchema.symbol;
 }
 const sim = (namespace, name, schemaRef, traits) => Schema.assign(new SimpleSchema(), {
@@ -27345,7 +28991,7 @@ const { createHmac, createHash, getRandomValues } = __nccwpck_require__(7598);
 const { ReadStream, lstatSync, fstatSync } = __nccwpck_require__(3024);
 const { HttpResponse } = __nccwpck_require__(4534);
 const { toEndpointV1 } = __nccwpck_require__(2085);
-const { Duplex, Readable, Writable, PassThrough } = __nccwpck_require__(7075);
+const { Readable, Writable, PassThrough } = __nccwpck_require__(7075);
 
 const isArrayBuffer = (arg) => (typeof ArrayBuffer === "function" && arg instanceof ArrayBuffer) ||
     Object.prototype.toString.call(arg) === "[object ArrayBuffer]";
@@ -27461,7 +29107,7 @@ function bindV4(getRandomValues) {
     };
 }
 
-const copyDocumentWithTransform = (source, schemaRef, transform = (_) => _) => source;
+const copyDocumentWithTransform = (source, _schemaRef, _transform = (_) => _) => source;
 
 const parseBoolean = (value) => {
     switch (value) {
@@ -27731,7 +29377,7 @@ const parseRfc3339DateTime = (value) => {
     const day = parseDateValue(dayStr, "day", 1, 31);
     return buildDate(year, month, day, { hours, minutes, seconds, fractionalMilliseconds });
 };
-const RFC3339_WITH_OFFSET$1 = new RegExp(/^(\d{4})-(\d{2})-(\d{2})[tT](\d{2}):(\d{2}):(\d{2})(?:\.(\d+))?(([-+]\d{2}\:\d{2})|[zZ])$/);
+const RFC3339_WITH_OFFSET$1 = new RegExp(/^(\d{4})-(\d{2})-(\d{2})[tT](\d{2}):(\d{2}):(\d{2})(?:\.(\d+))?(([-+]\d{2}:\d{2})|[zZ])$/);
 const parseRfc3339DateTimeWithOffset = (value) => {
     if (value === null || value === undefined) {
         return undefined;
@@ -28086,7 +29732,7 @@ const splitHeader = (value) => {
     });
 };
 
-const format = /^-?\d*(\.\d+)?$/;
+const format = /^-?((0|[1-9]\d*)(\.\d+)?|\.\d+)([eE][+-]?\d+)?$/;
 class NumericValue {
     string;
     type;
@@ -28094,7 +29740,7 @@ class NumericValue {
         this.string = string;
         this.type = type;
         if (!format.test(string)) {
-            throw new Error(`@smithy/core/serde - NumericValue must only contain [0-9], at most one decimal point ".", and an optional negation prefix "-".`);
+            throw new Error(`@smithy/core/serde - NumericValue string must conform to the Smithy bigDecimal format. Received: "${string}"`);
         }
     }
     toString() {
@@ -28223,7 +29869,7 @@ const deserializerMiddleware = (options, deserializer) => (next, context) => asy
             try {
                 error.message += "\n  " + hint;
             }
-            catch (e) {
+            catch (ignored) {
                 if (!context.logger || context.logger?.constructor?.name === "NoOpLogger") {
                     console.warn(hint);
                 }
@@ -28248,7 +29894,7 @@ const deserializerMiddleware = (options, deserializer) => (next, context) => asy
                     };
                 }
             }
-            catch (e) {
+            catch (ignored) {
             }
         }
         throw error;
@@ -28330,64 +29976,78 @@ function castSourceData(toCast, encoding) {
     return fromArrayBuffer(toCast);
 }
 
-let ChecksumStream$1 = class ChecksumStream extends Duplex {
+let ChecksumStream$1 = class ChecksumStream extends Readable {
     expectedChecksum;
     checksumSourceLocation;
     checksum;
     source;
     base64Encoder;
-    pendingCallback = null;
     constructor({ expectedChecksum, checksum, source, checksumSourceLocation, base64Encoder, }) {
         super();
-        if (typeof source.pipe === "function") {
-            this.source = source;
-        }
-        else {
+        if (typeof source.pipe !== "function") {
             throw new Error(`@smithy/util-stream: unsupported source type ${source?.constructor?.name ?? source} in ChecksumStream.`);
         }
+        this.source = source;
         this.base64Encoder = base64Encoder ?? toBase64$1;
         this.expectedChecksum = expectedChecksum;
         this.checksum = checksum;
         this.checksumSourceLocation = checksumSourceLocation;
-        this.source.pipe(this);
+        this.source.on("data", this.onSourceData);
+        this.source.on("end", this.onSourceEnd);
+        this.source.on("error", this.onSourceError);
+        this.source.on("close", this.onSourceClose);
+        this.source.pause();
     }
-    _read(size) {
-        if (this.pendingCallback) {
-            const callback = this.pendingCallback;
-            this.pendingCallback = null;
-            callback();
+    onSourceData = (chunk) => {
+        if (this.destroyed) {
+            return;
         }
-    }
-    _write(chunk, encoding, callback) {
         try {
             this.checksum.update(chunk);
-            const canPushMore = this.push(chunk);
-            if (!canPushMore) {
-                this.pendingCallback = callback;
-                return;
-            }
         }
         catch (e) {
-            return callback(e);
+            this.destroy(e);
+            return;
         }
-        return callback();
-    }
-    async _final(callback) {
+        if (!this.push(chunk)) {
+            this.source.pause();
+        }
+    };
+    onSourceEnd = async () => {
+        if (this.destroyed) {
+            return;
+        }
         try {
             const digest = await this.checksum.digest();
             const received = this.base64Encoder(digest);
             if (this.expectedChecksum !== received) {
-                return callback(new Error(`Checksum mismatch: expected "${this.expectedChecksum}" but received "${received}"` +
+                this.destroy(new Error(`Checksum mismatch: expected "${this.expectedChecksum}" but received "${received}"` +
                     ` in response header "${this.checksumSourceLocation}".`));
+                return;
             }
         }
         catch (e) {
-            return callback(e);
+            this.destroy(e);
+            return;
         }
         this.push(null);
-        return callback();
+    };
+    onSourceError = (error) => {
+        this.destroy(error);
+    };
+    onSourceClose = () => {
+        if (!this.destroyed && !this.source.readableEnded) {
+            this.destroy(new Error("Connection lost or stream closed before all data was received."));
+        }
+    };
+    _read(_size) {
+        this.source.resume();
     }
     _destroy(error, callback) {
+        this.source?.removeListener("data", this.onSourceData);
+        this.source?.removeListener("end", this.onSourceEnd);
+        this.source?.removeListener("error", this.onSourceError);
+        this.source?.removeListener("close", this.onSourceClose);
         this.source?.destroy();
         callback(error);
     }
@@ -28934,7 +30594,7 @@ const sdkStreamMixin = (stream) => {
         try {
             return sdkStreamMixin$1(stream);
         }
-        catch (e) {
+        catch (ignored) {
             const name = stream?.__proto__?.constructor?.name || stream;
             throw new Error(`Unexpected stream implementation, expect Stream.Readable instance, got ${name}`);
         }
@@ -29182,7 +30842,7 @@ const isValidHostLabel = (value, allowSubDomains = false) => {
 };
 
 function isValidHostname(hostname) {
-    const hostPattern = /^[a-z0-9][a-z0-9\.\-]*[a-z0-9]$/;
+    const hostPattern = /^[a-z0-9][a-z0-9.-]*[a-z0-9]$/;
     return hostPattern.test(hostname);
 }
 
@@ -30514,27 +32174,27 @@ class HeaderFormatter {
     formatHeaderValue(header) {
         switch (header.type) {
             case "boolean":
-                return Uint8Array.from([header.value ? 0 : 1]);
+                return Uint8Array.from([header.value ? HEADER_VALUE_TYPE.boolTrue : HEADER_VALUE_TYPE.boolFalse]);
             case "byte":
-                return Uint8Array.from([2, header.value]);
+                return Uint8Array.from([HEADER_VALUE_TYPE.byte, header.value]);
             case "short":
                 const shortView = new DataView(new ArrayBuffer(3));
-                shortView.setUint8(0, 3);
+                shortView.setUint8(0, HEADER_VALUE_TYPE.short);
                 shortView.setInt16(1, header.value, false);
                 return new Uint8Array(shortView.buffer);
             case "integer":
                 const intView = new DataView(new ArrayBuffer(5));
-                intView.setUint8(0, 4);
+                intView.setUint8(0, HEADER_VALUE_TYPE.integer);
                 intView.setInt32(1, header.value, false);
                 return new Uint8Array(intView.buffer);
             case "long":
                 const longBytes = new Uint8Array(9);
-                longBytes[0] = 5;
+                longBytes[0] = HEADER_VALUE_TYPE.long;
                 longBytes.set(header.value.bytes, 1);
                 return longBytes;
             case "binary":
                 const binView = new DataView(new ArrayBuffer(3 + header.value.byteLength));
-                binView.setUint8(0, 6);
+                binView.setUint8(0, HEADER_VALUE_TYPE.byteArray);
                 binView.setUint16(1, header.value.byteLength, false);
                 const binBytes = new Uint8Array(binView.buffer);
                 binBytes.set(header.value, 3);
@@ -30542,14 +32202,14 @@ class HeaderFormatter {
             case "string":
                 const utf8Bytes = fromUtf8(header.value);
                 const strView = new DataView(new ArrayBuffer(3 + utf8Bytes.byteLength));
-                strView.setUint8(0, 7);
+                strView.setUint8(0, HEADER_VALUE_TYPE.string);
                 strView.setUint16(1, utf8Bytes.byteLength, false);
                 const strBytes = new Uint8Array(strView.buffer);
                 strBytes.set(utf8Bytes, 3);
                 return strBytes;
             case "timestamp":
                 const tsBytes = new Uint8Array(9);
-                tsBytes[0] = 8;
+                tsBytes[0] = HEADER_VALUE_TYPE.timestamp;
                 tsBytes.set(Int64.fromNumber(header.value.valueOf()).bytes, 1);
                 return tsBytes;
             case "uuid":
@@ -30557,8 +32217,8 @@ class HeaderFormatter {
                     throw new Error(`Invalid UUID received: ${header.value}`);
                 }
                 const uuidBytes = new Uint8Array(17);
-                uuidBytes[0] = 9;
-                uuidBytes.set(fromHex(header.value.replace(/\-/g, "")), 1);
+                uuidBytes[0] = HEADER_VALUE_TYPE.uuid;
+                uuidBytes.set(fromHex(header.value.replace(/-/g, "")), 1);
                 return uuidBytes;
         }
     }
@@ -30772,7 +32432,7 @@ ${toHex(hashedRequest)}`;
         }
     }
     formatDate(now) {
-        const longDate = iso8601(now).replace(/[\-:]/g, "");
+        const longDate = iso8601(now).replace(/[-:]/g, "");
         return {
             longDate,
             shortDate: longDate.slice(0, 8),
