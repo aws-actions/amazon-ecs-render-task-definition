@@ -27,7 +27,7 @@
   "dependencies": {
     "@actions/core": "^2.0.2",
     "@aws-sdk/client-ecs": "^3.1076.0",
-    "tmp": "^0.2.6"
+    "tmp": "^0.2.7"
   },
   "devDependencies": {
     "@vercel/ncc": "^0.38.4",
