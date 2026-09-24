@@ -3829,7 +3829,7 @@ const commonParams = {
     UseDualStack: { type: "builtInParams", name: "useDualstackEndpoint" },
 };
 
-var version = "3.1105.0";
+var version = "3.1135.0";
 var packageInfo = {
 	version: version};
 
@@ -4421,6 +4421,7 @@ const _DEGSRes = "DescribeExpressGatewayServiceRequest";
 const _DEGSResc = "DescribeExpressGatewayServiceResponse";
 const _DEGSe = "DescribeExpressGatewayService";
 const _DES = "DeploymentEphemeralStorage";
+const _DESC = "DeploymentEarlySuccessCriteria";
 const _DL = "DevicesList";
 const _DLH = "DeploymentLifecycleHook";
 const _DLHD = "DeploymentLifecycleHookDetail";
@@ -4938,6 +4939,7 @@ const _cont = "container";
 const _conta = "containers";
 const _cou = "count";
 const _cp = "cpu";
+const _cr = "critical";
 const _d = "details";
 const _dA = "daemonArn";
 const _dAe = "deploymentArn";
@@ -5006,6 +5008,7 @@ const _eP = "entryPoint";
 const _eRA = "executionRoleArn";
 const _eS = "effectiveSettings";
 const _eSA = "executionStoppedAt";
+const _eSC = "earlySuccessCriteria";
 const _eSp = "ephemeralStorage";
 const _eVC = "efsVolumeConfiguration";
 const _en = "environment";
@@ -5049,9 +5052,10 @@ const _hD = "hookDetails";
 const _hE = "httpError";
 const _hI = "hookId";
 const _hL = "hardLimit";
-const _hP = "hostPath";
+const _hP = "healthyPercent";
 const _hPR = "hostPortRange";
-const _hPo = "hostPort";
+const _hPo = "hostPath";
+const _hPos = "hostPort";
 const _hS = "healthStatus";
 const _hTA = "hookTargetArn";
 const _he = "header";
@@ -5293,6 +5297,7 @@ const _sSA = "stabilityStatusAt";
 const _sSG = "serviceSecurityGroups";
 const _sSGB = "storageSizeGiB";
 const _sSR = "sourceServiceRevisions";
+const _sSRC = "sourceServiceRevisionCleanup";
 const _sSV = "stringSetValue";
 const _sSt = "stabilityStatus";
 const _sT = "startTimeout";
@@ -5362,6 +5367,8 @@ const _tT = "targetType";
 const _tTR = "testTrafficRules";
 const _tV = "targetValue";
 const _tVo = "tokenValue";
+const _tWDC = "totalWithoutDaemonCount";
+const _tWDIC = "totalWithoutDaemonInstanceCount";
 const _ta = "tags";
 const _tas = "tasks";
 const _task = "task";
@@ -5391,6 +5398,8 @@ const _ve = "version";
 const _vo = "volumes";
 const _w = "weight";
 const _wD = "workingDirectory";
+const _wDC = "withoutDaemonCount";
+const _wDIC = "withoutDaemonInstanceCount";
 const _xN = "xmlName";
 const n0 = "com.amazonaws.ecs";
 const _s_registry = TypeRegistry.for(_s);
@@ -5759,8 +5768,8 @@ var CreateClusterResponse$ = [3, n0, _CCRr,
 ];
 var CreateDaemonRequest$ = [3, n0, _CDR,
     0,
-    [_dNa, _dTDA, _cPAa, _cA, _dC, _ta, _pTr, _eECSMT, _eEC, _cT],
-    [0, 0, 64 | 0, 0, () => DaemonDeploymentConfiguration$, () => Tags, 0, 2, 2, 0], 3
+    [_dNa, _dTDA, _cPAa, _cA, _dC, _ta, _pTr, _eECSMT, _eEC, _cT, _cr],
+    [0, 0, 64 | 0, 0, () => DaemonDeploymentConfiguration$, () => Tags, 0, 2, 2, 0, 2], 3
 ];
 var CreateDaemonResponse$ = [3, n0, _CDRr,
     0,
@@ -5774,8 +5783,8 @@ var CreatedAt$ = [3, n0, _CA,
 ];
 var CreateExpressGatewayServiceRequest$ = [3, n0, _CEGSR,
     0,
-    [_iRA, _eRA, _sN, _cl, _hCP, _pC, _tRA, _nC, _cp, _me, _sTc, _ta, _tDA],
-    [0, 0, 0, 0, 0, [() => ExpressGatewayContainer$, 0], 0, () => ExpressGatewayServiceNetworkConfiguration$, 0, 0, () => ExpressGatewayScalingTarget$, () => Tags, 0], 1
+    [_iRA, _eRA, _sN, _cl, _hCP, _pC, _tRA, _nC, _cp, _me, _cAp, _sTc, _ta, _tDA],
+    [0, 0, 0, 0, 0, [() => ExpressGatewayContainer$, 0], 0, () => ExpressGatewayServiceNetworkConfiguration$, 0, 0, 0, () => ExpressGatewayScalingTarget$, () => Tags, 0], 1
 ];
 var CreateExpressGatewayServiceResponse$ = [3, n0, _CEGSRr,
     0,
@@ -5814,8 +5823,8 @@ var DaemonAlarmConfiguration$ = [3, n0, _DAC,
 ];
 var DaemonCapacityProvider$ = [3, n0, _DCP,
     0,
-    [_ar, _rCu],
-    [0, 1]
+    [_ar, _rCu, _wDC],
+    [0, 1, 1]
 ];
 var DaemonCircuitBreaker$ = [3, n0, _DCB,
     0,
@@ -5844,8 +5853,8 @@ var DaemonDeploymentAlarms$ = [3, n0, _DDA,
 ];
 var DaemonDeploymentCapacityProvider$ = [3, n0, _DDCP,
     0,
-    [_ar, _rIC, _dIC],
-    [0, 1, 1]
+    [_ar, _rIC, _wDIC, _dIC],
+    [0, 1, 1, 1]
 ];
 var DaemonDeploymentConfiguration$ = [3, n0, _DDC,
     0,
@@ -5854,8 +5863,8 @@ var DaemonDeploymentConfiguration$ = [3, n0, _DDC,
 ];
 var DaemonDeploymentRevisionDetail$ = [3, n0, _DDRD,
     0,
-    [_ar, _cPap, _tRIC, _tDIC],
-    [0, () => DaemonDeploymentCapacityProviderList, 1, 1]
+    [_ar, _cPap, _tRIC, _tWDIC, _tDIC],
+    [0, () => DaemonDeploymentCapacityProviderList, 1, 1, 1]
 ];
 var DaemonDeploymentSummary$ = [3, n0, _DDS,
     0,
@@ -5874,13 +5883,13 @@ var DaemonLinuxParameters$ = [3, n0, _DLP,
 ];
 var DaemonRevision$ = [3, n0, _DR,
     0,
-    [_dRA, _cA, _dA, _dTDA, _cAr, _cI, _pTr, _eECSMT, _eEC],
-    [0, 0, 0, 0, 4, () => DaemonContainerImages, 0, 2, 2]
+    [_dRA, _cA, _dA, _dTDA, _cAr, _cI, _pTr, _eECSMT, _eEC, _cr],
+    [0, 0, 0, 0, 4, () => DaemonContainerImages, 0, 2, 2, 2]
 ];
 var DaemonRevisionDetail$ = [3, n0, _DRD,
     0,
-    [_ar, _cPap, _tRC],
-    [0, () => DaemonCapacityProviderList, 1]
+    [_ar, _cPap, _tRC, _tWDC],
+    [0, () => DaemonCapacityProviderList, 1, 1]
 ];
 var DaemonRollback$ = [3, n0, _DRa,
     0,
@@ -6024,13 +6033,18 @@ var DeploymentCircuitBreaker$ = [3, n0, _DCBe,
 ];
 var DeploymentConfiguration$ = [3, n0, _DC,
     0,
-    [_dCB, _mPa, _mHP, _al, _str, _bTIM, _lH, _lCi, _cC],
-    [() => DeploymentCircuitBreaker$, 1, 1, () => DeploymentAlarms$, 0, 1, () => DeploymentLifecycleHookList, () => LinearConfiguration$, () => CanaryConfiguration$]
+    [_dCB, _mPa, _mHP, _al, _str, _bTIM, _lH, _lCi, _cC, _eSC],
+    [() => DeploymentCircuitBreaker$, 1, 1, () => DeploymentAlarms$, 0, 1, () => DeploymentLifecycleHookList, () => LinearConfiguration$, () => CanaryConfiguration$, () => DeploymentEarlySuccessCriteria$]
 ];
 var DeploymentController$ = [3, n0, _DCe,
     0,
     [_t],
     [0], 1
+];
+var DeploymentEarlySuccessCriteria$ = [3, n0, _DESC,
+    0,
+    [_enab, _hP, _sSRC],
+    [2, 1, 0], 1
 ];
 var DeploymentEphemeralStorage$ = [3, n0, _DES,
     0,
@@ -6214,7 +6228,7 @@ var DescribeTasksResponse$ = [3, n0, _DTRe,
 ];
 var Device$ = [3, n0, _De,
     0,
-    [_hP, _cPo, _pe],
+    [_hPo, _cPo, _pe],
     [0, 0, 64 | 0], 1
 ];
 var DiscoverPollEndpointRequest$ = [3, n0, _DPER,
@@ -6309,8 +6323,8 @@ var ExpressGatewayServiceAwsLogsConfiguration$ = [3, n0, _EGSALC,
 ];
 var ExpressGatewayServiceConfiguration$ = [3, n0, _EGSC,
     0,
-    [_sRAe, _eRA, _tRA, _tDA, _cp, _me, _nC, _hCP, _pC, _sTc, _iP, _cAr],
-    [0, 0, 0, 0, 0, 0, () => ExpressGatewayServiceNetworkConfiguration$, 0, [() => ExpressGatewayContainer$, 0], () => ExpressGatewayScalingTarget$, () => IngressPathSummaries, 4]
+    [_sRAe, _eRA, _tRA, _tDA, _cp, _me, _cAp, _nC, _hCP, _pC, _sTc, _iP, _cAr],
+    [0, 0, 0, 0, 0, 0, 0, () => ExpressGatewayServiceNetworkConfiguration$, 0, [() => ExpressGatewayContainer$, 0], () => ExpressGatewayScalingTarget$, () => IngressPathSummaries, 4]
 ];
 var ExpressGatewayServiceNetworkConfiguration$ = [3, n0, _EGSNC,
     0,
@@ -6709,7 +6723,7 @@ var NetworkBandwidthGbpsRequest$ = [3, n0, _NBGR,
 ];
 var NetworkBinding$ = [3, n0, _NB,
     0,
-    [_bIP, _cPon, _hPo, _pr, _cPR, _hPR],
+    [_bIP, _cPon, _hPos, _pr, _cPR, _hPR],
     [0, 1, 1, 0, 0, 0]
 ];
 var NetworkConfiguration$ = [3, n0, _NC,
@@ -6744,7 +6758,7 @@ var PlatformDevice$ = [3, n0, _PD,
 ];
 var PortMapping$ = [3, n0, _PM,
     0,
-    [_cPon, _hPo, _pr, _n, _aP, _cPR],
+    [_cPon, _hPos, _pr, _n, _aP, _cPR],
     [1, 1, 0, 0, 0, 0]
 ];
 var ProtectedTask$ = [3, n0, _PT,
@@ -7229,8 +7243,8 @@ var UpdateContainerInstancesStateResponse$ = [3, n0, _UCISRp,
 ];
 var UpdateDaemonRequest$ = [3, n0, _UDR,
     0,
-    [_dA, _dTDA, _cPAa, _dC, _pTr, _eECSMT, _eEC],
-    [0, 0, 64 | 0, () => DaemonDeploymentConfiguration$, 0, 2, 2], 3
+    [_dA, _dTDA, _cPAa, _dC, _pTr, _eECSMT, _eEC, _cr],
+    [0, 0, 64 | 0, () => DaemonDeploymentConfiguration$, 0, 2, 2, 2], 3
 ];
 var UpdateDaemonResponse$ = [3, n0, _UDRp,
     0,
@@ -7244,8 +7258,8 @@ var UpdatedExpressGatewayService$ = [3, n0, _UEGS,
 ];
 var UpdateExpressGatewayServiceRequest$ = [3, n0, _UEGSR,
     0,
-    [_sAe, _eRA, _hCP, _pC, _tRA, _nC, _cp, _me, _sTc, _tDA],
-    [0, 0, 0, [() => ExpressGatewayContainer$, 0], 0, () => ExpressGatewayServiceNetworkConfiguration$, 0, 0, () => ExpressGatewayScalingTarget$, 0], 1
+    [_sAe, _eRA, _hCP, _pC, _tRA, _nC, _cp, _me, _cAp, _sTc, _tDA],
+    [0, 0, 0, [() => ExpressGatewayContainer$, 0], 0, () => ExpressGatewayServiceNetworkConfiguration$, 0, 0, 0, () => ExpressGatewayScalingTarget$, 0], 1
 ];
 var UpdateExpressGatewayServiceResponse$ = [3, n0, _UEGSRp,
     0,
@@ -9271,6 +9285,10 @@ const ThresholdType = {
     COUNT: "COUNT",
     UNBOUNDED_PERCENT: "UNBOUNDED_PERCENT",
 };
+const ServiceRevisionCleanup = {
+    BLOCKING: "BLOCKING",
+    DEFERRED: "DEFERRED",
+};
 const DeploymentLifecycleHookStage = {
     POST_PRODUCTION_TRAFFIC_SHIFT: "POST_PRODUCTION_TRAFFIC_SHIFT",
     POST_SCALE_UP: "POST_SCALE_UP",
@@ -9320,6 +9338,10 @@ const ServiceDeploymentStatus = {
     STOPPED: "STOPPED",
     STOP_REQUESTED: "STOP_REQUESTED",
     SUCCESSFUL: "SUCCESSFUL",
+};
+const ExpressCpuArchitecture = {
+    ARM64: "ARM64",
+    X86_64: "X86_64",
 };
 const ExpressGatewayServiceScalingMetric = {
     AverageCPUUtilization: "AVERAGE_CPU",
@@ -9621,6 +9643,7 @@ exports.DeploymentCircuitBreaker$ = DeploymentCircuitBreaker$;
 exports.DeploymentConfiguration$ = DeploymentConfiguration$;
 exports.DeploymentController$ = DeploymentController$;
 exports.DeploymentControllerType = DeploymentControllerType;
+exports.DeploymentEarlySuccessCriteria$ = DeploymentEarlySuccessCriteria$;
 exports.DeploymentEphemeralStorage$ = DeploymentEphemeralStorage$;
 exports.DeploymentLifecycleHook$ = DeploymentLifecycleHook$;
 exports.DeploymentLifecycleHookAction = DeploymentLifecycleHookAction;
@@ -9725,6 +9748,7 @@ exports.ExecuteCommandLogConfiguration$ = ExecuteCommandLogConfiguration$;
 exports.ExecuteCommandLogging = ExecuteCommandLogging;
 exports.ExecuteCommandRequest$ = ExecuteCommandRequest$;
 exports.ExecuteCommandResponse$ = ExecuteCommandResponse$;
+exports.ExpressCpuArchitecture = ExpressCpuArchitecture;
 exports.ExpressGatewayContainer$ = ExpressGatewayContainer$;
 exports.ExpressGatewayRepositoryCredentials$ = ExpressGatewayRepositoryCredentials$;
 exports.ExpressGatewayScalingTarget$ = ExpressGatewayScalingTarget$;
@@ -9976,6 +10000,7 @@ exports.ServiceNotFoundException = ServiceNotFoundException;
 exports.ServiceNotFoundException$ = ServiceNotFoundException$;
 exports.ServiceRegistry$ = ServiceRegistry$;
 exports.ServiceRevision$ = ServiceRevision$;
+exports.ServiceRevisionCleanup = ServiceRevisionCleanup;
 exports.ServiceRevisionLoadBalancer$ = ServiceRevisionLoadBalancer$;
 exports.ServiceRevisionOverrides$ = ServiceRevisionOverrides$;
 exports.ServiceRevisionSummary$ = ServiceRevisionSummary$;
@@ -15267,6 +15292,8 @@ function memoizeChain(providers, treatAsExpired) {
                         .then((c) => {
                         credentials = c;
                     })
+                        .catch(() => {
+                    })
                         .finally(() => {
                         passiveLock = undefined;
                     });
@@ -15820,7 +15847,7 @@ const commonParams = {
     UseDualStack: { type: "builtInParams", name: "useDualstackEndpoint" },
 };
 
-var version = "3.997.41";
+var version = "3.997.44";
 var packageInfo = {
 	version: version};
 
@@ -16417,7 +16444,7 @@ const commonParams = {
     UseDualStack: { type: "builtInParams", name: "useDualstackEndpoint" },
 };
 
-var version = "3.997.41";
+var version = "3.997.44";
 var packageInfo = {
 	version: version};
 
@@ -17098,7 +17125,7 @@ const commonParams = {
     UseDualStack: { type: "builtInParams", name: "useDualstackEndpoint" },
 };
 
-var version = "3.997.41";
+var version = "3.997.44";
 var packageInfo = {
 	version: version};
 
@@ -17753,7 +17780,7 @@ const commonParams = {
     UseDualStack: { type: "builtInParams", name: "useDualstackEndpoint" },
 };
 
-var version = "3.997.41";
+var version = "3.997.44";
 var packageInfo = {
 	version: version};
 
@@ -18603,7 +18630,7 @@ const writeSSOTokenToFile = (id, ssoToken) => {
     return writeFile(tokenFilepath, tokenString);
 };
 
-const lastRefreshAttemptTime = new Date(0);
+const lastRefreshAttemptTimes = new Map();
 const fromSso = (init = {}) => async ({ callerClientConfig } = {}) => {
     init.logger?.debug("@aws-sdk/token-providers - fromSso");
     const profiles = await parseKnownFiles(init);
@@ -18640,11 +18667,15 @@ const fromSso = (init = {}) => async ({ callerClientConfig } = {}) => {
     validateTokenKey("accessToken", ssoToken.accessToken);
     validateTokenKey("expiresAt", ssoToken.expiresAt);
     const { accessToken, expiresAt } = ssoToken;
-    const existingToken = { token: accessToken, expiration: new Date(expiresAt) };
+    const existingToken = {
+        token: accessToken,
+        expiration: new Date(expiresAt),
+    };
     if (existingToken.expiration.getTime() - Date.now() > EXPIRE_WINDOW_MS) {
         return existingToken;
     }
-    if (Date.now() - lastRefreshAttemptTime.getTime() < 30 * 1000) {
+    const lastRefreshAttemptTime = lastRefreshAttemptTimes.get(ssoSessionName) ?? 0;
+    if (Date.now() - lastRefreshAttemptTime < 30 * 1000) {
         validateTokenExpiry(existingToken);
         return existingToken;
     }
@@ -18652,7 +18683,7 @@ const fromSso = (init = {}) => async ({ callerClientConfig } = {}) => {
     validateTokenKey("clientSecret", ssoToken.clientSecret, true);
     validateTokenKey("refreshToken", ssoToken.refreshToken, true);
     try {
-        lastRefreshAttemptTime.setTime(Date.now());
+        lastRefreshAttemptTimes.set(ssoSessionName, Date.now());
         const newSsoOidcToken = await getNewSsoOidcToken(ssoToken, ssoRegion, init, callerClientConfig);
         validateTokenKey("accessToken", newSsoOidcToken.accessToken);
         validateTokenKey("expiresIn", newSsoOidcToken.expiresIn);
@@ -19219,7 +19250,7 @@ exports.InvokeStoreBase = InvokeStoreBase;
 /***/ 402:
 /***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
-const { getSmithyContext } = __nccwpck_require__(4534);
+const { getSmithyContext, hasOwn } = __nccwpck_require__(4534);
 exports.getSmithyContext = getSmithyContext;
 const { HttpRequest } = __nccwpck_require__(3422);
 const { requestBuilder } = __nccwpck_require__(3422);
@@ -19424,6 +19455,8 @@ class DefaultIdentityProviderConfig {
     authSchemes = new Map();
     constructor(config) {
         for (const key in config) {
+            if (!hasOwn(config, key))
+                continue;
             const value = config[key];
             if (value !== undefined) {
                 this.authSchemes.set(key, value);
@@ -19569,9 +19602,9 @@ exports.setFeature = setFeature;
 /***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 const { nv, NumericValue, calculateBodyLength, generateIdempotencyToken, fromBase64, _parseEpochTimestamp } = __nccwpck_require__(2430);
+const { hasOwn, getSmithyContext } = __nccwpck_require__(4534);
 const { HttpRequest, collectBody, SerdeContext, RpcProtocol } = __nccwpck_require__(3422);
 const { NormalizedSchema, deref, TypeRegistry } = __nccwpck_require__(6890);
-const { getSmithyContext } = __nccwpck_require__(4534);
 
 const majorUint64 = 0;
 const majorNegativeInt64 = 1;
@@ -19869,23 +19902,39 @@ function decodeTagValue(at, to, minor, unsignedInt, offset) {
     }
     else if (minor === 4) {
         const decimalFraction = decode(at + offset, to);
-        const [exponent, mantissa] = decimalFraction;
+        const [rawExponent, mantissa] = decimalFraction;
         const normalizer = mantissa < 0 ? -1 : 1;
-        const mantissaStr = "0".repeat(Math.abs(exponent) + 1) + String(BigInt(normalizer) * BigInt(mantissa));
-        let numericString;
+        const absMantissa = BigInt(normalizer) * BigInt(mantissa);
+        const mantissaDigits = String(absMantissa);
         const sign = mantissa < 0 ? "-" : "";
-        numericString =
-            exponent === 0
-                ? mantissaStr
-                : mantissaStr.slice(0, mantissaStr.length + exponent) + "." + mantissaStr.slice(exponent);
-        numericString = numericString.replace(/^0+/g, "");
-        if (numericString === "") {
-            numericString = "0";
+        let numericString;
+        const isSmallExponent = typeof rawExponent === "number" && Math.abs(rawExponent) <= 2 ** 28;
+        if (isSmallExponent) {
+            const exponent = rawExponent;
+            const mantissaStr = "0".repeat(Math.abs(exponent) + 1) + mantissaDigits;
+            numericString =
+                exponent === 0
+                    ? mantissaStr
+                    : mantissaStr.slice(0, mantissaStr.length + exponent) + "." + mantissaStr.slice(exponent);
+            numericString = numericString.replace(/^0+/g, "");
+            if (numericString === "") {
+                numericString = "0";
+            }
+            if (numericString[0] === ".") {
+                numericString = "0" + numericString;
+            }
+            numericString = sign + numericString;
         }
-        if (numericString[0] === ".") {
-            numericString = "0" + numericString;
+        else {
+            const bigExponent = BigInt(rawExponent);
+            if (mantissaDigits.length === 1) {
+                numericString = sign + mantissaDigits + "e" + String(bigExponent);
+            }
+            else {
+                const adjustedExp = bigExponent + BigInt(mantissaDigits.length - 1);
+                numericString = sign + mantissaDigits[0] + "." + mantissaDigits.slice(1) + "e" + String(adjustedExp);
+            }
         }
-        numericString = sign + numericString;
         _offset = offset + _offset;
         return nv(numericString);
     }
@@ -20234,13 +20283,21 @@ function encode(_input) {
         }
         else if (typeof input === "object") {
             if (input instanceof NumericValue) {
-                const decimalIndex = input.string.indexOf(".");
-                const exponent = decimalIndex === -1 ? 0 : decimalIndex - input.string.length + 1;
-                const mantissa = BigInt(input.string.replace(".", ""));
+                let str = input.string;
+                let expOffset = BigInt(0);
+                const eIndex = str.search(/[eE]/);
+                if (eIndex !== -1) {
+                    expOffset = BigInt(str.slice(eIndex + 1));
+                    str = str.slice(0, eIndex);
+                }
+                const decimalIndex = str.indexOf(".");
+                const fractionDigits = decimalIndex === -1 ? 0 : str.length - decimalIndex - 1;
+                const exponent = expOffset - BigInt(fractionDigits);
+                const mantissa = BigInt(str.replace(".", ""));
                 data[cursor$1++] = 0b110_00100;
                 encodeInteger(majorList, 2);
                 encodeStack.push(mantissa);
-                encodeStack.push(exponent);
+                encodeStack.push(exponent >= -0x20000000000000n && exponent <= 0x1fffffffffffffn ? Number(exponent) : exponent);
                 continue;
             }
             if (input[tagSymbol]) {
@@ -20458,6 +20515,8 @@ const loadSmithyRpcV2CborErrorCode = (output, data) => {
     }
     let codeKey;
     for (const key in data) {
+        if (!hasOwn(data, key))
+            continue;
         if (key.toLowerCase() === "code") {
             codeKey = key;
             break;
@@ -20490,6 +20549,8 @@ const buildHttpRpcRequest = async (context, headers, path, resolvedHostname, bod
     }
     if (endpoint.headers) {
         for (const name in endpoint.headers) {
+            if (!hasOwn(endpoint.headers, name))
+                continue;
             contents.headers[name] = endpoint.headers[name];
         }
     }
@@ -20750,6 +20811,8 @@ function writeStruct(ns, value, serdeContext) {
     }
     if (typeof value.__type === "string") {
         for (const k in value) {
+            if (!hasOwn(value, k))
+                continue;
             if (!memberNames.includes(k)) {
                 writeString(k);
                 writeUntypedValue(value[k]);
@@ -20815,6 +20878,8 @@ function writeMap(ns, value, isDocument, serdeContext) {
     const valueSchema = ns.getValueSchema();
     const keys = [];
     for (const k in value) {
+        if (!hasOwn(value, k))
+            continue;
         const v = value[k];
         if (isDocument ? v !== undefined : v != null || sparse) {
             keys.push(k);
@@ -21076,14 +21141,27 @@ function writeTag(tagValue, innerValue) {
     writeUntypedValue(innerValue);
 }
 function writeNumericValue(nv) {
-    const decimalIndex = nv.string.indexOf(".");
-    const exponent = decimalIndex === -1 ? 0 : decimalIndex - nv.string.length + 1;
-    const mantissa = BigInt(nv.string.replace(".", ""));
+    let str = nv.string;
+    let expOffset = BigInt(0);
+    const eIndex = str.search(/[eE]/);
+    if (eIndex !== -1) {
+        expOffset = BigInt(str.slice(eIndex + 1));
+        str = str.slice(0, eIndex);
+    }
+    const decimalIndex = str.indexOf(".");
+    const fractionDigits = decimalIndex === -1 ? 0 : str.length - decimalIndex - 1;
+    const exponent = expOffset - BigInt(fractionDigits);
+    const mantissa = BigInt(str.replace(".", ""));
     ensure(9);
     buf[cursor++] = 0b110_00100;
     encodeHeader(majorList, 2);
     ensure(9);
-    writeInteger(exponent);
+    if (exponent >= -0x20000000000000n && exponent <= 0x1fffffffffffffn) {
+        writeInteger(Number(exponent));
+    }
+    else {
+        writeBigInt(exponent);
+    }
     writeBigInt(mantissa);
 }
 function writeTimestamp(date) {
@@ -21215,6 +21293,8 @@ function readStruct(ns, count, startPos) {
     if (isUnion) {
         let resultEmpty = true;
         for (const _ in result) {
+            if (!hasOwn(result, _))
+                continue;
             resultEmpty = false;
             break;
         }
@@ -21254,23 +21334,39 @@ function readTag(ns) {
     if (tagNumber === 4) {
         const docSchema = NormalizedSchema.of(15);
         const pair = readValue(docSchema);
-        const [exponent, mantissa] = pair;
+        const [rawExponent, mantissa] = pair;
         const normalizer = mantissa < 0 ? -1 : 1;
-        const mantissaStr = "0".repeat(Math.abs(exponent) + 1) + String(BigInt(normalizer) * BigInt(mantissa));
-        let numericString;
+        const absMantissa = BigInt(normalizer) * BigInt(mantissa);
+        const mantissaDigits = String(absMantissa);
         const sign = mantissa < 0 ? "-" : "";
-        numericString =
-            exponent === 0
-                ? mantissaStr
-                : mantissaStr.slice(0, mantissaStr.length + exponent) + "." + mantissaStr.slice(exponent);
-        numericString = numericString.replace(/^0+/g, "");
-        if (numericString === "") {
-            numericString = "0";
+        let numericString;
+        const isSmallExponent = typeof rawExponent === "number" && Math.abs(rawExponent) <= 2 ** 28;
+        if (isSmallExponent) {
+            const exponent = rawExponent;
+            const mantissaStr = "0".repeat(Math.abs(exponent) + 1) + mantissaDigits;
+            numericString =
+                exponent === 0
+                    ? mantissaStr
+                    : mantissaStr.slice(0, mantissaStr.length + exponent) + "." + mantissaStr.slice(exponent);
+            numericString = numericString.replace(/^0+/g, "");
+            if (numericString === "") {
+                numericString = "0";
+            }
+            if (numericString[0] === ".") {
+                numericString = "0" + numericString;
+            }
+            numericString = sign + numericString;
         }
-        if (numericString[0] === ".") {
-            numericString = "0" + numericString;
+        else {
+            const bigExponent = BigInt(rawExponent);
+            if (mantissaDigits.length === 1) {
+                numericString = sign + mantissaDigits + "e" + String(bigExponent);
+            }
+            else {
+                const adjustedExp = bigExponent + BigInt(mantissaDigits.length - 1);
+                numericString = sign + mantissaDigits[0] + "." + mantissaDigits.slice(1) + "e" + String(adjustedExp);
+            }
         }
-        numericString = sign + numericString;
         return nv(numericString);
     }
     const docSchema = NormalizedSchema.of(15);
@@ -21367,6 +21463,8 @@ function readMapIndefinite(ns) {
                 if (isUnion) {
                     let resultEmpty = true;
                     for (const _ in result) {
+                        if (!hasOwn(result, _))
+                            continue;
                         resultEmpty = false;
                         break;
                     }
@@ -21671,6 +21769,8 @@ function transformObject(ns, value) {
     if (ns.isMapSchema()) {
         const targetSchema = ns.getValueSchema();
         for (const key in value) {
+            if (!hasOwn(value, key))
+                continue;
             newObject[key] = transformObject(targetSchema, value[key]);
         }
     }
@@ -21680,6 +21780,8 @@ function transformObject(ns, value) {
         if (isUnion) {
             keys = new Set();
             for (const k in value) {
+                if (!hasOwn(value, k))
+                    continue;
                 if (k !== "__type") {
                     keys.add(k);
                 }
@@ -21696,6 +21798,8 @@ function transformObject(ns, value) {
         if (isUnion && keys?.size === 1) {
             let newObjectEmpty = true;
             for (const _ in newObject) {
+                if (!hasOwn(newObject, _))
+                    continue;
                 newObjectEmpty = false;
                 break;
             }
@@ -21706,6 +21810,8 @@ function transformObject(ns, value) {
         }
         else if (typeof value.__type === "string") {
             for (const k in value) {
+                if (!hasOwn(value, k))
+                    continue;
                 if (!(k in newObject)) {
                     newObject[k] = value[k];
                 }
@@ -21757,10 +21863,9 @@ class SmithyRpcV2CborProtocol extends RpcProtocol {
                 this.serializer.write(15, {});
                 request.body = this.serializer.flush();
             }
-            try {
+            if (request.body instanceof Uint8Array) {
                 request.headers["content-length"] = String(request.body.byteLength);
             }
-            catch (ignored) { }
         }
         const { service, operation } = getSmithyContext(context);
         const path = `/service/${service}/operation/${operation}`;
@@ -21869,6 +21974,8 @@ class CborShapeSerializer extends SerdeContext {
             if (ns.isMapSchema()) {
                 const sparse = !!ns.getMergedTraits().sparse;
                 for (const key in sourceObject) {
+                    if (!hasOwn(sourceObject, key))
+                        continue;
                     const value = this.serialize(ns.getValueSchema(), sourceObject[key]);
                     if (value != null || sparse) {
                         newObject[key] = value;
@@ -21889,6 +21996,8 @@ class CborShapeSerializer extends SerdeContext {
                 }
                 else if (typeof sourceObject.__type === "string") {
                     for (const k in sourceObject) {
+                        if (!hasOwn(sourceObject, k))
+                            continue;
                         if (!(k in newObject)) {
                             newObject[k] = this.serialize(15, sourceObject[k]);
                         }
@@ -21905,6 +22014,8 @@ class CborShapeSerializer extends SerdeContext {
                     return newArray;
                 }
                 for (const key in sourceObject) {
+                    if (!hasOwn(sourceObject, key))
+                        continue;
                     newObject[key] = this.serialize(ns.getValueSchema(), sourceObject[key]);
                 }
             }
@@ -21979,6 +22090,8 @@ class CborShapeDeserializer extends SerdeContext {
             if (ns.isMapSchema()) {
                 const targetSchema = ns.getValueSchema();
                 for (const key in value) {
+                    if (!hasOwn(value, key))
+                        continue;
                     const itemValue = this.readValue(targetSchema, value[key]);
                     newObject[key] = itemValue;
                 }
@@ -21989,6 +22102,8 @@ class CborShapeDeserializer extends SerdeContext {
                 if (isUnion) {
                     keys = new Set();
                     for (const k in value) {
+                        if (!hasOwn(value, k))
+                            continue;
                         if (k !== "__type") {
                             keys.add(k);
                         }
@@ -22005,6 +22120,8 @@ class CborShapeDeserializer extends SerdeContext {
                 if (isUnion && keys?.size === 1) {
                     let newObjectEmpty = true;
                     for (const _ in newObject) {
+                        if (!hasOwn(newObject, _))
+                            continue;
                         newObjectEmpty = false;
                         break;
                     }
@@ -22015,6 +22132,8 @@ class CborShapeDeserializer extends SerdeContext {
                 }
                 else if (typeof value.__type === "string") {
                     for (const k in value) {
+                        if (!hasOwn(value, k))
+                            continue;
                         if (!(k in newObject)) {
                             newObject[k] = value[k];
                         }
@@ -22638,6 +22757,7 @@ exports.readableStreamHasher = readableStreamHasher;
 /***/ 2658:
 /***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
+const { hasOwn } = __nccwpck_require__(4534);
 const { getSmithyContext, normalizeProvider } = __nccwpck_require__(4534);
 exports.getSmithyContext = getSmithyContext;
 exports.normalizeProvider = normalizeProvider;
@@ -23507,6 +23627,8 @@ const knownAlgorithms = Object.values(AlgorithmId);
 const getChecksumConfiguration = (runtimeConfig) => {
     const checksumAlgorithms = [];
     for (const id in AlgorithmId) {
+        if (!hasOwn(AlgorithmId, id))
+            continue;
         const algorithmId = AlgorithmId[id];
         if (runtimeConfig[algorithmId] === undefined) {
             continue;
@@ -23580,7 +23702,9 @@ const getArrayIfSingleItem = (mayBeArray) => Array.isArray(mayBeArray) ? mayBeAr
 const getValueFromTextNode = (obj) => {
     const textNodeName = "#text";
     for (const key in obj) {
-        if (Object.prototype.hasOwnProperty.call(obj, key) && obj[key][textNodeName] !== undefined) {
+        if (!hasOwn(obj, key))
+            continue;
+        if (obj[key][textNodeName] !== undefined) {
             obj[key] = obj[key][textNodeName];
         }
         else if (typeof obj[key] === "object" && obj[key] !== null) {
@@ -23621,7 +23745,9 @@ function map(arg0, arg1, arg2) {
             instructions = arg1;
         }
     }
-    for (const key of Object.keys(instructions)) {
+    for (const key in instructions) {
+        if (!hasOwn(instructions, key))
+            continue;
         if (!Array.isArray(instructions[key])) {
             target[key] = instructions[key];
             continue;
@@ -23640,6 +23766,8 @@ const convertMap = (target) => {
 const take = (source, instructions) => {
     const out = {};
     for (const key in instructions) {
+        if (!hasOwn(instructions, key))
+            continue;
         applyInstruction(out, source, instructions, key);
     }
     return out;
@@ -23719,7 +23847,9 @@ const _json = (obj) => {
     }
     if (typeof obj === "object") {
         const target = {};
-        for (const key of Object.keys(obj)) {
+        for (const key in obj) {
+            if (!hasOwn(obj, key))
+                continue;
             if (obj[key] == null) {
                 continue;
             }
@@ -24577,7 +24707,7 @@ exports.resolveRegionConfig = resolveRegionConfig;
 /***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 const { CONFIG_PREFIX_SEPARATOR, booleanSelector, SelectorType, loadConfig } = __nccwpck_require__(7291);
-const { toEndpointV1, getSmithyContext, normalizeProvider, isValidHostLabel } = __nccwpck_require__(4534);
+const { toEndpointV1, getSmithyContext, normalizeProvider, isValidHostLabel, hasOwn } = __nccwpck_require__(4534);
 exports.isValidHostLabel = isValidHostLabel;
 exports.middlewareEndpointToEndpointV1 = toEndpointV1;
 exports.toEndpointV1 = toEndpointV1;
@@ -25408,6 +25538,8 @@ const resolveEndpoint = (ruleSetObject, options) => {
     const { parameters, rules } = ruleSetObject;
     options.logger?.debug?.(`${debugId} Initial EndpointParams: ${toDebugString(endpointParams)}`);
     for (const paramKey in parameters) {
+        if (!hasOwn(parameters, paramKey))
+            continue;
         const parameter = parameters[paramKey];
         const endpointParam = endpointParams[paramKey];
         if (endpointParam == null && parameter.default != null) {
@@ -25460,6 +25592,7 @@ exports.resolveParams = resolveParams;
 /***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 const { Crc32 } = __nccwpck_require__(9542);
+const { hasOwn } = __nccwpck_require__(4534);
 const { toHex, fromHex, toUtf8, fromUtf8 } = __nccwpck_require__(2430);
 const { Readable } = __nccwpck_require__(7075);
 const { TypeRegistry } = __nccwpck_require__(6890);
@@ -25517,7 +25650,9 @@ class HeaderMarshaller {
     }
     format(headers) {
         const chunks = [];
-        for (const headerName of Object.keys(headers)) {
+        for (const headerName in headers) {
+            if (!hasOwn(headers, headerName))
+                continue;
             const bytes = this.fromUtf8(headerName);
             chunks.push(Uint8Array.from([bytes.byteLength]), bytes, this.formatHeaderValue(headers[headerName]));
         }
@@ -25532,27 +25667,27 @@ class HeaderMarshaller {
     formatHeaderValue(header) {
         switch (header.type) {
             case "boolean":
-                return Uint8Array.from([header.value ? HEADER_VALUE_TYPE.boolTrue : HEADER_VALUE_TYPE.boolFalse]);
+                return Uint8Array.from([header.value ? 0 : 1]);
             case "byte":
-                return Uint8Array.from([HEADER_VALUE_TYPE.byte, header.value]);
+                return Uint8Array.from([2, header.value]);
             case "short":
                 const shortView = new DataView(new ArrayBuffer(3));
-                shortView.setUint8(0, HEADER_VALUE_TYPE.short);
+                shortView.setUint8(0, 3);
                 shortView.setInt16(1, header.value, false);
                 return new Uint8Array(shortView.buffer);
             case "integer":
                 const intView = new DataView(new ArrayBuffer(5));
-                intView.setUint8(0, HEADER_VALUE_TYPE.integer);
+                intView.setUint8(0, 4);
                 intView.setInt32(1, header.value, false);
                 return new Uint8Array(intView.buffer);
             case "long":
                 const longBytes = new Uint8Array(9);
-                longBytes[0] = HEADER_VALUE_TYPE.long;
+                longBytes[0] = 5;
                 longBytes.set(header.value.bytes, 1);
                 return longBytes;
             case "binary":
                 const binView = new DataView(new ArrayBuffer(3 + header.value.byteLength));
-                binView.setUint8(0, HEADER_VALUE_TYPE.byteArray);
+                binView.setUint8(0, 6);
                 binView.setUint16(1, header.value.byteLength, false);
                 const binBytes = new Uint8Array(binView.buffer);
                 binBytes.set(header.value, 3);
@@ -25560,14 +25695,14 @@ class HeaderMarshaller {
             case "string":
                 const utf8Bytes = this.fromUtf8(header.value);
                 const strView = new DataView(new ArrayBuffer(3 + utf8Bytes.byteLength));
-                strView.setUint8(0, HEADER_VALUE_TYPE.string);
+                strView.setUint8(0, 7);
                 strView.setUint16(1, utf8Bytes.byteLength, false);
                 const strBytes = new Uint8Array(strView.buffer);
                 strBytes.set(utf8Bytes, 3);
                 return strBytes;
             case "timestamp":
                 const tsBytes = new Uint8Array(9);
-                tsBytes[0] = HEADER_VALUE_TYPE.timestamp;
+                tsBytes[0] = 8;
                 tsBytes.set(Int64.fromNumber(header.value.valueOf()).bytes, 1);
                 return tsBytes;
             case "uuid":
@@ -25575,7 +25710,7 @@ class HeaderMarshaller {
                     throw new Error(`Invalid UUID received: ${header.value}`);
                 }
                 const uuidBytes = new Uint8Array(17);
-                uuidBytes[0] = HEADER_VALUE_TYPE.uuid;
+                uuidBytes[0] = 9;
                 uuidBytes.set(fromHex(header.value.replace(/-/g, "")), 1);
                 return uuidBytes;
         }
@@ -25588,46 +25723,46 @@ class HeaderMarshaller {
             const name = this.toUtf8(new Uint8Array(headers.buffer, headers.byteOffset + position, nameLength));
             position += nameLength;
             switch (headers.getUint8(position++)) {
-                case HEADER_VALUE_TYPE.boolTrue:
+                case 0:
                     out[name] = {
                         type: BOOLEAN_TAG,
                         value: true,
                     };
                     break;
-                case HEADER_VALUE_TYPE.boolFalse:
+                case 1:
                     out[name] = {
                         type: BOOLEAN_TAG,
                         value: false,
                     };
                     break;
-                case HEADER_VALUE_TYPE.byte:
+                case 2:
                     out[name] = {
                         type: BYTE_TAG,
                         value: headers.getInt8(position++),
                     };
                     break;
-                case HEADER_VALUE_TYPE.short:
+                case 3:
                     out[name] = {
                         type: SHORT_TAG,
                         value: headers.getInt16(position, false),
                     };
                     position += 2;
                     break;
-                case HEADER_VALUE_TYPE.integer:
+                case 4:
                     out[name] = {
                         type: INT_TAG,
                         value: headers.getInt32(position, false),
                     };
                     position += 4;
                     break;
-                case HEADER_VALUE_TYPE.long:
+                case 5:
                     out[name] = {
                         type: LONG_TAG,
                         value: new Int64(new Uint8Array(headers.buffer, headers.byteOffset + position, 8)),
                     };
                     position += 8;
                     break;
-                case HEADER_VALUE_TYPE.byteArray:
+                case 6:
                     const binaryLength = headers.getUint16(position, false);
                     position += 2;
                     out[name] = {
@@ -25636,7 +25771,7 @@ class HeaderMarshaller {
                     };
                     position += binaryLength;
                     break;
-                case HEADER_VALUE_TYPE.string:
+                case 7:
                     const stringLength = headers.getUint16(position, false);
                     position += 2;
                     out[name] = {
@@ -25645,14 +25780,14 @@ class HeaderMarshaller {
                     };
                     position += stringLength;
                     break;
-                case HEADER_VALUE_TYPE.timestamp:
+                case 8:
                     out[name] = {
                         type: TIMESTAMP_TAG,
                         value: new Date(new Int64(new Uint8Array(headers.buffer, headers.byteOffset + position, 8)).valueOf()),
                     };
                     position += 8;
                     break;
-                case HEADER_VALUE_TYPE.uuid:
+                case 9:
                     const uuidBytes = new Uint8Array(headers.buffer, headers.byteOffset + position, 16);
                     position += 16;
                     out[name] = {
@@ -26087,7 +26222,7 @@ class EventStreamSerde {
         this.defaultContentType = defaultContentType;
         this.compositeErrorRegistry = compositeErrorRegistry;
     }
-    async serializeEventStream({ eventStream, requestSchema, initialRequest, }) {
+    async serializeEventStream({ eventStream, requestSchema, initialRequest, initialMessageType, }) {
         const marshaller = this.marshaller;
         const eventStreamMember = requestSchema.getEventStreamMember();
         const unionSchema = requestSchema.getMemberSchema(eventStreamMember);
@@ -26098,7 +26233,7 @@ class EventStreamSerde {
             async *[Symbol.asyncIterator]() {
                 if (initialRequest) {
                     const headers = {
-                        ":event-type": { type: "string", value: "initial-request" },
+                        ":event-type": { type: "string", value: initialMessageType ?? "initial-request" },
                         ":message-type": { type: "string", value: "event" },
                         ":content-type": { type: "string", value: defaultContentType },
                     };
@@ -26124,6 +26259,8 @@ class EventStreamSerde {
             }
             let unionMember = "";
             for (const key in event) {
+                if (!hasOwn(event, key))
+                    continue;
                 if (key !== "__type") {
                     unionMember = key;
                     break;
@@ -26142,7 +26279,7 @@ class EventStreamSerde {
             };
         });
     }
-    async deserializeEventStream({ response, responseSchema, initialResponseContainer, }) {
+    async deserializeEventStream({ response, responseSchema, initialResponseContainer, initialMessageType, }) {
         const marshaller = this.marshaller;
         const eventStreamMember = responseSchema.getEventStreamMember();
         const unionSchema = responseSchema.getMemberSchema(eventStreamMember);
@@ -26151,13 +26288,15 @@ class EventStreamSerde {
         const asyncIterable = marshaller.deserialize(response.body, async (event) => {
             let unionMember = "";
             for (const key in event) {
+                if (!hasOwn(event, key))
+                    continue;
                 if (key !== "__type") {
                     unionMember = key;
                     break;
                 }
             }
             const body = event[unionMember].body;
-            if (unionMember === "initial-response") {
+            if (unionMember === (initialMessageType ?? "initial-response")) {
                 const dataObject = await this.deserializer.read(responseSchema, body);
                 delete dataObject[eventStreamMember];
                 return {
@@ -26225,6 +26364,8 @@ class EventStreamSerde {
                 throw new Error("@smithy::core/protocols - initial-response event encountered in event stream but no response schema given.");
             }
             for (const key in firstEvent.value) {
+                if (!hasOwn(firstEvent.value, key))
+                    continue;
                 initialResponseContainer[key] = firstEvent.value[key];
             }
         }
@@ -26382,14 +26523,14 @@ exports.universalEventStreamSerdeProvider = eventStreamSerdeProvider$1;
 /***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 const { Uint8ArrayBlobAdapter, sdkStreamMixin, splitEvery, splitHeader, fromBase64, _parseEpochTimestamp, _parseRfc7231DateTime, _parseRfc3339DateTimeWithOffset, LazyJsonString, NumericValue, toUtf8, fromUtf8, generateIdempotencyToken, toBase64, dateToUtcString, quoteHeader } = __nccwpck_require__(2430);
-const { TypeRegistry, NormalizedSchema, translateTraits } = __nccwpck_require__(6890);
-const { HttpRequest, HttpResponse, isValidHostname } = __nccwpck_require__(4534);
+const { HttpRequest, HttpResponse, hasOwn, isValidHostname } = __nccwpck_require__(4534);
 const { parseQueryString, parseUrl } = __nccwpck_require__(4534);
 exports.HttpRequest = HttpRequest;
 exports.HttpResponse = HttpResponse;
 exports.isValidHostname = isValidHostname;
 exports.parseQueryString = parseQueryString;
 exports.parseUrl = parseUrl;
+const { TypeRegistry, NormalizedSchema, translateTraits } = __nccwpck_require__(6890);
 const { FieldPosition } = __nccwpck_require__(690);
 
 const collectBody = async (streamBody = new Uint8Array(), context) => {
@@ -26458,6 +26599,8 @@ class HttpProtocol extends SerdeContext {
             }
             if (endpoint.headers) {
                 for (const name in endpoint.headers) {
+                    if (!hasOwn(endpoint.headers, name))
+                        continue;
                     request.headers[name] = endpoint.headers[name].join(", ");
                 }
             }
@@ -26473,6 +26616,8 @@ class HttpProtocol extends SerdeContext {
             };
             if (endpoint.headers) {
                 for (const name in endpoint.headers) {
+                    if (!hasOwn(endpoint.headers, name))
+                        continue;
                     request.headers[name] = endpoint.headers[name];
                 }
             }
@@ -26652,6 +26797,8 @@ class HttpBindingProtocol extends HttpProtocol {
             }
             else if (typeof memberTraits.httpPrefixHeaders === "string") {
                 for (const key in inputMemberValue) {
+                    if (!hasOwn(inputMemberValue, key))
+                        continue;
                     const val = inputMemberValue[key];
                     const amalgam = memberTraits.httpPrefixHeaders + key;
                     serializer.write([memberNs.getValueSchema(), { httpHeader: amalgam }], val);
@@ -26698,6 +26845,8 @@ class HttpBindingProtocol extends HttpProtocol {
         const traits = ns.getMergedTraits();
         if (traits.httpQueryParams) {
             for (const key in data) {
+                if (!hasOwn(data, key))
+                    continue;
                 if (!(key in query)) {
                     const val = data[key];
                     const valueSchema = ns.getValueSchema();
@@ -26741,6 +26890,8 @@ class HttpBindingProtocol extends HttpProtocol {
             throw new Error("@smithy/core/protocols - HTTP Protocol error handler failed to throw.");
         }
         for (const header in response.headers) {
+            if (!hasOwn(response.headers, header))
+                continue;
             const value = response.headers[header];
             delete response.headers[header];
             response.headers[header.toLowerCase()] = value;
@@ -26828,6 +26979,8 @@ class HttpBindingProtocol extends HttpProtocol {
             else if (memberTraits.httpPrefixHeaders !== undefined) {
                 dataObject[memberName] = {};
                 for (const header in response.headers) {
+                    if (!hasOwn(response.headers, header))
+                        continue;
                     if (header.startsWith(memberTraits.httpPrefixHeaders)) {
                         const value = response.headers[header];
                         const valueSchema = memberSchema.getValueSchema();
@@ -26877,10 +27030,9 @@ class RpcProtocol extends HttpProtocol {
             if (eventStreamMember) {
                 if (input[eventStreamMember]) {
                     const initialRequest = {};
-                    for (const [memberName, memberSchema] of ns.structIterator()) {
-                        if (memberName !== eventStreamMember && input[memberName]) {
-                            serializer.write(memberSchema, input[memberName]);
-                            initialRequest[memberName] = serializer.flush();
+                    for (const [memberName] of ns.structIterator()) {
+                        if (memberName !== eventStreamMember && input[memberName] != null) {
+                            initialRequest[memberName] = input[memberName];
                         }
                     }
                     payload = await this.serializeEventStream({
@@ -26914,6 +27066,8 @@ class RpcProtocol extends HttpProtocol {
             throw new Error("@smithy/core/protocols - RPC Protocol error handler failed to throw.");
         }
         for (const header in response.headers) {
+            if (!hasOwn(response.headers, header))
+                continue;
             const value = response.headers[header];
             delete response.headers[header];
             response.headers[header.toLowerCase()] = value;
@@ -27311,24 +27465,27 @@ class Fields {
 }
 
 const getHttpHandlerExtensionConfiguration = (runtimeConfig) => {
+    if (runtimeConfig.logger && runtimeConfig.logger.constructor?.name !== "NoOpLogger") {
+        runtimeConfig.requestHandler?.updateHttpClientConfig?.(Symbol.for("logger"), runtimeConfig.logger);
+    }
     return {
         setHttpHandler(handler) {
-            runtimeConfig.httpHandler = handler;
+            runtimeConfig.requestHandler = handler;
         },
         httpHandler() {
-            return runtimeConfig.httpHandler;
+            return runtimeConfig.requestHandler;
         },
         updateHttpClientConfig(key, value) {
-            runtimeConfig.httpHandler?.updateHttpClientConfig(key, value);
+            runtimeConfig.requestHandler?.updateHttpClientConfig(key, value);
         },
         httpHandlerConfigs() {
-            return runtimeConfig.httpHandler.httpHandlerConfigs();
+            return runtimeConfig.requestHandler.httpHandlerConfigs();
         },
     };
 };
 const resolveHttpHandlerRuntimeConfig = (httpHandlerExtensionConfiguration) => {
     return {
-        httpHandler: httpHandlerExtensionConfiguration.httpHandler(),
+        requestHandler: httpHandlerExtensionConfiguration.httpHandler(),
     };
 };
 
@@ -27344,10 +27501,12 @@ function contentLengthMiddleware(bodyLengthChecker) {
                     .indexOf(CONTENT_LENGTH_HEADER) === -1) {
                 try {
                     const length = bodyLengthChecker(body);
-                    request.headers = {
-                        ...request.headers,
-                        [CONTENT_LENGTH_HEADER]: String(length),
-                    };
+                    if (length != null) {
+                        request.headers = {
+                            ...request.headers,
+                            [CONTENT_LENGTH_HEADER]: String(length),
+                        };
+                    }
                 }
                 catch (ignored) {
                 }
@@ -27432,6 +27591,7 @@ const { Readable } = __nccwpck_require__(7075);
 const { NoOpLogger, normalizeProvider } = __nccwpck_require__(2658);
 const { HttpResponse, HttpRequest } = __nccwpck_require__(3422);
 const { parseRfc7231DateTime, v4 } = __nccwpck_require__(2430);
+const { hasOwn } = __nccwpck_require__(4534);
 
 const isStreamingPayload = (request) => request?.body instanceof Readable ||
     (typeof ReadableStream !== "undefined" && request?.body instanceof ReadableStream);
@@ -27486,16 +27646,17 @@ const isBrowserNetworkError = (error) => {
 const isThrottlingError = (error) => error.$metadata?.httpStatusCode === 429 ||
     THROTTLING_ERROR_CODES.includes(error.name) ||
     error.$retryable?.throttling == true;
-const isTransientError = (error, depth = 0) => isRetryableByTrait(error) ||
-    isClockSkewCorrectedError(error) ||
-    (error.name === "InvalidSignatureException" && error.message?.includes("Signature expired")) ||
-    TRANSIENT_ERROR_CODES.includes(error.name) ||
-    NODEJS_TIMEOUT_ERROR_CODES.includes(error?.code || "") ||
-    NODEJS_NETWORK_ERROR_CODES.includes(error?.code || "") ||
-    TRANSIENT_ERROR_STATUS_CODES.includes(error.$metadata?.httpStatusCode || 0) ||
-    isBrowserNetworkError(error) ||
-    isNodeJsHttp2TransientError(error) ||
-    (error.cause !== undefined && depth <= 10 && isTransientError(error.cause, depth + 1));
+const isTransientError = (error, depth = 0) => error?.name !== "AbortError" &&
+    (isRetryableByTrait(error) ||
+        isClockSkewCorrectedError(error) ||
+        (error.name === "InvalidSignatureException" && error.message?.includes("Signature expired")) ||
+        TRANSIENT_ERROR_CODES.includes(error.name) ||
+        NODEJS_TIMEOUT_ERROR_CODES.includes(error?.code || "") ||
+        NODEJS_NETWORK_ERROR_CODES.includes(error?.code || "") ||
+        TRANSIENT_ERROR_STATUS_CODES.includes(error.$metadata?.httpStatusCode || 0) ||
+        isBrowserNetworkError(error) ||
+        isNodeJsHttp2TransientError(error) ||
+        (error.cause !== undefined && depth <= 10 && isTransientError(error.cause, depth + 1)));
 const isServerError = (error) => {
     if (error.$metadata?.httpStatusCode !== undefined) {
         const statusCode = error.$metadata.httpStatusCode;
@@ -27524,7 +27685,9 @@ function parseRetryAfterHeader(response, logger) {
     if (!HttpResponse.isInstance(response)) {
         return;
     }
-    for (const header of Object.keys(response.headers)) {
+    for (const header in response.headers) {
+        if (!hasOwn(response.headers, header))
+            continue;
         const h = header.toLowerCase();
         if (h === "retry-after") {
             const retryAfter = response.headers[header];
@@ -28988,8 +29151,9 @@ exports.translateTraits = translateTraits;
 /***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 const { createHmac, createHash, getRandomValues } = __nccwpck_require__(7598);
+const { hasOwn, HttpResponse } = __nccwpck_require__(4534);
+exports.hasOwn = hasOwn;
 const { ReadStream, lstatSync, fstatSync } = __nccwpck_require__(3024);
-const { HttpResponse } = __nccwpck_require__(4534);
 const { toEndpointV1 } = __nccwpck_require__(2085);
 const { Readable, Writable, PassThrough } = __nccwpck_require__(7075);
 
@@ -29248,6 +29412,8 @@ const expectUnion = (value) => {
     const asObject = expectObject(value);
     const setKeys = [];
     for (const k in asObject) {
+        if (!hasOwn(asObject, k))
+            continue;
         if (asObject[k] != null) {
             setKeys.push(k);
         }
@@ -30338,6 +30504,8 @@ const getAwsChunkedEncodingStream$1 = (readableStream, options) => {
         checksumLocationName !== undefined &&
         streamHasher !== undefined;
     const digest = checksumRequired ? streamHasher(checksumAlgorithmFn, readableStream) : undefined;
+    Promise.resolve(digest).catch(() => {
+    });
     const reader = readableStream.getReader();
     return new ReadableStream({
         async pull(controller) {
@@ -30370,8 +30538,12 @@ function getAwsChunkedEncodingStream(stream, options) {
         checksumLocationName !== undefined &&
         streamHasher !== undefined;
     const digest = checksumRequired ? streamHasher(checksumAlgorithmFn, readable) : undefined;
+    Promise.resolve(digest).catch(() => {
+    });
     const awsChunkedEncodingStream = new Readable({
-        read: () => { },
+        read() {
+            readable.resume();
+        },
     });
     readable.on("data", (data) => {
         const length = bodyLengthChecker(data) || 0;
@@ -30380,16 +30552,27 @@ function getAwsChunkedEncodingStream(stream, options) {
         }
         awsChunkedEncodingStream.push(`${length.toString(16)}\r\n`);
         awsChunkedEncodingStream.push(data);
-        awsChunkedEncodingStream.push("\r\n");
-    });
-    readable.on("end", async () => {
-        awsChunkedEncodingStream.push(`0\r\n`);
-        if (checksumRequired) {
-            const checksum = base64Encoder(await digest);
-            awsChunkedEncodingStream.push(`${checksumLocationName}:${checksum}\r\n`);
-            awsChunkedEncodingStream.push(`\r\n`);
+        if (!awsChunkedEncodingStream.push("\r\n")) {
+            readable.pause();
         }
-        awsChunkedEncodingStream.push(null);
+    });
+    readable.on("error", (err) => {
+        awsChunkedEncodingStream.destroy(err);
+    });
+    readable.pause();
+    readable.on("end", async () => {
+        try {
+            awsChunkedEncodingStream.push(`0\r\n`);
+            if (checksumRequired) {
+                const checksum = base64Encoder(await digest);
+                awsChunkedEncodingStream.push(`${checksumLocationName}:${checksum}\r\n`);
+                awsChunkedEncodingStream.push(`\r\n`);
+            }
+            awsChunkedEncodingStream.push(null);
+        }
+        catch (err) {
+            awsChunkedEncodingStream.destroy(err);
+        }
     });
     return awsChunkedEncodingStream;
 }
@@ -30743,6 +30926,10 @@ const { SMITHY_CONTEXT_KEY } = __nccwpck_require__(690);
 
 const getSmithyContext = (context) => context[SMITHY_CONTEXT_KEY] || (context[SMITHY_CONTEXT_KEY] = {});
 
+function hasOwn(o, k) {
+    return Object.prototype.hasOwnProperty.call(o, k);
+}
+
 class HttpRequest {
     method;
     protocol;
@@ -30902,6 +31089,8 @@ const toEndpointV1 = (endpoint) => {
             if (endpoint.headers) {
                 v1Endpoint.headers = {};
                 for (const name in endpoint.headers) {
+                    if (!hasOwn(endpoint.headers, name))
+                        continue;
                     v1Endpoint.headers[name.toLowerCase()] = endpoint.headers[name].join(", ");
                 }
             }
@@ -30915,6 +31104,7 @@ const toEndpointV1 = (endpoint) => {
 exports.HttpRequest = HttpRequest;
 exports.HttpResponse = HttpResponse;
 exports.getSmithyContext = getSmithyContext;
+exports.hasOwn = hasOwn;
 exports.isValidHostLabel = isValidHostLabel;
 exports.isValidHostname = isValidHostname;
 exports.normalizeProvider = normalizeProvider;
@@ -31305,12 +31495,13 @@ exports.providerConfigFromInit = providerConfigFromInit;
 /***/ 1279:
 /***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
+const { hasOwn } = __nccwpck_require__(2430);
+const { streamCollector } = __nccwpck_require__(2430);
+exports.streamCollector = streamCollector;
 const { buildQueryString, HttpResponse } = __nccwpck_require__(3422);
 const node_https = __nccwpck_require__(4708);
 const { Readable } = __nccwpck_require__(7075);
 const http2 = __nccwpck_require__(2467);
-const { streamCollector } = __nccwpck_require__(2430);
-exports.streamCollector = streamCollector;
 
 function buildAbortError(abortSignal) {
     const reason = abortSignal && typeof abortSignal === "object" && "reason" in abortSignal
@@ -31337,6 +31528,8 @@ const NODEJS_TIMEOUT_ERROR_CODES = ["ECONNRESET", "EPIPE", "ETIMEDOUT"];
 const getTransformedHeaders = (headers) => {
     const transformedHeaders = {};
     for (const name in headers) {
+        if (!hasOwn(headers, name))
+            continue;
         const headerValues = headers[name];
         transformedHeaders[name] = Array.isArray(headerValues) ? headerValues.join(",") : headerValues;
     }
@@ -31538,6 +31731,8 @@ class NodeHttpHandler {
         }
         if (sockets && requests) {
             for (const origin in sockets) {
+                if (!hasOwn(sockets, origin))
+                    continue;
                 const socketsInUse = sockets[origin]?.length ?? 0;
                 const requestsEnqueued = requests[origin]?.length ?? 0;
                 if (socketsInUse >= maxSockets && requestsEnqueued >= 2 * maxSockets) {
@@ -31573,6 +31768,7 @@ or increase socketAcquisitionWarningTimeout=(millis) in the NodeHttpHandler conf
             this.config = await this.configProvider;
         }
         const config = this.config;
+        const logger = config.logger;
         const isSSL = request.protocol === "https:";
         if (!isSSL && !this.config.httpAgent) {
             this.config.httpAgent = await this.config.httpAgentProvider();
@@ -31616,7 +31812,7 @@ or increase socketAcquisitionWarningTimeout=(millis) in the NodeHttpHandler conf
                 });
             }
             socketWarningTimeoutId = timing.setTimeout(() => {
-                this.socketWarningTimestamp = NodeHttpHandler.checkSocketUsage(agent, this.socketWarningTimestamp, config.logger);
+                this.socketWarningTimestamp = NodeHttpHandler.checkSocketUsage(agent, this.socketWarningTimestamp, logger);
             }, config.socketAcquisitionWarningTimeout ?? (config.requestTimeout ?? 2000) + (config.connectionTimeout ?? 1000));
             const queryString = request.query ? buildQueryString(request.query) : "";
             let auth = undefined;
@@ -31683,7 +31879,7 @@ or increase socketAcquisitionWarningTimeout=(millis) in the NodeHttpHandler conf
             }
             const effectiveRequestTimeout = requestTimeout ?? config.requestTimeout;
             connectionTimeoutId = setConnectionTimeout(req, reject, config.connectionTimeout);
-            requestTimeoutId = setRequestTimeout(req, reject, effectiveRequestTimeout, config.throwOnRequestTimeout, config.logger ?? console);
+            requestTimeoutId = setRequestTimeout(req, reject, effectiveRequestTimeout, config.throwOnRequestTimeout, logger ?? console);
             socketTimeoutId = setSocketTimeout(req, reject, config.socketTimeout);
             const httpAgent = nodeHttpsOptions.agent;
             if (typeof httpAgent === "object" && "keepAlive" in httpAgent) {
@@ -31701,6 +31897,12 @@ or increase socketAcquisitionWarningTimeout=(millis) in the NodeHttpHandler conf
     updateHttpClientConfig(key, value) {
         this.config = undefined;
         this.configProvider = this.configProvider.then((config) => {
+            if (key === Symbol.for("logger")) {
+                return {
+                    ...config,
+                    logger: config.logger ?? value,
+                };
+            }
             return {
                 ...config,
                 [key]: value,
@@ -31786,6 +31988,7 @@ class ClientHttp2SessionRef {
     destroy() {
         this.refs = 0;
         if (!this.session.destroyed) {
+            this.session.setTimeout(0);
             this.session.destroy();
         }
     }
@@ -31903,9 +32106,8 @@ class NodeHttp2ConnectionManager {
         session.on("error", ensureDestroyed);
         session.on("frameError", ensureDestroyed);
         session.on("close", ensureDestroyed);
-        if (connectionConfiguration.requestTimeout) {
-            session.setTimeout(connectionConfiguration.requestTimeout, ensureDestroyed);
-        }
+        const timeout = connectionConfiguration.requestTimeout ?? 300_000;
+        session.setTimeout(timeout, ensureDestroyed);
         ref.retain();
         return ref;
     }
@@ -32112,6 +32314,9 @@ class NodeHttp2Handler {
                 resolve({ response: httpResponse });
                 if (useIsolatedSession) {
                     session.close();
+                    clientHttp2Stream.on("end", () => {
+                        ref.destroy();
+                    });
                 }
             });
             clientHttp2Stream.on("close", () => {
@@ -32122,7 +32327,11 @@ class NodeHttp2Handler {
                     this.connectionManager.release(requestContext, ref);
                 }
                 if (!fulfilled) {
-                    rejectWithDestroy(new Error("Unexpected error: http2 request did not get a response"));
+                    const error = new Error("Unexpected error: http2 request did not get a response");
+                    if (session.destroyed) {
+                        error.name = "TimeoutError";
+                    }
+                    rejectWithDestroy(error);
                 }
             });
             writeRequestBodyPromise = writeRequestBody(clientHttp2Stream, request, effectiveRequestTimeout);
@@ -32152,14 +32361,16 @@ exports.NodeHttpHandler = NodeHttpHandler;
 /***/ 5118:
 /***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
-const { fromUtf8, fromHex, toHex, toUint8Array, isArrayBuffer } = __nccwpck_require__(2430);
+const { hasOwn, fromUtf8, fromHex, toHex, toUint8Array, isArrayBuffer } = __nccwpck_require__(2430);
 const { normalizeProvider } = __nccwpck_require__(2658);
 const { escapeUri, HttpRequest } = __nccwpck_require__(3422);
 
 class HeaderFormatter {
     format(headers) {
         const chunks = [];
-        for (const headerName of Object.keys(headers)) {
+        for (const headerName in headers) {
+            if (!hasOwn(headers, headerName))
+                continue;
             const bytes = fromUtf8(headerName);
             chunks.push(Uint8Array.from([bytes.byteLength]), bytes, this.formatHeaderValue(headers[headerName]));
         }
@@ -32174,27 +32385,27 @@ class HeaderFormatter {
     formatHeaderValue(header) {
         switch (header.type) {
             case "boolean":
-                return Uint8Array.from([header.value ? HEADER_VALUE_TYPE.boolTrue : HEADER_VALUE_TYPE.boolFalse]);
+                return Uint8Array.from([header.value ? 0 : 1]);
             case "byte":
-                return Uint8Array.from([HEADER_VALUE_TYPE.byte, header.value]);
+                return Uint8Array.from([2, header.value]);
             case "short":
                 const shortView = new DataView(new ArrayBuffer(3));
-                shortView.setUint8(0, HEADER_VALUE_TYPE.short);
+                shortView.setUint8(0, 3);
                 shortView.setInt16(1, header.value, false);
                 return new Uint8Array(shortView.buffer);
             case "integer":
                 const intView = new DataView(new ArrayBuffer(5));
-                intView.setUint8(0, HEADER_VALUE_TYPE.integer);
+                intView.setUint8(0, 4);
                 intView.setInt32(1, header.value, false);
                 return new Uint8Array(intView.buffer);
             case "long":
                 const longBytes = new Uint8Array(9);
-                longBytes[0] = HEADER_VALUE_TYPE.long;
+                longBytes[0] = 5;
                 longBytes.set(header.value.bytes, 1);
                 return longBytes;
             case "binary":
                 const binView = new DataView(new ArrayBuffer(3 + header.value.byteLength));
-                binView.setUint8(0, HEADER_VALUE_TYPE.byteArray);
+                binView.setUint8(0, 6);
                 binView.setUint16(1, header.value.byteLength, false);
                 const binBytes = new Uint8Array(binView.buffer);
                 binBytes.set(header.value, 3);
@@ -32202,14 +32413,14 @@ class HeaderFormatter {
             case "string":
                 const utf8Bytes = fromUtf8(header.value);
                 const strView = new DataView(new ArrayBuffer(3 + utf8Bytes.byteLength));
-                strView.setUint8(0, HEADER_VALUE_TYPE.string);
+                strView.setUint8(0, 7);
                 strView.setUint16(1, utf8Bytes.byteLength, false);
                 const strBytes = new Uint8Array(strView.buffer);
                 strBytes.set(utf8Bytes, 3);
                 return strBytes;
             case "timestamp":
                 const tsBytes = new Uint8Array(9);
-                tsBytes[0] = HEADER_VALUE_TYPE.timestamp;
+                tsBytes[0] = 8;
                 tsBytes.set(Int64.fromNumber(header.value.valueOf()).bytes, 1);
                 return tsBytes;
             case "uuid":
@@ -32217,7 +32428,7 @@ class HeaderFormatter {
                     throw new Error(`Invalid UUID received: ${header.value}`);
                 }
                 const uuidBytes = new Uint8Array(17);
-                uuidBytes[0] = HEADER_VALUE_TYPE.uuid;
+                uuidBytes[0] = 9;
                 uuidBytes.set(fromHex(header.value.replace(/-/g, "")), 1);
                 return uuidBytes;
         }
@@ -32328,7 +32539,9 @@ const MAX_PRESIGNED_TTL = 60 * 60 * 24 * 7;
 const getCanonicalQuery = ({ query = {} }) => {
     const keys = [];
     const serialized = {};
-    for (const key of Object.keys(query)) {
+    for (const key in query) {
+        if (!hasOwn(query, key))
+            continue;
         if (key.toLowerCase() === SIGNATURE_HEADER) {
             continue;
         }
@@ -32495,7 +32708,9 @@ const getCanonicalHeaders = ({ headers }, unsignableHeaders, signableHeaders) =>
 };
 
 const getPayloadHash = async ({ headers, body }, hashConstructor) => {
-    for (const headerName of Object.keys(headers)) {
+    for (const headerName in headers) {
+        if (!hasOwn(headers, headerName))
+            continue;
         if (headerName.toLowerCase() === SHA256_HEADER) {
             return headers[headerName];
         }
@@ -32513,7 +32728,9 @@ const getPayloadHash = async ({ headers, body }, hashConstructor) => {
 
 const hasHeader = (soughtHeader, headers) => {
     soughtHeader = soughtHeader.toLowerCase();
-    for (const headerName of Object.keys(headers)) {
+    for (const headerName in headers) {
+        if (!hasOwn(headers, headerName))
+            continue;
         if (soughtHeader === headerName.toLowerCase()) {
             return true;
         }
@@ -32523,7 +32740,9 @@ const hasHeader = (soughtHeader, headers) => {
 
 const moveHeadersToQuery = (request, options = {}) => {
     const { headers, query = {} } = HttpRequest.clone(request);
-    for (const name of Object.keys(headers)) {
+    for (const name in headers) {
+        if (!hasOwn(headers, name))
+            continue;
         const lname = name.toLowerCase();
         if ((lname.slice(0, 6) === "x-amz-" && !options.unhoistableHeaders?.has(lname)) ||
             options.hoistableHeaders?.has(lname)) {
@@ -32540,7 +32759,9 @@ const moveHeadersToQuery = (request, options = {}) => {
 
 const prepareRequest = (request) => {
     request = HttpRequest.clone(request);
-    for (const headerName of Object.keys(request.headers)) {
+    for (const headerName in request.headers) {
+        if (!hasOwn(request.headers, headerName))
+            continue;
         if (GENERATED_HEADERS.indexOf(headerName.toLowerCase()) > -1) {
             delete request.headers[headerName];
         }
