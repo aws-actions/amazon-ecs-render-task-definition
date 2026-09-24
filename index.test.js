@@ -15,7 +15,8 @@ jest.mock('fs', () => ({
     },
     rmdirSync: jest.fn(),
     existsSync: jest.fn(),
-    writeFileSync: jest.fn()
+    writeFileSync: jest.fn(),
+    readFileSync: jest.fn()
 }));
 
 jest.mock('@aws-sdk/client-ecs');
@@ -65,7 +66,7 @@ describe('Render task definition', () => {
 
         fs.existsSync.mockReturnValue(true);
 
-        jest.mock('./task-definition.json', () => ({
+        fs.readFileSync.mockReturnValue(JSON.stringify({
             family: 'task-def-family',
             revision: 10,
             registeredBy: 'arn:aws:sts::012345678901:assumed-role/Role/myrole',
@@ -124,7 +125,7 @@ describe('Render task definition', () => {
                   value: "mytaskdef"
                 }
             ]
-        }), { virtual: true });
+        }));
 
         mockEcsDescribeTaskDef.mockImplementation(() => Promise.resolve({
             taskDefinition: {
@@ -272,7 +273,7 @@ describe('Render task definition', () => {
             .mockReturnValueOnce('')                                                      // task-definition revision
             .mockReturnValueOnce('')                                                      // secrets
 
-        jest.mock('/hello/task-definition.json', () => ({
+        fs.readFileSync.mockReturnValueOnce(JSON.stringify({
             family: 'task-def-family',
             containerDefinitions: [
                 {
@@ -280,7 +281,7 @@ describe('Render task definition', () => {
                     image: "some-other-image"
                 }
             ]
-        }), { virtual: true });
+        }));
 
         await run();
 
@@ -856,7 +857,7 @@ describe('Render task definition', () => {
             .mockReturnValueOnce('awslogs-create-group=true\nawslogs-group=/ecs/web\nawslogs-region=us-east-1\nawslogs-stream-prefix=ecs')
             .mockReturnValueOnce('key1=update_value1\nkey2\nkey3=value3');
 
-        jest.mock('/hello/task-definition.json', () => ({
+        fs.readFileSync.mockReturnValueOnce(JSON.stringify({
             family: 'task-def-family',
             containerDefinitions: [
                 {
@@ -868,7 +869,7 @@ describe('Render task definition', () => {
                     }
                 }
             ]
-        }), { virtual: true });
+        }));
 
         await run();
 
@@ -876,7 +877,7 @@ describe('Render task definition', () => {
     });
 
     test('error returned for non-JSON task definition contents', async () => {
-        jest.mock('./non-json-task-definition.json', () => ("hello"), { virtual: true });
+        fs.readFileSync.mockReturnValueOnce(JSON.stringify("hello"));
 
         core.getInput = jest
             .fn()
@@ -890,10 +891,10 @@ describe('Render task definition', () => {
     });
 
     test('error returned for malformed task definition with non-array container definition section', async () => {
-        jest.mock('./malformed-task-definition.json', () => ({
+        fs.readFileSync.mockReturnValueOnce(JSON.stringify({
             family: 'task-def-family',
             containerDefinitions: {}
-        }), { virtual: true });
+        }));
 
         core.getInput = jest
             .fn()
@@ -907,7 +908,7 @@ describe('Render task definition', () => {
     });
 
     test('error returned for task definition without matching container name', async () => {
-        jest.mock('./missing-container-task-definition.json', () => ({
+        fs.readFileSync.mockReturnValueOnce(JSON.stringify({
             family: 'task-def-family',
             containerDefinitions: [
                 {
@@ -915,7 +916,7 @@ describe('Render task definition', () => {
                     image: "some-other-image"
                 }
             ]
-        }), { virtual: true });
+        }));
 
         core.getInput = jest
             .fn()
@@ -1047,7 +1048,7 @@ describe('Render task definition', () => {
                 'MY_SECRET=arn:aws:secretsmanager:us-east-1:123456789:secret:my-secret\nDB_PASSWORD=arn:aws:ssm:us-east-1:123456789:parameter/db-password'
             );
 
-        jest.mock('/hello/secrets-only-task-definition.json', () => ({
+        fs.readFileSync.mockReturnValueOnce(JSON.stringify({
             family: 'task-def-family',
             containerDefinitions: [
                 {
@@ -1055,7 +1056,7 @@ describe('Render task definition', () => {
                     image: "some-other-image"
                 }
             ]
-        }), { virtual: true });
+        }));
 
         await run();
 
@@ -1109,7 +1110,7 @@ describe('Render task definition', () => {
             .mockReturnValueOnce('')                                                     // task-definition-revision
             .mockReturnValueOnce('');                                                    // secrets
 
-        jest.mock('/hello/task-role-task-definition.json', () => ({
+        fs.readFileSync.mockReturnValueOnce(JSON.stringify({
             family: 'task-def-family',
             containerDefinitions: [
                 {
@@ -1117,7 +1118,7 @@ describe('Render task definition', () => {
                     image: "some-other-image"
                 }
             ]
-        }), { virtual: true });
+        }));
 
         await run();
 
@@ -1155,7 +1156,7 @@ describe('Render task definition', () => {
             .mockReturnValueOnce('')                                                     // task-definition-revision
             .mockReturnValueOnce('');                                                    // secrets
 
-        jest.mock('/hello/exec-role-task-definition.json', () => ({
+        fs.readFileSync.mockReturnValueOnce(JSON.stringify({
             family: 'task-def-family',
             containerDefinitions: [
                 {
@@ -1163,7 +1164,7 @@ describe('Render task definition', () => {
                     image: "some-other-image"
                 }
             ]
-        }), { virtual: true });
+        }));
 
         await run();
 
@@ -1201,7 +1202,7 @@ describe('Render task definition', () => {
             .mockReturnValueOnce('')                                                     // task-definition-revision
             .mockReturnValueOnce('');                                                    // secrets
 
-        jest.mock('/hello/both-roles-task-definition.json', () => ({
+        fs.readFileSync.mockReturnValueOnce(JSON.stringify({
             family: 'task-def-family',
             containerDefinitions: [
                 {
@@ -1209,7 +1210,7 @@ describe('Render task definition', () => {
                     image: "some-other-image"
                 }
             ]
-        }), { virtual: true });
+        }));
 
         await run();
 
@@ -1248,7 +1249,7 @@ describe('Render task definition', () => {
             .mockReturnValueOnce('')                                                     // task-definition-revision
             .mockReturnValueOnce('');                                                    // secrets
 
-        jest.mock('/hello/path-role-task-definition.json', () => ({
+        fs.readFileSync.mockReturnValueOnce(JSON.stringify({
             family: 'task-def-family',
             containerDefinitions: [
                 {
@@ -1256,7 +1257,7 @@ describe('Render task definition', () => {
                     image: "some-other-image"
                 }
             ]
-        }), { virtual: true });
+        }));
 
         await run();
 
@@ -1293,7 +1294,7 @@ describe('Render task definition', () => {
             .mockReturnValueOnce('')                                                     // task-definition-revision
             .mockReturnValueOnce('');                                                    // secrets
 
-        jest.mock('/hello/cn-role-task-definition.json', () => ({
+        fs.readFileSync.mockReturnValueOnce(JSON.stringify({
             family: 'task-def-family',
             containerDefinitions: [
                 {
@@ -1301,7 +1302,7 @@ describe('Render task definition', () => {
                     image: "some-other-image"
                 }
             ]
-        }), { virtual: true });
+        }));
 
         await run();
 
@@ -1389,5 +1390,35 @@ describe('Render task definition', () => {
         await run();
 
         expect(core.setFailed).toBeCalledWith('Invalid ARN format for task-role-arn. Expected format: arn:aws:iam::<account-id>:role/<role-name>');
+    });
+
+    test('loads the task definition file as data via readFileSync and does not execute it (no require)', async () => {
+        // Regression test for the RCE vector where the task-definition path was
+        // loaded with require(), which executes JavaScript / follows symlinks to
+        // .js files. The loader must read the file as text and JSON.parse it, so
+        // a non-JSON (e.g. JavaScript) payload fails to parse rather than run.
+        core.getInput = jest
+            .fn()
+            .mockReturnValueOnce('task-definition.json')
+            .mockReturnValueOnce('web')
+            .mockReturnValueOnce('nginx:latest');
+
+        // Simulate a file whose contents are JavaScript rather than JSON (what a
+        // symlink-to-.js attack would surface). readFileSync returns the raw
+        // text; JSON.parse must throw, and the action must fail gracefully
+        // without ever executing the payload.
+        fs.readFileSync.mockReturnValueOnce("module.exports = { pwned: true };");
+
+        await run();
+
+        // The file was read as text through the mocked fs module...
+        expect(fs.readFileSync).toHaveBeenCalledWith(
+            require('path').join(process.env.GITHUB_WORKSPACE, 'task-definition.json'),
+            'utf8'
+        );
+        // ...and parsing JavaScript-as-JSON failed, so the run was marked failed
+        // rather than registering a task definition.
+        expect(core.setFailed).toHaveBeenCalled();
+        expect(tmp.fileSync).not.toHaveBeenCalled();
     });
 });

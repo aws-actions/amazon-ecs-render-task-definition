@@ -67,7 +67,13 @@ async function run() {
       if (!fs.existsSync(taskDefPath)) {
         throw new Error(`Task definition file does not exist: ${taskDefinitionFile}`);
       }
-      taskDefContents = require(taskDefPath);
+      // Read and parse the file as JSON data rather than loading it with
+      // require(). require() is a code loader that resolves and executes
+      // CommonJS modules and follows symlinks, so a task-definition file that
+      // is a symlink to (or itself is) JavaScript would be executed with the
+      // job's privileges. JSON.parse(fs.readFileSync(...)) strictly parses the
+      // file as data and throws on non-JSON input without executing anything.
+      taskDefContents = JSON.parse(fs.readFileSync(taskDefPath, 'utf8'));
     } else if (taskDefinitionArn || taskDefinitionFamily || taskDefinitionRevision) {
       if (taskDefinitionArn) {
         core.info("The task definition arn will be used to fetch task definition");
