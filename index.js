@@ -67,7 +67,14 @@ async function run() {
       if (!fs.existsSync(taskDefPath)) {
         throw new Error(`Task definition file does not exist: ${taskDefinitionFile}`);
       }
-      taskDefContents = require(taskDefPath);
+      // Read the file and parse it strictly as JSON data
+      try {
+        // Strip a leading UTF-8 BOM, which JSON.parse rejects
+        const fileContents = fs.readFileSync(taskDefPath, 'utf8').replace(/^\uFEFF/, '');
+        taskDefContents = JSON.parse(fileContents);
+      } catch (error) {
+        throw new Error(`Failed to parse task definition file as JSON: ${taskDefinitionFile}. ${error.message}`);
+      }
     } else if (taskDefinitionArn || taskDefinitionFamily || taskDefinitionRevision) {
       if (taskDefinitionArn) {
         core.info("The task definition arn will be used to fetch task definition");
