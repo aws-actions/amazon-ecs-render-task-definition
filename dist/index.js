@@ -75,7 +75,9 @@ async function run() {
       }
       // Read the file and parse it strictly as JSON data
       try {
-        taskDefContents = JSON.parse(fs.readFileSync(taskDefPath, 'utf8'));
+        // Strip a leading UTF-8 BOM, which JSON.parse rejects
+        const fileContents = fs.readFileSync(taskDefPath, 'utf8').replace(/^\uFEFF/, '');
+        taskDefContents = JSON.parse(fileContents);
       } catch (error) {
         throw new Error(`Failed to parse task definition file as JSON: ${taskDefinitionFile}. ${error.message}`);
       }

@@ -878,6 +878,39 @@ describe('Render task definition', () => {
         expect(core.setFailed).toBeCalledWith('Invalid task definition format: containerDefinitions section is not present or is not an array');
     });
 
+    test('renders a task definition file that starts with a UTF-8 BOM', async () => {
+        fs.readFileSync.mockReturnValue('\uFEFF' + JSON.stringify({
+            family: 'task-def-family',
+            containerDefinitions: [
+                {
+                    name: "web",
+                    image: "some-other-image"
+                }
+            ]
+        }));
+
+        core.getInput = jest
+            .fn()
+            .mockReturnValueOnce('task-definition.json')
+            .mockReturnValueOnce('web')
+            .mockReturnValueOnce('nginx:latest');
+
+        await run();
+
+        expect(core.setFailed).toHaveBeenCalledTimes(0);
+        expect(fs.writeFileSync).toHaveBeenNthCalledWith(1, 'new-task-def-file-name',
+            JSON.stringify({
+                family: 'task-def-family',
+                containerDefinitions: [
+                    {
+                        name: "web",
+                        image: "nginx:latest"
+                    }
+                ]
+            }, null, 2)
+        );
+    });
+
     test('error returned for task definition file that is not valid JSON', async () => {
         fs.readFileSync.mockReturnValue("not valid json {");
 
