@@ -3836,7 +3836,7 @@ const commonParams = {
     UseDualStack: { type: "builtInParams", name: "useDualstackEndpoint" },
 };
 
-var version = "3.1140.0";
+var version = "3.1145.0";
 var packageInfo = {
 	version: version};
 
@@ -4730,6 +4730,8 @@ const _SRLBe = "ServiceRevisionLoadBalancers";
 const _SRO = "ServiceRevisionOverrides";
 const _SRS = "ServiceRevisionSummary";
 const _SRSL = "ServiceRevisionsSummaryList";
+const _SRVLC = "ServiceRevisionVpcLatticeConfiguration";
+const _SRVLCe = "ServiceRevisionVpcLatticeConfigurations";
 const _SRe = "ServiceRevision";
 const _SRer = "ServiceRegistries";
 const _SRerv = "ServiceRevisions";
@@ -4830,6 +4832,7 @@ const _VF = "VolumeFrom";
 const _VFL = "VolumeFromList";
 const _VI = "VersionInfo";
 const _VL = "VolumeList";
+const _VLAC = "VpcLatticeAdvancedConfiguration";
 const _VLC = "VpcLatticeConfiguration";
 const _VLCp = "VpcLatticeConfigurations";
 const _a = "attachments";
@@ -6855,8 +6858,8 @@ var RepositoryCredentials$ = [3, n0, _RC,
 ];
 var ResolvedConfiguration$ = [3, n0, _RCe,
     0,
-    [_lB],
-    [() => ServiceRevisionLoadBalancers]
+    [_lB, _vLC],
+    [() => ServiceRevisionLoadBalancers, () => ServiceRevisionVpcLatticeConfigurations]
 ];
 var Resource$ = [3, n0, _R,
     0,
@@ -7022,6 +7025,11 @@ var ServiceRevisionSummary$ = [3, n0, _SRS,
     0,
     [_ar, _rTCe, _rTCu, _pTCe, _rTTW, _rPTW],
     [0, 1, 1, 1, 1, 1]
+];
+var ServiceRevisionVpcLatticeConfiguration$ = [3, n0, _SRVLC,
+    0,
+    [_tGA, _pLR],
+    [0, 0]
 ];
 var ServiceVolumeConfiguration$ = [3, n0, _SVC,
     0,
@@ -7338,10 +7346,15 @@ var VolumeFrom$ = [3, n0, _VF,
     [_sCo, _rO],
     [0, 2]
 ];
+var VpcLatticeAdvancedConfiguration$ = [3, n0, _VLAC,
+    0,
+    [_aTGA, _pLR, _tLR],
+    [0, 0, 0]
+];
 var VpcLatticeConfiguration$ = [3, n0, _VLC,
     0,
-    [_rA, _tGA, _pN],
-    [0, 0, 0], 3
+    [_rA, _tGA, _pN, _aCd],
+    [0, 0, 0, () => VpcLatticeAdvancedConfiguration$], 3
 ];
 var AcceleratorManufacturerSet = [1, n0, _AMS,
     0, [0,
@@ -7604,6 +7617,9 @@ var ServiceRevisions = [1, n0, _SRerv,
 ];
 var ServiceRevisionsSummaryList = [1, n0, _SRSL,
     0, () => ServiceRevisionSummary$
+];
+var ServiceRevisionVpcLatticeConfigurations = [1, n0, _SRVLCe,
+    0, () => ServiceRevisionVpcLatticeConfiguration$
 ];
 var Services = [1, n0, _Serv,
     0, () => Service$
@@ -10011,6 +10027,7 @@ exports.ServiceRevisionCleanup = ServiceRevisionCleanup;
 exports.ServiceRevisionLoadBalancer$ = ServiceRevisionLoadBalancer$;
 exports.ServiceRevisionOverrides$ = ServiceRevisionOverrides$;
 exports.ServiceRevisionSummary$ = ServiceRevisionSummary$;
+exports.ServiceRevisionVpcLatticeConfiguration$ = ServiceRevisionVpcLatticeConfiguration$;
 exports.ServiceVolumeConfiguration$ = ServiceVolumeConfiguration$;
 exports.Session$ = Session$;
 exports.Setting$ = Setting$;
@@ -10140,6 +10157,7 @@ exports.VersionConsistency = VersionConsistency;
 exports.VersionInfo$ = VersionInfo$;
 exports.Volume$ = Volume$;
 exports.VolumeFrom$ = VolumeFrom$;
+exports.VpcLatticeAdvancedConfiguration$ = VpcLatticeAdvancedConfiguration$;
 exports.VpcLatticeConfiguration$ = VpcLatticeConfiguration$;
 exports.errorTypeRegistries = errorTypeRegistries;
 exports.paginateListAccountSettings = paginateListAccountSettings;
