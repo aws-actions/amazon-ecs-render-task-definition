@@ -1,0 +1,2 @@
+- name: Amazon ECS "Render Task Definition" Action for GitHub Actions
+  uses: aws-actions/amazon-ecs-render-task-definition@v1.9.1
