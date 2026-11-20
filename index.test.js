@@ -3,6 +3,8 @@ const core = require('@actions/core');
 const tmp = require('tmp');
 const fs = require('fs');
 const {ECS} = require('@aws-sdk/client-ecs');
+const { NodeHttpHandler } = require('@smithy/node-http-handler');
+const { HttpsProxyAgent } = require('https-proxy-agent');
 
 jest.mock('@actions/core');
 jest.mock('tmp');
@@ -20,6 +22,8 @@ jest.mock('fs', () => ({
 }));
 
 jest.mock('@aws-sdk/client-ecs');
+jest.mock('@smithy/node-http-handler');
+jest.mock('https-proxy-agent');
 
 const mockEcsDescribeTaskDef = jest.fn();
 
@@ -1417,5 +1421,69 @@ describe('Render task definition', () => {
         await run();
 
         expect(core.setFailed).toBeCalledWith('Invalid ARN format for task-role-arn. Expected format: arn:aws:iam::<account-id>:role/<role-name>');
+    });
+    describe('http proxy', () => {
+        const proxyEnvVars = ['HTTPS_PROXY', 'https_proxy', 'HTTP_PROXY', 'http_proxy'];
+        let savedEnv;
+
+        beforeEach(() => {
+            savedEnv = {};
+            proxyEnvVars.forEach(name => {
+                savedEnv[name] = process.env[name];
+                delete process.env[name];
+            });
+        });
+
+        afterEach(() => {
+            proxyEnvVars.forEach(name => {
+                if (savedEnv[name] === undefined) {
+                    delete process.env[name];
+                } else {
+                    process.env[name] = savedEnv[name];
+                }
+            });
+        });
+
+        function mockInputs(inputs) {
+            core.getInput = jest.fn().mockImplementation(name => inputs[name] || '');
+        }
+
+        const baseInputs = {
+            'task-definition': 'task-definition.json',
+            'container-name': 'web',
+            'image': 'nginx:latest'
+        };
+
+        test('does not configure a custom request handler when no proxy is set', async () => {
+            mockInputs(baseInputs);
+
+            await run();
+            expect(core.setFailed).toHaveBeenCalledTimes(0);
+            expect(HttpsProxyAgent).not.toHaveBeenCalled();
+            expect(NodeHttpHandler).not.toHaveBeenCalled();
+            expect(ECS).toHaveBeenCalledWith(expect.objectContaining({ requestHandler: undefined }));
+        });
+
+        test('uses the proxy from the http-proxy input', async () => {
+            process.env.HTTPS_PROXY = 'http://env-proxy:3128';
+            mockInputs({ ...baseInputs, 'http-proxy': 'http://input-proxy:8080' });
+
+            await run();
+            expect(core.setFailed).toHaveBeenCalledTimes(0);
+            expect(HttpsProxyAgent).toHaveBeenCalledWith('http://input-proxy:8080');
+            const agent = HttpsProxyAgent.mock.instances[0];
+            expect(NodeHttpHandler).toHaveBeenCalledWith({ httpAgent: agent, httpsAgent: agent });
+            expect(ECS).toHaveBeenCalledWith(expect.objectContaining({ requestHandler: NodeHttpHandler.mock.instances[0] }));
+        });
+
+        test.each(proxyEnvVars)('falls back to the %s environment variable', async (name) => {
+            process.env[name] = 'http://env-proxy:3128';
+            mockInputs(baseInputs);
+
+            await run();
+            expect(core.setFailed).toHaveBeenCalledTimes(0);
+            expect(HttpsProxyAgent).toHaveBeenCalledWith('http://env-proxy:3128');
+            expect(ECS).toHaveBeenCalledWith(expect.objectContaining({ requestHandler: NodeHttpHandler.mock.instances[0] }));
+        });
     });
 });
