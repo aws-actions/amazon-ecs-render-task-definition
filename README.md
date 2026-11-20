@@ -99,6 +99,20 @@ Use the following approach to configure your log driver if needed:
 
 ```
 
+If your runner needs to go through a proxy to reach AWS APIs (only used when fetching the task definition with `task-definition-arn` or `task-definition-family`), set the `http-proxy` input:
+
+```yaml
+    - name: Render Amazon ECS task definition
+      uses: aws-actions/amazon-ecs-render-task-definition@v1
+      with:
+        task-definition-family: my-task-def-family
+        container-name: web
+        image: amazon/amazon-ecs-sample:latest
+        http-proxy: "http://proxy.example.com:3128"
+```
+
+If `http-proxy` is not set, the action uses the `HTTPS_PROXY` or `HTTP_PROXY` environment variables (or their lowercase variants) if they are present.
+
 See [action.yml](action.yml) for the full documentation for this action's inputs and outputs.
 
 ## License Summary

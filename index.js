@@ -3,6 +3,8 @@ const core = require('@actions/core');
 const tmp = require('tmp');
 const fs = require('fs');
 const {ECS} = require('@aws-sdk/client-ecs');
+const { NodeHttpHandler } = require('@smithy/node-http-handler');
+const { HttpsProxyAgent } = require('https-proxy-agent');
 
 // Attributes that are returned by DescribeTaskDefinition, but are not valid RegisterTaskDefinition inputs
 const IGNORED_TASK_DEFINITION_ATTRIBUTES = [
@@ -28,12 +30,24 @@ function removeIgnoredAttributes(taskDef) {
   return cleanTaskDef;  // Returns a completely new object
 }
 
+function getProxyAgent() {
+  const proxyInput = core.getInput('http-proxy', { required: false });
+  const proxyFromEnv = process.env.HTTPS_PROXY || process.env.https_proxy ||
+    process.env.HTTP_PROXY || process.env.http_proxy;
+
+  if (proxyInput) {
+    core.info('Using proxy from action input');
+    return new HttpsProxyAgent(proxyInput);
+  }
+  if (proxyFromEnv) {
+    core.info('Using proxy from environment');
+    return new HttpsProxyAgent(proxyFromEnv);
+  }
+  return undefined;
+}
+
 async function run() {
   try {
-    const ecs = new ECS({
-      customUserAgent: 'amazon-ecs-render-task-definition-for-github-actions'
-    });
-
     // Get inputs
     const taskDefinitionFile = core.getInput('task-definition', { required: false });
     const containerName = core.getInput('container-name', { required: true });
@@ -53,6 +67,14 @@ async function run() {
     const taskDefinitionFamily = core.getInput('task-definition-family', { required: false }) || undefined;
     const taskDefinitionRevision = Number(core.getInput('task-definition-revision', { required: false })) || null;
     const secrets = core.getInput('secrets', { required: false });
+
+    const proxyAgent = getProxyAgent();
+    const ecs = new ECS({
+      customUserAgent: 'amazon-ecs-render-task-definition-for-github-actions',
+      requestHandler: proxyAgent ?
+        new NodeHttpHandler({ httpAgent: proxyAgent, httpsAgent: proxyAgent }) :
+        undefined
+    });
 
     let taskDefPath;
     let taskDefContents;

@@ -27,6 +27,8 @@
   "dependencies": {
     "@actions/core": "^2.0.2",
     "@aws-sdk/client-ecs": "^3.1141.0",
+    "@smithy/node-http-handler": "^4.14.2",
+    "https-proxy-agent": "^7.0.6",
     "tmp": "^0.2.6"
   },
   "devDependencies": {
